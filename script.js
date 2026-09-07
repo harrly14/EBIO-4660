@@ -607,7 +607,7 @@ function questionFor(mode='mixed'){
     return {type,label:'Order → feature',prompt:`Which feature is the best match for <strong>${o.order}</strong>?`,correct,choices:shuffled([correct,...distract]),order:o.order,why:`${o.order} (${o.common}) is best recognized by: ${o.key}.`};
   }
   if(type==='visual'){
-    return {type,label:'Photo visual ID',prompt:'Which order does the insect in this real specimen photograph belong to?',correct:o.order,choices:makeChoices(o.order,confusableFor(o.order).length>=4?confusableFor(o.order):orders.map(x=>x.order)),order:o.order,why:`Look for the real-world version of this giveaway: ${o.key}.`,visual:true,photoUrl:randomPhotoFor(o.order)};
+    return {type,label:'Photo visual ID',prompt:'Which order does the insect in this real specimen photograph belong to?',correct:o.order,choices:makeChoices(o.order,confusableFor(o.order).length>=4?confusableFor(o.order):orders.map(x=>x.order)),order:o.order,why:`Look for the this giveaway: ${o.key}.`,visual:true,photoUrl:randomPhotoFor(o.order)};
   }
   if(type==='confusion'){
     const group=sample(confusionGroups), target=byOrder[sample(group)];
