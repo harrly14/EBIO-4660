@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Insect Order Photo Review</title>
+<style>
+:root{
+  --bg:#f3f6fb;--panel:#ffffff;--panel2:#edf3fb;--text:#1f2d3d;--muted:#5b6c83;
+  --accent:#2d7a67;--accent2:#4b6bb3;--good:#2d9b67;--bad:#cd5b5b;--warn:#b98418;
+  --line:#dfe8f5;--shadow:0 8px 20px rgba(26,40,60,.06);
+}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}
+button,input{font:inherit}
+.app{max-width:1100px;margin:auto;padding:20px}
+header{margin-bottom:10px}
+header h1{margin:0 0 6px;font-size:clamp(1.4rem,2.6vw,1.9rem);letter-spacing:-.02em}
+header p{margin:0;color:var(--muted);max-width:760px;line-height:1.5}
+.preload-note{font-size:.82rem;color:var(--muted);margin:8px 0 0;display:flex;align-items:center;gap:8px}
+.tabs{display:flex;gap:8px;margin:16px 0}
+.tab{border:1px solid var(--line);background:var(--panel2);color:var(--muted);padding:9px 14px;border-radius:12px;cursor:pointer}
+.tab.active{background:var(--panel);color:var(--text);border-color:var(--accent)}
+.hidden{display:none!important}
+.layout{display:grid;grid-template-columns:250px 1fr;gap:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
+.side{padding:14px;height:max-content;position:sticky;top:14px;max-height:calc(100vh - 28px);overflow:auto}
+.side .eyebrow{color:var(--accent);text-transform:uppercase;letter-spacing:.1em;font-size:.72rem;font-weight:800;margin-bottom:8px}
+.progress-track{height:8px;background:var(--panel2);border-radius:999px;overflow:hidden;margin-bottom:12px}
+.progress-track>div{height:100%;background:var(--accent)}
+.order-row{display:flex;align-items:center;gap:8px;padding:8px 9px;border-radius:10px;cursor:pointer;font-size:.85rem}
+.order-row:hover{background:var(--panel2)}
+.order-row.active{background:#eaf3ff;font-weight:700}
+.dot{width:9px;height:9px;border-radius:50%;flex:none;background:#c7d2e2}
+.dot.some{background:var(--warn)}
+.dot.kept{background:var(--good)}
+.dot.stuck{background:var(--bad)}
+.order-row .cnt{margin-left:auto;color:var(--muted);font-size:.74rem}
+.main-card{padding:22px;min-height:520px;display:flex;flex-direction:column}
+.top-row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.nav-btns{display:flex;gap:8px}
+button.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line);padding:8px 12px;border-radius:11px;cursor:pointer}
+button.primary{background:var(--accent);color:#fff;border:0;padding:9px 14px;border-radius:11px;font-weight:700;cursor:pointer}
+button.reject{background:#fff;color:var(--bad);border:2px solid var(--bad)}
+button.keep{background:var(--good);color:#fff;border:2px solid var(--good)}
+button:disabled{opacity:.4;cursor:not-allowed}
+.pill{display:inline-flex;gap:8px;align-items:center;background:var(--panel2);border:1px solid var(--line);padding:6px 11px;border-radius:999px;font-size:.8rem;white-space:nowrap}
+.ref-block{margin-bottom:12px}
+.ref-block .oname{font-size:1.25rem;font-weight:800;margin:0}
+.ref-block .common{color:var(--accent);font-weight:700;margin-bottom:2px;font-size:.92rem}
+.ref-block .key{font-weight:700}
+.ref-block .links{margin-top:4px;font-size:.8rem;display:flex;gap:14px;flex-wrap:wrap}
+.ref-block .links a{color:var(--accent2)}
+.swipe-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:var(--panel2);border:1px solid var(--line);border-radius:16px;padding:18px;min-height:340px}
+.swipe-imgwrap{width:100%;max-width:420px;aspect-ratio:1/1;background:#fff;border-radius:12px;overflow:hidden;display:grid;place-items:center;border:1px solid var(--line)}
+.swipe-imgwrap img{max-width:100%;max-height:100%;object-fit:contain}
+.swipe-caption{font-size:.78rem;color:var(--muted);text-align:center;max-width:420px;overflow-wrap:anywhere}
+.swipe-actions{display:flex;gap:14px}
+.swipe-actions button{min-width:150px;padding:13px 18px;font-size:1rem;border-radius:14px;font-weight:800;cursor:pointer}
+.swipe-meta{font-size:.8rem;color:var(--muted)}
+.status-msg{text-align:center;color:var(--muted);padding:20px}
+.status-msg .spinner{margin-bottom:10px}
+.empty-note{background:#fff8e4;border:1px solid #f0d899;color:#7a5a00;padding:14px 16px;border-radius:12px;font-size:.9rem;line-height:1.55;text-align:center}
+.empty-note a{color:#7a5a00;font-weight:700}
+.resolved-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;width:100%}
+.resolved-grid .thumb{border:2px solid var(--good);border-radius:10px;padding:6px;background:#eaf9f1}
+.resolved-grid .thumb img{width:100%;aspect-ratio:1/1;object-fit:contain;background:#fff;border-radius:7px}
+.add-row{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.add-row input{flex:1;min-width:220px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:9px 10px;color:var(--text)}
+.spinner{width:16px;height:16px;border-radius:50%;border:2px solid var(--line);border-top-color:var(--accent);animation:spin .7s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+textarea{width:100%;min-height:320px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px;color:var(--text);font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.82rem}
+.export-actions{display:flex;gap:10px;margin:12px 0;flex-wrap:wrap}
+.kbd-hint{text-align:center;font-size:.78rem;color:var(--muted);margin-top:10px}
+@media(max-width:860px){.layout{grid-template-columns:1fr}.side{position:static;max-height:none}.swipe-actions button{min-width:120px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>Insect Order Photo Review</h1>
+    <p>Photos load automatically for every order. Look at each one and click Keep or Not this — if an order runs out with no keeps, more photos are pulled in automatically. Once an order has a keep, it moves on to the next.</p>
+    <div class="preload-note" id="preloadNote"></div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="review">Review photos</button>
+    <button class="tab" data-tab="export">Export picks</button>
+  </div>
+
+  <div id="reviewPane">
+    <div class="layout">
+      <aside class="card side">
+        <div class="eyebrow">28 orders</div>
+        <div class="progress-track"><div id="progressBar" style="width:0%"></div></div>
+        <div id="orderList"></div>
+      </aside>
+      <main class="card main-card">
+        <div class="top-row">
+          <div class="nav-btns">
+            <button class="secondary" id="prevBtn">← Prev order</button>
+            <button class="secondary" id="nextBtn">Next order →</button>
+          </div>
+          <div class="pill" id="progressPill"></div>
+        </div>
+
+        <div class="ref-block" id="refBlock"></div>
+
+        <div class="swipe-body" id="swipeBody"></div>
+        <div class="kbd-hint">Keyboard: ← not this · → keep</div>
+
+        <div class="add-row">
+          <input type="text" id="addUrlInput" placeholder="Or paste a direct image URL to add it as a candidate" />
+          <button class="secondary" id="addUrlBtn">Add candidate</button>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div id="exportPane" class="hidden">
+    <div class="card main-card">
+      <p class="status-msg" id="exportSummary" style="text-align:left;padding:0;margin-top:0"></p>
+      <div class="export-actions">
+        <button class="primary" id="downloadBtn">Download decisions.json</button>
+        <button class="secondary" id="copyBtn">Copy to clipboard</button>
+      </div>
+      <textarea id="exportBox" readonly></textarea>
+      <p class="status-msg" style="text-align:left;padding:0">Send Claude the downloaded file (or paste this text) and it will integrate these photos into your original file.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const orders = [
+{order:'Archaeognatha',common:'Jumping bristletails',key:'Humped wingless jumper with 3 tails',aliases:['bristletail','jumping bristletail','Machilidae']},
+{order:'Odonata',common:'Dragonflies and damselflies',key:'Huge eyes + long abdomen + 2 pairs of long wings',aliases:['dragonfly','damselfly']},
+{order:'Grylloblattodea',common:'Rock crawlers / ice crawlers',key:'Wingless cold-adapted crawler',aliases:['rock crawler','ice crawler','Grylloblatta']},
+{order:'Mantophasmatodea',common:'Gladiators / heelwalkers',key:'Wingless predator that looks mantis/stick-like',aliases:['gladiator','heelwalker','Mantophasma']},
+{order:'Dermaptera',common:'Earwigs',key:'Pincers on the rear end',aliases:['earwig']},
+{order:'Mantodea',common:'Mantises',key:'Praying/grasping forelegs',aliases:['mantis','praying mantis']},
+{order:'Ephemeroptera',common:'Mayflies',key:'Upright wings + 2–3 long tails',aliases:['mayfly']},
+{order:'Trichoptera',common:'Caddisflies',key:'Moth-like, but hairy tented wings',aliases:['caddisfly']},
+{order:'Siphonaptera',common:'Fleas',key:'Sideways-flat wingless jumper',aliases:['flea']},
+{order:'Blattodea',common:'Cockroaches and termites',key:'Roaches + termites',aliases:['cockroach','roach','termite']},
+{order:'Plecoptera',common:'Stoneflies',key:'Flat-folded wings + 2 tails',aliases:['stonefly']},
+{order:'Embioptera',common:'Webspinners',key:'Silk-spinning front feet',aliases:['webspinner']},
+{order:'Orthoptera',common:'Grasshoppers, crickets, and locusts',key:'Huge jumping hind legs',aliases:['grasshopper','cricket','locust','katydid']},
+{order:'Phasmatodea',common:'Stick and leaf insects',key:'Looks like a stick or leaf',aliases:['stick insect','walking stick','leaf insect']},
+{order:'Psocodea',common:'Booklice, barklice, and parasitic lice',key:'Booklice/barklice + parasitic lice',aliases:['booklouse','barklouse','psocid','parasitic lice']},
+{order:'Megaloptera',common:'Dobsonflies, alderflies, and fishflies',key:'Large net-winged insect; dobsonfly may have huge jaws',aliases:['dobsonfly','alderfly','fishfly']},
+{order:'Raphidioptera',common:'Snakeflies',key:'Long snake-like neck',aliases:['snakefly']},
+{order:'Coleoptera',common:'Beetles',key:'Hard shell-like forewings (elytra)',aliases:['beetle']},
+{order:'Strepsiptera',common:'Twisted-wing parasites',key:'Tiny forewings + fan-shaped hindwings; parasite',aliases:['twisted-wing parasite','strepsipteran']},
+{order:'Mecoptera',common:'Scorpionflies and hangingflies',key:'Long snout; male may look scorpion-tailed',aliases:['scorpionfly','hangingfly']},
+{order:'Diptera',common:'True flies and mosquitoes',key:'One pair of wings + halteres',aliases:['true fly','mosquito','gnat','midge']},
+{order:'Lepidoptera',common:'Butterflies and moths',key:'Scaly wings',aliases:['butterfly','moth']},
+{order:'Hymenoptera',common:'Ants, bees, wasps, and sawflies',key:'Ant/bee/wasp/sawfly; often narrow waist',aliases:['ant','bee','wasp','sawfly','hornet']},
+{order:'Zoraptera',common:'Angel insects / zorapterans',key:'Tiny soft-bodied termite-like insect',aliases:['angel insect','zorapteran']},
+{order:'Thysanoptera',common:'Thrips',key:'Tiny insect with narrow fringed wings',aliases:['thrips']},
+{order:'Hemiptera',common:'True bugs, aphids, cicadas, and hoppers',key:'Piercing-sucking beak',aliases:['true bug','aphid','cicada','leafhopper','planthopper','stink bug','assassin bug']},
+{order:'Neuroptera',common:'Lacewings, antlions, and owlflies',key:'Delicate net-veined wings',aliases:['lacewing','antlion','owlfly']},
+{order:'Zygentoma',common:'Silverfish',key:'Flat wingless runner with 3 tails',aliases:['silverfish','firebrat']}
+];
+const byOrder = Object.fromEntries(orders.map(o=>[o.order,o]));
+
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+
+function photoKey(url){
+  try{
+    const path=decodeURIComponent(new URL(url).pathname).toLowerCase();
+    const thumbMarker='/commons/thumb/';
+    if(path.includes(thumbMarker)){
+      const original=path.slice(path.indexOf(thumbMarker)+thumbMarker.length).split('/');
+      return original.slice(0,-1).join('/');
+    }
+    return path.replace(/^\/wikipedia\/commons\//,'');
+  }catch(err){return String(url).split('?')[0].toLowerCase()}
+}
+function pageUrlFromTitle(title){return 'https://commons.wikimedia.org/wiki/'+encodeURIComponent(title).replace(/%2F/g,'/').replace(/%3A/g,':')}
+
+const blocklist = /\.pdf$|\.svg$|bulletin|documentation|manual|report|catalog|catalogue|brochure|poster|diagram|schema|esquema|anatomy|anatomical|illustration|drawing of|drawing_of|scheme|plate ?\d|map\b|morpholog|histolog|development|structure|wing venation|stamp|postage|philatel|coin|banknote|currency|logo|clipart|clip.art|cartoon|silhouette|icon|vector|line art|colouring|coloring|emblem|sticker|badge|flag of|figurine|sculpture|statue|mural|graffiti|painting|artwork|specimen label|collection drawer|taxonomy chart|key to |dichotomous|children'?s book/i;
+
+// ---------- state ----------
+const STORAGE_KEY='insectPhotoReviewV2';
+let state = JSON.parse(localStorage.getItem(STORAGE_KEY)||'{"candidates":{},"decisions":{},"rounds":{},"exhausted":{}}');
+orders.forEach(o=>{
+  if(!state.candidates[o.order])state.candidates[o.order]={};
+  if(!state.decisions[o.order])state.decisions[o.order]={};
+  if(!state.rounds)state.rounds={};
+  if(!state.exhausted)state.exhausted={};
+});
+function saveState(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}
+
+let currentIndex=0;
+const fetchingNow=new Set();
+
+// ---------- Commons fetching ----------
+async function runQuery(params){
+  try{
+    const apiUrl=new URL('https://commons.wikimedia.org/w/api.php');
+    apiUrl.search=new URLSearchParams({format:'json',origin:'*',...params}).toString();
+    const res=await fetch(apiUrl.toString());
+    if(!res.ok)return[];
+    const data=await res.json();
+    return data && data.query && data.query.pages ? Object.values(data.query.pages) : [];
+  }catch(err){console.warn('Commons query failed',err);return[]}
+}
+function pagesToCandidates(pages){
+  const out=[];
+  for(const page of pages){
+    const info=page && page.imageinfo && page.imageinfo[0];
+    const title=String((page && page.title)||'');
+    if(!info)continue;
+    if(!String(info.mime||'').startsWith('image/'))continue;
+    if(blocklist.test(title))continue;
+    const url=info.thumburl||info.url;
+    if(!url)continue;
+    out.push({key:photoKey(url),url,title,pageUrl:pageUrlFromTitle(title)});
+  }
+  return out;
+}
+async function fetchRoundQueries(order, round){
+  const meta=byOrder[order];
+  const collected=new Map();
+  const firstCommon=(meta.common||'').split(/[,/]| and /)[0].trim();
+
+  if(round===1){
+    pagesToCandidates(await runQuery({action:'query',generator:'categorymembers',gcmtitle:'Category:'+order,gcmtype:'file',gcmlimit:'50',prop:'imageinfo',iiprop:'url|mime',iiurlwidth:'600'})).forEach(c=>collected.set(c.key,c));
+    pagesToCandidates(await runQuery({action:'query',generator:'search',gsrsearch:`"${order}" insect`,gsrnamespace:'6',gsrlimit:'24',prop:'imageinfo',iiprop:'url|mime',iiurlwidth:'600'})).forEach(c=>{if(!collected.has(c.key))collected.set(c.key,c)});
+    if(firstCommon){
+      pagesToCandidates(await runQuery({action:'query',generator:'search',gsrsearch:`"${firstCommon}" insect`,gsrnamespace:'6',gsrlimit:'24',prop:'imageinfo',iiprop:'url|mime',iiurlwidth:'600'})).forEach(c=>{if(!collected.has(c.key))collected.set(c.key,c)});
+    }
+  } else if(round===2){
+    pagesToCandidates(await runQuery({action:'query',generator:'search',gsrsearch:`incategory:"${order}" insect`,gsrnamespace:'6',gsrlimit:'40',prop:'imageinfo',iiprop:'url|mime',iiurlwidth:'600'})).forEach(c=>collected.set(c.key,c));
+    for(const alias of (meta.aliases||[])){
+      pagesToCandidates(await runQuery({action:'query',generator:'search',gsrsearch:`"${alias}" insect`,gsrnamespace:'6',gsrlimit:'20',prop:'imageinfo',iiprop:'url|mime',iiurlwidth:'600'})).forEach(c=>{if(!collected.has(c.key))collected.set(c.key,c)});
+    }
+  } else {
+    pagesToCandidates(await runQuery({action:'query',generator:'search',gsrsearch:order,gsrnamespace:'6',gsrlimit:'40',prop:'imageinfo',iiprop:'url|mime',iiurlwidth:'600'})).forEach(c=>collected.set(c.key,c));
+    if(firstCommon){
+      pagesToCandidates(await runQuery({action:'query',generator:'search',gsrsearch:firstCommon,gsrnamespace:'6',gsrlimit:'30',prop:'imageinfo',iiprop:'url|mime',iiurlwidth:'600'})).forEach(c=>{if(!collected.has(c.key))collected.set(c.key,c)});
+    }
+  }
+  return [...collected.values()];
+}
+async function fetchMoreRound(order){
+  if(fetchingNow.has(order)){
+    while(fetchingNow.has(order))await new Promise(r=>setTimeout(r,200));
+    return;
+  }
+  fetchingNow.add(order);
+  try{
+    const round=(state.rounds[order]||0)+1;
+    const found=await fetchRoundQueries(order,round);
+    let added=0;
+    found.forEach(c=>{if(!state.candidates[order][c.key]){state.candidates[order][c.key]=c;added++}});
+    state.rounds[order]=round;
+    if(added===0 && round>=2)state.exhausted[order]=true;
+    saveState();
+  } finally {
+    fetchingNow.delete(order);
+  }
+}
+
+// ---------- background preload for all orders ----------
+async function preloadAll(){
+  const note=document.getElementById('preloadNote');
+  const todo=orders.map(o=>o.order).filter(o=>Object.keys(state.candidates[o]).length===0 && !(state.rounds[o]>=1));
+  let done=orders.length-todo.length;
+  const updateNote=()=>{
+    if(todo.length===0){note.textContent='';return}
+    note.innerHTML=`<span class="spinner"></span> preloading photos in the background… ${done}/${orders.length} orders`;
+  };
+  updateNote();
+  const queue=[...todo];
+  const worker=async()=>{
+    while(queue.length){
+      const order=queue.shift();
+      await fetchMoreRound(order);
+      done++;
+      updateNote();
+      renderOrderList();
+      if(order===orders[currentIndex].order)renderForOrder(order,{allowAutoAdvance:false});
+    }
+  };
+  await Promise.all([worker(),worker(),worker()]);
+  note.textContent='';
+}
+
+// ---------- stats & rendering ----------
+function orderStats(order){
+  const cands=state.candidates[order]||{};
+  const dec=state.decisions[order]||{};
+  const total=Object.keys(cands).length;
+  const kept=Object.values(dec).filter(Boolean).length;
+  return {total,kept};
+}
+function pickNextUndecided(order){
+  const cands=state.candidates[order]||{};
+  const dec=state.decisions[order]||{};
+  return Object.keys(cands).find(k=>dec[k]===undefined);
+}
+function dotClassFor(order){
+  const {kept,total}=orderStats(order);
+  if(kept>0)return 'kept';
+  if(state.exhausted[order])return 'stuck';
+  if(total>0)return 'some';
+  return '';
+}
+function renderOrderList(){
+  const list=document.getElementById('orderList');
+  list.innerHTML=orders.map((o,i)=>{
+    const {total,kept}=orderStats(o.order);
+    return `<div class="order-row ${i===currentIndex?'active':''}" data-i="${i}">
+      <span class="dot ${dotClassFor(o.order)}"></span>
+      <span>${esc(o.order)}</span>
+      <span class="cnt">${kept}/${total}</span>
+    </div>`;
+  }).join('');
+  list.querySelectorAll('.order-row').forEach(el=>el.onclick=()=>{currentIndex=Number(el.dataset.i);renderForOrder(orders[currentIndex].order,{allowAutoAdvance:false})});
+
+  const resolved=orders.filter(o=>orderStats(o.order).kept>0 || state.exhausted[o.order]).length;
+  const keptOrders=orders.filter(o=>orderStats(o.order).kept>0).length;
+  document.getElementById('progressPill').textContent=`${keptOrders} / 28 orders have a kept photo`;
+  document.getElementById('progressBar').style.width=(resolved/orders.length*100)+'%';
+}
+function renderRefBlock(){
+  const o=orders[currentIndex];
+  document.getElementById('refBlock').innerHTML=`
+    <div class="oname">${esc(o.order)} <span class="pill" style="margin-left:6px">order ${currentIndex+1} of 28</span></div>
+    <div class="common">${esc(o.common)}</div>
+    <div>Look for: <span class="key">${esc(o.key)}</span></div>
+    <div class="links">
+      <a href="https://en.wikipedia.org/wiki/${encodeURIComponent(o.order)}" target="_blank" rel="noopener">Wikipedia ↗</a>
+      <a href="https://commons.wikimedia.org/w/index.php?search=${encodeURIComponent(o.order+' insect')}&title=Special:MediaSearch&type=image" target="_blank" rel="noopener">Search Commons yourself ↗</a>
+    </div>`;
+}
+
+let swipeShowing=null; // {order,key}
+
+function renderForOrder(order, opts){
+  const allowAutoAdvance = !!(opts && opts.allowAutoAdvance);
+  if(order!==orders[currentIndex].order)return; // stale async callback, ignore
+  renderRefBlock();
+  renderOrderList();
+  const key=pickNextUndecided(order);
+  if(key){renderSwipeCard(order,key);return}
+
+  const {kept}=orderStats(order);
+  if(kept>0){
+    if(allowAutoAdvance){goToNextUnresolvedOrder();return}
+    renderResolvedSummary(order);
+    return;
+  }
+  if(!state.exhausted[order] && (state.rounds[order]||0)<3){
+    renderLoadingMore(order);
+    fetchMoreRound(order).then(()=>renderForOrder(order,{allowAutoAdvance}));
+    return;
+  }
+  state.exhausted[order]=true;saveState();
+  renderExhausted(order);
+}
+
+function renderSwipeCard(order,key){
+  swipeShowing={order,key};
+  const c=state.candidates[order][key];
+  document.getElementById('swipeBody').innerHTML=`
+    <div class="swipe-imgwrap"><img src="${esc(c.url)}" alt="candidate for ${esc(order)}" onerror="this.closest('.swipe-imgwrap').innerHTML='<span class=&quot;status-msg&quot;>Image failed to load</span>'"></div>
+    <div class="swipe-caption"><a href="${esc(c.pageUrl)}" target="_blank" rel="noopener">${esc(c.title.replace(/^File:/,''))} — view on Commons ↗</a></div>
+    <div class="swipe-actions">
+      <button class="reject" id="noBtn">✕ Not this one</button>
+      <button class="keep" id="yesBtn">✓ Keep this</button>
+    </div>
+    <div class="swipe-meta" id="orderKeptCount"></div>
+  `;
+  updateKeptCount(order);
+  document.getElementById('noBtn').onclick=()=>decide(order,key,false);
+  document.getElementById('yesBtn').onclick=()=>decide(order,key,true);
+}
+function updateKeptCount(order){
+  const {kept,total}=orderStats(order);
+  const el=document.getElementById('orderKeptCount');
+  if(el)el.textContent=`${kept} kept so far for ${order} · ${total} candidates seen`;
+}
+function renderLoadingMore(order){
+  document.getElementById('swipeBody').innerHTML=`<div class="status-msg"><span class="spinner"></span><br>No keeps yet for ${esc(order)} — pulling in more photos…</div>`;
+}
+function renderExhausted(order){
+  document.getElementById('swipeBody').innerHTML=`<div class="empty-note">Automatic search didn't turn up a confident match for <strong>${esc(order)}</strong>. Try <a href="https://commons.wikimedia.org/w/index.php?search=${encodeURIComponent(order+' insect')}&title=Special:MediaSearch&type=image" target="_blank" rel="noopener">searching Commons yourself</a> and pasting a URL below, or skip it for now.</div>
+  <div style="text-align:center;margin-top:12px"><button class="secondary" id="skipBtn">Skip for now →</button></div>`;
+  document.getElementById('skipBtn').onclick=()=>goToNextUnresolvedOrder();
+}
+function renderResolvedSummary(order){
+  const cands=state.candidates[order];
+  const dec=state.decisions[order];
+  const keptKeys=Object.keys(dec).filter(k=>dec[k]);
+  document.getElementById('swipeBody').innerHTML=`
+    <p class="status-msg" style="padding:0">✓ ${keptKeys.length} photo${keptKeys.length===1?'':'s'} kept for ${esc(order)}.</p>
+    <div class="resolved-grid">${keptKeys.map(k=>`<div class="thumb"><img src="${esc(cands[k].url)}"></div>`).join('')}</div>
+    <button class="secondary" id="moreBtn" style="margin-top:8px">Find more candidates for this order</button>
+  `;
+  document.getElementById('moreBtn').onclick=async()=>{
+    renderLoadingMore(order);
+    state.exhausted[order]=false;
+    await fetchMoreRound(order);
+    renderForOrder(order,{allowAutoAdvance:false});
+  };
+}
+
+function decide(order,key,keep){
+  state.decisions[order][key]=keep;
+  saveState();
+  renderForOrder(order,{allowAutoAdvance:true});
+}
+
+function goToNextUnresolvedOrder(){
+  const n=orders.length;
+  for(let step=1;step<=n;step++){
+    const i=(currentIndex+step)%n;
+    const o=orders[i].order;
+    const {kept}=orderStats(o);
+    if(kept===0 && !state.exhausted[o]){
+      currentIndex=i;
+      renderForOrder(o,{allowAutoAdvance:false});
+      return;
+    }
+  }
+  renderCompletion();
+}
+function renderCompletion(){
+  renderOrderList();
+  const stuck=orders.filter(o=>orderStats(o.order).kept===0);
+  document.getElementById('swipeBody').innerHTML=`
+    <div class="status-msg">
+      <h2 style="margin:0 0 8px;color:var(--text)">All 28 orders reviewed 🎉</h2>
+      ${stuck.length? `<p>${stuck.length} order${stuck.length===1?'':'s'} still need${stuck.length===1?'s':''} a manual photo: ${stuck.map(o=>esc(o.order)).join(', ')}. You can jump to them from the list on the left.</p>` : '<p>Every order has at least one kept photo.</p>'}
+      <p>Head to the <strong>Export picks</strong> tab to download your results.</p>
+    </div>`;
+}
+
+// ---------- events ----------
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===b));
+  document.getElementById('reviewPane').classList.toggle('hidden',b.dataset.tab!=='review');
+  document.getElementById('exportPane').classList.toggle('hidden',b.dataset.tab!=='export');
+  if(b.dataset.tab==='export')renderExport();
+});
+document.getElementById('prevBtn').onclick=()=>{currentIndex=(currentIndex-1+orders.length)%orders.length;renderForOrder(orders[currentIndex].order,{allowAutoAdvance:false})};
+document.getElementById('nextBtn').onclick=()=>{currentIndex=(currentIndex+1)%orders.length;renderForOrder(orders[currentIndex].order,{allowAutoAdvance:false})};
+
+document.getElementById('addUrlBtn').onclick=()=>{
+  const input=document.getElementById('addUrlInput');
+  const url=input.value.trim();
+  if(!url)return;
+  const order=orders[currentIndex].order;
+  const key=photoKey(url);
+  state.candidates[order][key]={url,title:url.split('/').pop(),pageUrl:url};
+  saveState();
+  input.value='';
+  renderForOrder(order,{allowAutoAdvance:false});
+};
+document.getElementById('addUrlInput').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('addUrlBtn').click()});
+
+document.addEventListener('keydown',e=>{
+  if(document.activeElement && document.activeElement.tagName==='INPUT')return;
+  if(!swipeShowing)return;
+  if(e.key==='ArrowLeft'){document.getElementById('noBtn')?.click()}
+  else if(e.key==='ArrowRight'){document.getElementById('yesBtn')?.click()}
+});
+
+function renderExport(){
+  const out={};
+  let keptTotal=0, ordersWithKeep=0;
+  orders.forEach(o=>{
+    const cands=state.candidates[o.order]||{};
+    const dec=state.decisions[o.order]||{};
+    const keptUrls=Object.keys(dec).filter(k=>dec[k]).map(k=>(cands[k]&&cands[k].url)||('https://upload.wikimedia.org/wikipedia/commons/'+k));
+    if(keptUrls.length){out[o.order]=keptUrls;keptTotal+=keptUrls.length;ordersWithKeep++}
+  });
+  document.getElementById('exportSummary').textContent=`${keptTotal} photo${keptTotal===1?'':'s'} kept across ${ordersWithKeep} of 28 orders.${ordersWithKeep<28?' Orders with no kept photo yet will need a manual photo before export covers them.':''}`;
+  document.getElementById('exportBox').value=JSON.stringify(out,null,2);
+}
+document.getElementById('downloadBtn').onclick=()=>{
+  renderExport();
+  const blob=new Blob([document.getElementById('exportBox').value],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='decisions.json';
+  a.click();
+};
+document.getElementById('copyBtn').onclick=async()=>{
+  renderExport();
+  try{await navigator.clipboard.writeText(document.getElementById('exportBox').value);document.getElementById('copyBtn').textContent='Copied!';setTimeout(()=>document.getElementById('copyBtn').textContent='Copy to clipboard',1200)}
+  catch(err){document.getElementById('exportBox').select();document.execCommand('copy')}
+};
+
+// ---------- init ----------
+async function init(){
+  renderOrderList();
+  renderRefBlock();
+  document.getElementById('swipeBody').innerHTML='<div class="status-msg"><span class="spinner"></span><br>loading photos…</div>';
+  await fetchMoreRound(orders[0].order);
+  renderForOrder(orders[0].order,{allowAutoAdvance:false});
+  preloadAll();
+}
+init();
+</script>
+</body>
+</html>
