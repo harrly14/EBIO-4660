@@ -396,6 +396,90 @@ const photoUrls = {
 };
 
 const challengeBank = [
+['Archaeognatha','What order do jumping bristletails belong to?','Jumping bristletails are Archaeognatha.',['Zygentoma','Dermaptera','Grylloblattodea']],
+['Archaeognatha','Which order has a distinctly arched or humped body and three tail filaments?','A humped body with three tail filaments is characteristic of Archaeognatha.',['Zygentoma','Ephemeroptera','Plecoptera']],
+
+['Odonata','What order includes dragonflies and damselflies?','Dragonflies and damselflies are Odonata.',['Ephemeroptera','Neuroptera','Plecoptera']],
+['Odonata','Which order has aquatic nymphs with large extendable mouthparts used to catch prey?','Dragonfly and damselfly nymphs belong to Odonata.',['Megaloptera','Ephemeroptera','Trichoptera']],
+
+['Grylloblattodea','What order do ice crawlers belong to?','Ice crawlers are Grylloblattodea.',['Mantophasmatodea','Archaeognatha','Zoraptera']],
+['Grylloblattodea','Which order is strongly associated with cold alpine habitats and snowfields?','Grylloblattodea are adapted to very cold habitats.',['Orthoptera','Blattodea','Mantodea']],
+
+['Mantophasmatodea','What order do gladiators belong to?','Gladiators are Mantophasmatodea.',['Mantodea','Phasmatodea','Grylloblattodea']],
+['Mantophasmatodea','Which order contains wingless predatory insects commonly called heelwalkers?','Heelwalkers are Mantophasmatodea.',['Mantodea','Embioptera','Orthoptera']],
+
+['Dermaptera','What order has forceps at the end of the abdomen?','Forceps-like cerci are characteristic of Dermaptera.',['Orthoptera','Blattodea','Plecoptera']],
+['Dermaptera','Which order includes insects commonly recognized by their rear pincers?','Earwigs and their rear pincers identify Dermaptera.',['Mantodea','Hemiptera','Coleoptera']],
+
+['Mantodea','Which order has a triangular, highly mobile head and raptorial front legs?','Those features are characteristic of Mantodea.',['Orthoptera','Phasmatodea','Mantophasmatodea']],
+['Mantodea','What order contains mantids?','Mantids belong to Mantodea.',['Mantophasmatodea','Mecoptera','Orthoptera']],
+
+['Ephemeroptera','What order do mayflies belong to?','Mayflies belong to Ephemeroptera.',['Plecoptera','Trichoptera','Odonata']],
+['Ephemeroptera','Which order has adults that usually have two or three long tail filaments and very short antennae?','These are typical mayfly features, identifying Ephemeroptera.',['Plecoptera','Zygentoma','Neuroptera']],
+
+['Trichoptera','What order do caddisflies belong to?','Caddisflies belong to Trichoptera.',['Lepidoptera','Plecoptera','Megaloptera']],
+['Trichoptera','Which order can be distinguished from moths by having hairy rather than scaly wings?','Hair-covered wings are characteristic of Trichoptera.',['Lepidoptera','Neuroptera','Mecoptera']],
+
+['Siphonaptera','Which order contains laterally flattened, wingless insects adapted for jumping?','Those features identify fleas in Siphonaptera.',['Psocodea','Thysanoptera','Diptera']],
+['Siphonaptera','What order contains jumping ectoparasites of birds and mammals?','Fleas are jumping ectoparasites in Siphonaptera.',['Psocodea','Mecoptera','Hemiptera']],
+
+['Blattodea','What order includes both cockroaches and termites?','Cockroaches and termites are classified in Blattodea.',['Orthoptera','Hymenoptera','Dermaptera']],
+['Blattodea','Which order includes insects with flattened bodies, long antennae, and a large pronotum covering part of the head?','Those are common cockroach traits, identifying Blattodea.',['Coleoptera','Hemiptera','Orthoptera']],
+
+['Plecoptera','What order do stoneflies belong to?','Stoneflies belong to Plecoptera.',['Ephemeroptera','Trichoptera','Megaloptera']],
+['Plecoptera','Which order has aquatic nymphs that usually have two tail filaments?','Stonefly nymphs in Plecoptera usually have two cerci.',['Ephemeroptera','Odonata','Trichoptera']],
+
+['Embioptera','What order includes webspinners?','Webspinners belong to Embioptera.',['Trichoptera','Zoraptera','Psocodea']],
+['Embioptera','Which order lives in silk tunnels and produces silk using the front legs?','Webspinners in Embioptera make silk with glands in their front tarsi.',['Trichoptera','Thysanoptera','Zoraptera']],
+
+['Orthoptera','What order do crickets and grasshoppers belong to?','Crickets and grasshoppers belong to Orthoptera.',['Phasmatodea','Mantodea','Dermaptera']],
+['Orthoptera','Which order commonly has enlarged hind femora adapted for jumping?','Large jumping hind legs are characteristic of Orthoptera.',['Mantodea','Hemiptera','Blattodea']],
+
+['Phasmatodea','What order do stick insects belong to?','Stick insects belong to Phasmatodea.',['Mantodea','Orthoptera','Mantophasmatodea']],
+['Phasmatodea','Which order is known for camouflage that makes insects resemble twigs or leaves?','Twig and leaf mimicry is characteristic of Phasmatodea.',['Mantodea','Orthoptera','Embioptera']],
+
+['Psocodea','What order includes lice?','Parasitic lice are included in Psocodea.',['Siphonaptera','Thysanoptera','Hemiptera']],
+['Psocodea','Which order contains booklice and barklice?','Booklice and barklice belong to Psocodea.',['Zoraptera','Embioptera','Thysanoptera']],
+
+['Megaloptera','What order do dobsonflies belong to?','Dobsonflies belong to Megaloptera.',['Neuroptera','Raphidioptera','Trichoptera']],
+['Megaloptera','Which order includes large aquatic larvae called hellgrammites?','Hellgrammites are larval dobsonflies in Megaloptera.',['Plecoptera','Odonata','Neuroptera']],
+
+['Raphidioptera','What order do snakeflies belong to?','Snakeflies belong to Raphidioptera.',['Mecoptera','Neuroptera','Megaloptera']],
+['Raphidioptera','Which order is recognized by a long prothorax that gives the insect a neck-like appearance?','The long prothorax is characteristic of Raphidioptera.',['Mecoptera','Neuroptera','Mantodea']],
+
+['Coleoptera','What order includes beetles?','Beetles belong to Coleoptera.',['Hemiptera','Orthoptera','Neuroptera']],
+['Coleoptera','Which order has hardened forewings that protect the hindwings underneath?','Hardened forewings called elytra identify Coleoptera.',['Hemiptera','Dermaptera','Orthoptera']],
+
+['Strepsiptera','What order contains twisted-wing parasites?','Twisted-wing parasites belong to Strepsiptera.',['Siphonaptera','Mecoptera','Diptera']],
+['Strepsiptera','Which order has males with large hindwings but reduced, club-like forewings?','That unusual wing arrangement identifies Strepsiptera.',['Diptera','Hymenoptera','Mecoptera']],
+
+['Mecoptera','What order do scorpionflies belong to?','Scorpionflies belong to Mecoptera.',['Raphidioptera','Neuroptera','Megaloptera']],
+['Mecoptera','Which order commonly has an elongated, beak-like head?','The elongated rostrum is characteristic of Mecoptera.',['Diptera','Neuroptera','Raphidioptera']],
+
+['Diptera','What order do true flies belong to?','True flies belong to Diptera.',['Hymenoptera','Lepidoptera','Mecoptera']],
+['Diptera','Which order has halteres instead of a second functional pair of wings?','Halteres are characteristic of Diptera.',['Strepsiptera','Hymenoptera','Neuroptera']],
+
+['Lepidoptera','What order contains butterflies and moths?','Butterflies and moths belong to Lepidoptera.',['Trichoptera','Diptera','Neuroptera']],
+['Lepidoptera','Which order has adults with wings covered in overlapping scales?','Scaled wings are characteristic of Lepidoptera.',['Trichoptera','Neuroptera','Hymenoptera']],
+
+['Hymenoptera','What order do ants and wasps belong to?','Ants and wasps belong to Hymenoptera.',['Diptera','Coleoptera','Hemiptera']],
+['Hymenoptera','Which order includes bees, ants, wasps, and sawflies?','These insects belong to Hymenoptera.',['Diptera','Blattodea','Neuroptera']],
+
+['Zoraptera','What order do angel insects belong to?','Angel insects belong to Zoraptera.',['Embioptera','Psocodea','Mantophasmatodea']],
+['Zoraptera','Which order contains tiny insects often found under bark or in rotting wood?','Zorapterans are small insects commonly associated with decaying wood.',['Psocodea','Embioptera','Blattodea']],
+
+['Thysanoptera','What order do thrips belong to?','Thrips belong to Thysanoptera.',['Psocodea','Trichoptera','Hemiptera']],
+['Thysanoptera','Which order has tiny insects with narrow, fringed wings?','Fringed wings are characteristic of Thysanoptera.',['Trichoptera','Diptera','Psocodea']],
+
+['Hemiptera','What order includes true bugs, aphids, cicadas, and leafhoppers?','These insects belong to Hemiptera.',['Coleoptera','Orthoptera','Hymenoptera']],
+['Hemiptera','Which order is characterized by piercing-sucking mouthparts?','Piercing-sucking mouthparts are characteristic of Hemiptera.',['Coleoptera','Neuroptera','Orthoptera']],
+
+['Neuroptera','What order do lacewings belong to?','Lacewings belong to Neuroptera.',['Megaloptera','Raphidioptera','Trichoptera']],
+['Neuroptera','Which order includes insects with two similar pairs of highly net-veined wings?','Net-veined wings are characteristic of Neuroptera.',['Megaloptera','Odonata','Mecoptera']],
+
+['Zygentoma','What order do silverfish belong to?','Silverfish belong to Zygentoma.',['Archaeognatha','Psocodea','Zoraptera']],
+['Zygentoma','Which order has flattened, wingless insects with three tail filaments and a carrot-shaped body?','That body shape is characteristic of Zygentoma.',['Archaeognatha','Ephemeroptera','Dermaptera']]
+
 ['Archaeognatha','Which order is wingless, humped, has three tail filaments, and can jump?','The humped jumping bristletails are Archaeognatha.',['Zygentoma','Grylloblattodea','Zoraptera']],
 ['Archaeognatha','Which order has large eyes, a humped body, and a middle tail filament longer than the other two?','Archaeognatha are jumping bristletails; the humped body and long median filament separate them from silverfish.',['Zygentoma','Dermaptera','Plecoptera']],
 
