@@ -1,5 +1,3 @@
-const byOrder = Object.fromEntries(orders.map(o=>[o.order,o]));
-
 let learnIndex=0;
 
 function renderLearnNav(){
