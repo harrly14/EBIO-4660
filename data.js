@@ -221,7 +221,7 @@ const photoUrls = {
   ],
   'Blattodea': [
     'images/Blattodea_1.png',
-    'images/Blattodea_2.png',
+    'images/Blattodea_2.jpg',
     'images/Blattodea_3.jpg',
     'images/Blattodea_4.jpg',
     'images/Blattodea_5.jpg',
