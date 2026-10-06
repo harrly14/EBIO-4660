@@ -1,0 +1,12 @@
+{
+  "name": "ebio-4660-study-materials",
+  "private": true,
+  "description": "Static study materials for EBIO 4660",
+  "scripts": {
+    "build": "node build.js",
+    "dev": "node build.js --serve"
+  },
+  "dependencies": {
+    "handlebars": "^4.7.8"
+  }
+}

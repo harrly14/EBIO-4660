@@ -1,0 +1,63 @@
+<script id="learn-nav-template" type="text/x-handlebars-template">
+  {{#each lessons}}
+    <button class="learn-step {{#if active}}active{{/if}}" data-learn="{{index}}">{{number}}. {{title}}</button>
+  {{/each}}
+</script>
+<script id="lesson-template" type="text/x-handlebars-template">
+  <div class="lesson">
+    <div class="eyebrow">{{kicker}}</div>
+    <h2>{{title}}</h2>
+    <p>{{intro}}</p>
+    {{#if cards}}
+      <div class="learn-grid">{{#each cards}}<div class="memory-card"><div class="order-name">{{order}}</div><strong>{{label}}</strong><div>{{detail}}</div><div class="mnemonic">{{mnemonic}}</div></div>{{/each}}</div>
+    {{/if}}
+    {{#if comparisons}}
+      <table class="compare-table"><thead><tr><th>Comparison</th><th>Order A</th><th>Order B</th></tr></thead><tbody>{{#each comparisons}}<tr><td><strong>{{comparison}}</strong></td><td><span class="chunk-pill">{{orderA}}</span><br>{{detailA}}</td><td><span class="chunk-pill">{{orderB}}</span><br>{{detailB}}</td></tr>{{/each}}</tbody></table>
+    {{/if}}
+    {{#if algorithm}}
+      <div class="learn-grid">{{#each algorithm}}<div class="memory-card"><div class="order-name">Step {{step}}: {{title}}</div><div>{{detail}}</div></div>{{/each}}</div>
+    {{/if}}
+    <div class="learn-check">
+      <div class="eyebrow">30-second self-check</div>
+      <div class="question" style="font-size:1.15rem;margin-bottom:8px">{{check.question}}</div>
+      <div class="options">{{#each check.choices}}<button class="option learnOpt" data-answer="{{value}}"><span class="num">{{number}}</span>{{value}}</button>{{/each}}</div>
+      <div class="learn-feedback" id="learnFeedback">Try it before moving on.</div>
+    </div>
+    <div class="lesson-actions">
+      <button class="secondary" id="prevLesson" {{#if first}}disabled{{/if}}>← Previous lesson</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="secondary" id="practiceLesson">Practice these ideas</button><button class="primary" id="nextLesson">{{nextLabel}}</button></div>
+    </div>
+  </div>
+</script>
+<script id="question-template" type="text/x-handlebars-template">
+  <div class="eyebrow">{{label}} • {{position}} of {{total}}</div>
+  <div class="question">{{{prompt}}}</div>
+  {{#if visual}}<div class="visual-box"><img src="{{photoUrl}}" alt="Unlabeled insect specimen photograph" referrerpolicy="no-referrer" loading="eager" decoding="async" onerror="this.parentElement.innerHTML='&lt;div class=&quot;subtle&quot; style=&quot;padding:30px;text-align:center&quot;&gt;Photo could not load. Check your internet connection, then try another question.&lt;/div&gt;'"></div>{{/if}}
+  {{#if fill}}<div class="fill-answer"><input id="fillAnswer" type="text" autocomplete="off" placeholder="Type the order name" aria-label="Order name"><button class="primary" id="submitFill" type="button">Check answer</button></div>{{else}}<div class="options">{{#each choices}}<button class="option" data-choice="{{value}}"><span class="num">{{number}}</span>{{value}}</button>{{/each}}</div>{{/if}}
+  <div class="explain" id="explain"></div>
+  <div class="next-row" style="justify-content:space-between;align-items:center;"><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="secondary" id="skipQ" type="button">Unsure / Skip</button><button class="secondary" id="finishSet" type="button">Finish early</button></div><button class="primary" id="nextQ" disabled>Next question →</button></div>
+</script>
+<script id="feedback-template" type="text/x-handlebars-template">
+  <strong class="{{#if ok}}feedback-correct{{else}}feedback-incorrect{{/if}}">{{message}}</strong> {{explain}}{{#if source}}<div class="photo-source">Photo via Wikimedia Commons. <a href="{{source}}" target="_blank" rel="noopener">Source, photographer, and license</a></div>{{/if}}
+</script>
+<script id="review-item-template" type="text/x-handlebars-template">
+  <div class="review-item"><div class="review-question">{{{question}}}</div><div class="review-answer {{reviewClass}}"><strong>Your answer:</strong> {{answer}}<br><strong>Correct answer:</strong> {{correct}}</div></div>
+</script>
+<script id="quiz-end-template" type="text/x-handlebars-template">
+  <div class="speed-end"><div class="eyebrow">Set complete</div><h2>{{heading}}</h2><p class="subtle">Review your results, then return to setup when you are ready for another round.</p><div class="set-stats"><div class="set-stat"><div class="big">{{correct}}/{{answered}}</div><div class="lbl">correct</div></div><div class="set-stat"><div class="big">{{accuracy}}%</div><div class="lbl">accuracy</div></div><div class="set-stat"><div class="big">{{skipped}}</div><div class="lbl">skipped</div></div></div><button class="primary" id="continuePractice">Continue practicing</button><div class="set-review"><h3>Question review</h3><div class="review-list">{{{review}}}</div></div></div>
+</script>
+<script id="flash-template" type="text/x-handlebars-template">
+  <div class="eyebrow">{{frontEyebrow}}</div><h2 class="{{frontClass}}">{{front}}</h2><p class="subtle">{{frontHint}}</p>
+</script>
+<script id="flash-back-template" type="text/x-handlebars-template">
+  <div class="eyebrow">{{common}}</div><h2>{{order}}</h2><strong>Best giveaway</strong><p>{{key}}</p><strong>Characteristics</strong><ul class="trait-list">{{#each traits}}<li>{{this}}</li>{{/each}}</ul><div>{{#each tags}}<span class="tag">{{this}}</span>{{/each}}</div>
+</script>
+<script id="speed-question-template" type="text/x-handlebars-template">
+  <div class="eyebrow">Rapid fire</div><div class="question">{{{prompt}}}</div><div class="options">{{#each choices}}<button class="option speedOpt" data-choice="{{value}}"><span class="num">{{number}}</span>{{value}}</button>{{/each}}</div>
+</script>
+<script id="speed-end-template" type="text/x-handlebars-template">
+  <div class="speed-end"><div class="eyebrow">Time</div><h2>{{score}}</h2><p class="subtle">correct answers in 60 seconds</p><div class="set-review"><h3>Question review</h3><div class="review-list">{{{review}}}</div></div></div>
+</script>
+<script id="reference-template" type="text/x-handlebars-template">
+  {{#each orders}}<div class="ref-card"><h3>{{order}}</h3><div class="common">{{common}}</div><div style="margin-top:7px"><strong>{{key}}</strong></div><ul>{{#each traits}}<li>{{this}}</li>{{/each}}</ul>{{#each tags}}<span class="tag">{{this}}</span>{{/each}}</div>{{/each}}
+</script>

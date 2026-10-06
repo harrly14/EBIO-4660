@@ -1,26 +1,27 @@
 let learnIndex=0;
 
+const templates = ['learn-nav','lesson','question','feedback','review-item','quiz-end','flash','flash-back','speed-question','speed-end','reference'].reduce((all,name)=>{
+  all[name]=Handlebars.compile(document.getElementById(`${name}-template`).innerHTML);
+  return all;
+},{});
+const numbered = values => values.map((value,index)=>({value,number:index+1}));
+
 function renderLearnNav(){
-  document.getElementById('learnNav').innerHTML=learnLessons.map((l,i)=>`<button class="learn-step ${i===learnIndex?'active':''}" data-learn="${i}">${i+1}. ${esc(l.title.split(':').pop().trim())}</button>`).join('');
+  document.getElementById('learnNav').innerHTML=templates['learn-nav']({lessons:learnLessons.map((lesson,index)=>({index,number:index+1,title:lesson.title.split(':').pop().trim(),active:index===learnIndex}))});
   document.querySelectorAll('[data-learn]').forEach(b=>b.onclick=()=>{learnIndex=Number(b.dataset.learn);renderLesson();});
 }
 function renderLesson(){
   const l=learnLessons[learnIndex];
-  let body='';
-  if(l.cards){
-    body=`<div class="learn-grid">${l.cards.map(c=>`<div class="memory-card"><div class="order-name">${esc(c[0])}</div><strong>${esc(c[1])}</strong><div>${esc(c[2])}</div><div class="mnemonic">${esc(c[3])}</div></div>`).join('')}</div>`;
-  }
-  if(l.comparisons){
-    body=`<table class="compare-table"><thead><tr><th>Comparison</th><th>Order A</th><th>Order B</th></tr></thead><tbody>${l.comparisons.map(c=>`<tr><td><strong>${esc(c[0])}</strong></td><td><span class="chunk-pill">${esc(c[1])}</span><br>${esc(c[2])}</td><td><span class="chunk-pill">${esc(c[3])}</span><br>${esc(c[4])}</td></tr>`).join('')}</tbody></table>`;
-  }
-  if(l.algorithm){
-    body=`<div class="learn-grid">${l.algorithm.map(c=>`<div class="memory-card"><div class="order-name">Step ${esc(c[0])}: ${esc(c[1])}</div><div>${esc(c[2])}</div></div>`).join('')}</div>`;
-  }
-  document.getElementById('lessonArea').innerHTML=`<div class="lesson"><div class="eyebrow">${esc(l.kicker)}</div><h2>${esc(l.title)}</h2><p>${esc(l.intro)}</p>${body}<div class="learn-check"><div class="eyebrow">30-second self-check</div><div class="question" style="font-size:1.15rem;margin-bottom:8px">${esc(l.check.q)}</div><div class="options">${l.check.choices.map((c,i)=>`<button class="option learnOpt" data-answer="${esc(c)}"><span class="num">${i+1}</span>${esc(c)}</button>`).join('')}</div><div class="learn-feedback" id="learnFeedback">Try it before moving on.</div></div><div class="lesson-actions"><button class="secondary" id="prevLesson" ${learnIndex===0?'disabled':''}>← Previous lesson</button><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="secondary" id="practiceLesson">Practice these ideas</button><button class="primary" id="nextLesson">${learnIndex===learnLessons.length-1?'Go to Practice →':'Next lesson →'}</button></div></div></div>`;
+  const lesson={...l,first:learnIndex===0,nextLabel:learnIndex===learnLessons.length-1?'Go to Practice →':'Next lesson →',
+    cards:l.cards?.map(c=>({order:c[0],label:c[1],detail:c[2],mnemonic:c[3]})),
+    comparisons:l.comparisons?.map(c=>({comparison:c[0],orderA:c[1],detailA:c[2],orderB:c[3],detailB:c[4]})),
+    algorithm:l.algorithm?.map(c=>({step:c[0],title:c[1],detail:c[2]})),
+    check:{question:l.check.q,choices:numbered(l.check.choices),answer:l.check.answer,explain:l.check.explain}};
+  document.getElementById('lessonArea').innerHTML=templates.lesson(lesson);
   document.querySelectorAll('.learnOpt').forEach(b=>b.onclick=()=>{
     document.querySelectorAll('.learnOpt').forEach(x=>{x.disabled=true;if(x.dataset.answer===l.check.answer)x.classList.add('correct')});
     const ok=b.dataset.answer===l.check.answer;if(!ok)b.classList.add('wrong');
-    document.getElementById('learnFeedback').innerHTML=`<strong class="${ok?'feedback-correct':'feedback-incorrect'}">${ok?'Correct.':'Not quite.'}</strong> ${esc(l.check.explain)}`;
+    document.getElementById('learnFeedback').innerHTML=templates.feedback({ok,message:ok?'Correct.':'Not quite.',explain:l.check.explain});
   });
   document.getElementById('prevLesson').onclick=()=>{if(learnIndex>0){learnIndex--;renderLesson()}};
   document.getElementById('nextLesson').onclick=()=>{if(learnIndex<learnLessons.length-1){learnIndex++;renderLesson()}else setTab('practice')};
@@ -78,16 +79,10 @@ function commonsFilePageFromUrl(url){
     return `https://commons.wikimedia.org/wiki/File:${encodeURIComponent(name.replace(/ /g,'_'))}`;
   }catch(err){return 'https://commons.wikimedia.org/';}
 }
-function photoHTML(url){return `<img src="${url}" alt="Unlabeled insect specimen photograph" referrerpolicy="no-referrer" loading="eager" decoding="async" onerror="this.parentElement.innerHTML='<div class=&quot;subtle&quot; style=&quot;padding:30px;text-align:center&quot;>Photo could not load. Check your internet connection, then try another question.</div>'">`}
-
-let stats = JSON.parse(localStorage.getItem('insectOrderStats')||'{}');
-orders.forEach(o=>{if(!stats[o.order]) stats[o.order]={c:0,w:0}});
-let totalAnswered=Number(localStorage.getItem('insectTotalAnswered')||0), totalCorrect=Number(localStorage.getItem('insectTotalCorrect')||0);
 let quiz=[],qIndex=0,answered=false,practiceView='setup',setAnswered=0,setCorrect=0,setReview=[];
 let flashDeck=[...orders],flashIndex=0;
 let speedTimer=null,speedLeft=60,speedPoints=0,speedCurrent=null,speedReview=[],speedUsedQuestions=new Set();
 
-function save(){localStorage.setItem('insectOrderStats',JSON.stringify(stats));localStorage.setItem('insectTotalAnswered',totalAnswered);localStorage.setItem('insectTotalCorrect',totalCorrect);renderStats()}
 function getCookie(name){const match=document.cookie.split('; ').find(row=>row.startsWith(`${encodeURIComponent(name)}=`));return match?decodeURIComponent(match.split('=').slice(1).join('=')):''}
 function setCookie(name,value,days=365){document.cookie=`${encodeURIComponent(name)}=${encodeURIComponent(value)}; max-age=${days*24*60*60}; path=/; SameSite=Lax`}
 function getStoredHighScore(){return getCookie('insectSpeedHighScore')||localStorage.getItem('insectSpeedHighScore')||'0'}
@@ -97,11 +92,8 @@ function sample(arr){return arr[Math.floor(Math.random()*arr.length)]}
 function shuffled(arr){return [...arr].sort(()=>Math.random()-.5)}
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 function makeChoices(correct,pool=orders.map(o=>o.order)){let vals=[correct,...shuffled(pool.filter(x=>x!==correct)).slice(0,3)];return shuffled(vals)}
-function weightedOrder(){
-  const bag=[]; orders.forEach(o=>{const s=stats[o.order];const weight=2+Math.max(0,s.w-s.c)*2+(s.c+s.w===0?3:0);for(let i=0;i<weight;i++)bag.push(o)});return sample(bag)
-}
 function confusableFor(order){let g=confusionGroups.find(g=>g.includes(order));return g?g:orders.map(o=>o.order)}
-const orderBasedPracticeModes=new Set(['common','traits','feature','fill','visual','weak']);
+const orderBasedPracticeModes=new Set(['common','traits','feature','fill','visual']);
 function practiceQuestionTotal(mode){
   if(orderBasedPracticeModes.has(mode))return orders.length;
   if(mode==='scenario')return challengeBank.length;
@@ -132,8 +124,7 @@ function questionFor(mode='mixed'){
   if(mode==='mixed') type=sample(['common','traits','feature','fill','visual','confusion','scenario','scenario']);
   if(type==='scenario') return challengeQuestion();
   if(type==='fill') return fillQuestion();
-  let o=(mode==='weak')?weightedOrder():sample(orders);
-  if(mode==='weak') type=sample(['common','traits','feature','confusion','scenario']);
+  let o=sample(orders);
   if(type==='scenario'){
     const candidates=challengeBank.filter(x=>x[0]===o.order);
     if(candidates.length){const x=sample(candidates);return {type:'scenario',label:'Weak-spot challenge',prompt:esc(x[1]),correct:x[0],choices:shuffled([x[0],...x[3]]),order:x[0],why:x[2]}}
@@ -181,18 +172,7 @@ function renderQuestion(){
   if(qIndex>=quiz.length){document.body.classList.remove('fill-active');renderQuizEnd();return}
   answered=false; const q=quiz[qIndex];
   document.body.classList.toggle('fill-active',q.type==='fill');
-  const pct=(qIndex/quiz.length)*100;
-  document.getElementById('quizArea').innerHTML=`
-    <div class="progress"><div style="width:${pct}%"></div></div>
-    <div class="eyebrow">${esc(q.label)} • ${qIndex+1} of ${quiz.length}</div>
-    <div class="question">${q.prompt}</div>
-    ${q.visual?`<div class="visual-box">${photoHTML(q.photoUrl)}</div>`:''}
-    ${q.type==='fill'?`<div class="fill-answer"><input id="fillAnswer" type="text" autocomplete="off" placeholder="Type the order name" aria-label="Order name"><button class="primary" id="submitFill" type="button">Check answer</button></div>`:`<div class="options">${q.choices.map((c,i)=>`<button class="option" data-choice="${esc(c)}"><span class="num">${i+1}</span>${esc(c)}</button>`).join('')}</div>`}
-    <div class="explain" id="explain"></div>
-    <div class="next-row" style="justify-content:space-between;align-items:center;">
-      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="secondary" id="skipQ" type="button">Unsure / Skip</button><button class="secondary" id="finishSet" type="button">Finish early</button></div>
-      <button class="primary" id="nextQ" disabled>Next question →</button>
-    </div>`;
+  document.getElementById('quizArea').innerHTML=templates.question({...q,position:qIndex+1,total:quiz.length,fill:q.type==='fill',choices:numbered(q.choices||[])});
   document.querySelectorAll('.option').forEach(b=>b.addEventListener('click',()=>answerQuestion(b,q)));
   if(q.type==='fill'){
     const fillInput=document.getElementById('fillAnswer');
@@ -215,7 +195,7 @@ function renderQuestion(){
     const e=document.getElementById('explain');
     e.classList.add('show');
     setReview.push({q,answer:'Skipped',ok:false,skipped:true});
-    e.innerHTML=`<strong>Skipped.</strong> ${esc(q.why)}${q.visual?`<div class="photo-source">Photo via Wikimedia Commons. <a href="${commonsFilePageFromUrl(q.photoUrl)}" target="_blank" rel="noopener">Source, photographer, and license</a></div>`:''}`;
+    e.innerHTML=templates.feedback({ok:false,message:'Skipped.',explain:q.why,source:q.visual?commonsFilePageFromUrl(q.photoUrl):''});
     document.getElementById('nextQ').disabled=false;
   };
   document.getElementById('finishSet').onclick=()=>renderQuizEnd();
@@ -230,12 +210,12 @@ function answerFill(input,q){
   const ok=typed===q.correct.toLowerCase();
   input.disabled=true;
   document.getElementById('submitFill').disabled=true;
-  totalAnswered++;setAnswered++;if(ok){totalCorrect++;setCorrect++;stats[q.order].c++}else stats[q.order].w++;
+  setAnswered++;if(ok)setCorrect++;
   const e=document.getElementById('explain');e.classList.add('show');
   const answerMarkup=fillAnswerMarkup(typedDisplay,q.correct);
   setReview.push({q,answer:typedDisplay,ok});
-  e.innerHTML=`<strong class="${ok?'feedback-correct':'feedback-incorrect'}">${ok?'Correct.':'Not quite.'}</strong> ${esc(q.why)}${ok?'':`<div class="fill-correction">Your answer: ${answerMarkup}<br>Correct spelling: <strong>${esc(q.correct)}</strong></div>`}`;
-  document.getElementById('nextQ').disabled=false;save();
+  e.innerHTML=templates.feedback({ok,message:ok?'Correct.':'Not quite.',explain:q.why})+(ok?'':`<div class="fill-correction">Your answer: ${answerMarkup}<br>Correct spelling: <strong>${esc(q.correct)}</strong></div>`);
+  document.getElementById('nextQ').disabled=false;
 }
 function fillAnswerMarkup(answer,correct){
   const answerChars=[...answer],correctChars=[...correct];
@@ -245,10 +225,10 @@ function answerQuestion(btn,q){
   if(answered)return;answered=true;
   const choice=btn.dataset.choice, ok=choice===q.correct;
   document.querySelectorAll('.option').forEach(b=>{if(b.dataset.choice===q.correct)b.classList.add('correct');else if(b===btn)b.classList.add('wrong');b.disabled=true});
-  totalAnswered++;setAnswered++;if(ok){totalCorrect++;setCorrect++;stats[q.order].c++}else stats[q.order].w++;
+  setAnswered++;if(ok)setCorrect++;
   setReview.push({q,answer:choice,ok});
-  const e=document.getElementById('explain');e.classList.add('show');e.innerHTML=`<strong class="${ok?'feedback-correct':'feedback-incorrect'}">${ok?'Correct.':'Not quite.'}</strong> ${esc(q.why)}${q.visual?`<div class="photo-source">Photo via Wikimedia Commons. <a href="${commonsFilePageFromUrl(q.photoUrl)}" target="_blank" rel="noopener">Source, photographer, and license</a></div>`:''}`;
-  document.getElementById('nextQ').disabled=false;save();
+  const e=document.getElementById('explain');e.classList.add('show');e.innerHTML=templates.feedback({ok,message:ok?'Correct.':'Not quite.',explain:q.why,source:q.visual?commonsFilePageFromUrl(q.photoUrl):''});
+  document.getElementById('nextQ').disabled=false;
 }
 function renderQuizEnd(){
   document.body.classList.remove('fill-active');
@@ -256,8 +236,8 @@ function renderQuizEnd(){
   const skipped=quiz.length-setAnswered;
   const accuracy=setAnswered?Math.round(setCorrect/setAnswered*100):0;
   const heading=setAnswered===0?'Set ended':accuracy>=80?'Set complete':accuracy>=50?'Good effort':'Keep practicing';
-  const review=setReview.map((item,index)=>`<div class="review-item"><div class="review-question">${index+1}. ${item.q.prompt}</div><div class="review-answer ${item.skipped?'':'review-'+(item.ok?'correct':'incorrect')}"><strong>Your answer:</strong> ${esc(item.answer)}<br><strong>Correct answer:</strong> ${esc(item.q.correct)}</div></div>`).join('');
-  document.getElementById('quizArea').innerHTML=`<div class="speed-end"><div class="eyebrow">Set complete</div><h2>${heading}</h2><p class="subtle">Review your results, then return to setup when you are ready for another round.</p><div class="set-stats"><div class="set-stat"><div class="big">${setCorrect}/${setAnswered}</div><div class="lbl">correct</div></div><div class="set-stat"><div class="big">${accuracy}%</div><div class="lbl">accuracy</div></div><div class="set-stat"><div class="big">${skipped}</div><div class="lbl">skipped</div></div></div><button class="primary" id="continuePractice">Continue practicing</button><div class="set-review"><h3>Question review</h3><div class="review-list">${review||'<p class="subtle">No questions were answered before the set ended.</p>'}</div></div></div>`;
+  const review=setReview.map((item,index)=>templates['review-item']({question:`${index+1}. ${item.q.prompt}`,answer:item.answer,correct:item.q.correct,reviewClass:item.skipped?'':'review-'+(item.ok?'correct':'incorrect')})).join('')||'<p class="subtle">No questions were answered before the set ended.</p>';
+  document.getElementById('quizArea').innerHTML=templates['quiz-end']({heading,correct:setCorrect,answered:setAnswered,accuracy,skipped,review});
   document.getElementById('continuePractice').onclick=renderPracticeSetup;
 }
 
@@ -268,22 +248,12 @@ function renderPracticeSetup(){
   document.getElementById('practiceSetup').classList.remove('hidden');
 }
 
-function renderStats(){
-  document.getElementById('statAnswered').textContent=totalAnswered;
-  document.getElementById('statAccuracy').textContent=totalAnswered?Math.round(totalCorrect/totalAnswered*100)+'%':'—';
-  const ranked=orders
-    .map(o=>{const s=stats[o.order],n=s.c+s.w;return {o,n,acc:n?s.c/n:1}})
-    .sort((a,b)=>a.acc-b.acc||b.n-a.n);
-
-  document.getElementById('weakList').innerHTML=ranked.map(x=>`<div class="weak"><span>${x.o.order}</span><span class="${x.acc<.7?'hot':'cool'}">${x.n?Math.round(x.acc*100)+'%':'0%'}</span></div>`).join('');
-}
-
 function renderFlash(){
   const o=flashDeck[flashIndex%flashDeck.length],mode=document.getElementById('flashMode').value;
   document.getElementById('flashCard').classList.remove('flipped');
-  const front=mode==='order'?`<div class="eyebrow">Order ${flashIndex+1}/${flashDeck.length}</div><h2>${esc(o.order)}</h2><p class="subtle">Click or press Space to flip</p>`:mode==='common'?`<div class="eyebrow">Common name</div><h2>${esc(o.common)}</h2><p class="subtle">What order is this?</p>`:`<div class="eyebrow">Recognition clue</div><h2 style="font-size:1.55rem">${esc(o.key)}</h2><p class="subtle">Name the order</p>`;
-  document.getElementById('flashFront').innerHTML=front;
-  document.getElementById('flashBack').innerHTML=`<div class="eyebrow">${esc(o.common)}</div><h2>${esc(o.order)}</h2><strong>Best giveaway</strong><p>${esc(o.key)}</p><strong>Characteristics</strong><ul class="trait-list">${o.traits.map(t=>`<li>${esc(t)}</li>`).join('')}</ul><div>${o.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>`;
+  const front=mode==='order'?{frontEyebrow:`Order ${flashIndex+1}/${flashDeck.length}`,front:o.order,frontHint:'Click or press Space to flip'}:mode==='common'?{frontEyebrow:'Common name',front:o.common,frontHint:'What order is this?'}:{frontEyebrow:'Recognition clue',front:o.key,frontClass:'flash-clue',frontHint:'Name the order'};
+  document.getElementById('flashFront').innerHTML=templates.flash(front);
+  document.getElementById('flashBack').innerHTML=templates['flash-back'](o);
 }
 function moveFlash(d){flashIndex=(flashIndex+d+flashDeck.length)%flashDeck.length;renderFlash()}
 
@@ -294,15 +264,15 @@ function startSpeed(){
 }
 function nextSpeed(){
   speedCurrent=uniqueQuestionFor(Math.random()<.6?'common':'traits',speedUsedQuestions);
-  document.getElementById('speedArea').innerHTML=`<div class="eyebrow">Rapid fire</div><div class="question">${speedCurrent.prompt}</div><div class="options">${speedCurrent.choices.map((c,i)=>`<button class="option speedOpt" data-choice="${esc(c)}"><span class="num">${i+1}</span>${esc(c)}</button>`).join('')}</div>`;
-  document.querySelectorAll('.speedOpt').forEach(b=>b.onclick=()=>{const choice=b.dataset.choice;const ok=choice===speedCurrent.correct;speedReview.push({q:speedCurrent,answer:choice,ok});totalAnswered++;if(ok){speedPoints++;totalCorrect++;stats[speedCurrent.order].c++}else stats[speedCurrent.order].w++;document.getElementById('speedScore').textContent='Score: '+speedPoints;save();nextSpeed()});
+  document.getElementById('speedArea').innerHTML=templates['speed-question']({...speedCurrent,choices:numbered(speedCurrent.choices)});
+  document.querySelectorAll('.speedOpt').forEach(b=>b.onclick=()=>{  const choice=b.dataset.choice;const ok=choice===speedCurrent.correct;speedReview.push({q:speedCurrent,answer:choice,ok});if(ok)speedPoints++;document.getElementById('speedScore').textContent='Score: '+speedPoints;nextSpeed()});
 }
-function endSpeed(){clearInterval(speedTimer);speedTimer=null;const previous=Number(getStoredHighScore());if(speedPoints>previous)storeHighScore(speedPoints);renderSpeedHighScore();document.getElementById('startSpeed').disabled=false;const review=speedReview.map((item,index)=>`<div class="review-item"><div class="review-question">${index+1}. ${item.q.prompt}</div><div class="review-answer review-${item.ok?'correct':'incorrect'}"><strong>Your answer:</strong> ${esc(item.answer)}<br><strong>Correct answer:</strong> ${esc(item.q.correct)}</div></div>`).join('');document.getElementById('speedArea').innerHTML=`<div class="speed-end"><div class="eyebrow">Time</div><h2>${speedPoints}</h2><p class="subtle">correct answers in 60 seconds</p><div class="set-review"><h3>Question review</h3><div class="review-list">${review||'<p class="subtle">No questions were answered before time ran out.</p>'}</div></div></div>`}
+function endSpeed(){clearInterval(speedTimer);speedTimer=null;const previous=Number(getStoredHighScore());if(speedPoints>previous)storeHighScore(speedPoints);renderSpeedHighScore();document.getElementById('startSpeed').disabled=false;const review=speedReview.map((item,index)=>templates['review-item']({question:`${index+1}. ${item.q.prompt}`,answer:item.answer,correct:item.q.correct,reviewClass:`review-${item.ok?'correct':'incorrect'}`})).join('')||'<p class="subtle">No questions were answered before time ran out.</p>';document.getElementById('speedArea').innerHTML=templates['speed-end']({score:speedPoints,review})}
 
 function renderReference(){
   const q=document.getElementById('refSearch').value.toLowerCase(),f=document.getElementById('refFilter').value;
   const arr=orders.filter(o=>(f==='all'||o.meta===f)&&([o.order,o.common,o.key,...o.traits,...o.tags].join(' ').toLowerCase().includes(q)));
-  document.getElementById('refGrid').innerHTML=arr.map(o=>`<div class="ref-card"><h3>${esc(o.order)}</h3><div class="common">${esc(o.common)}</div><div style="margin-top:7px"><strong>${esc(o.key)}</strong></div><ul>${o.traits.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>${o.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>`).join('');
+  document.getElementById('refGrid').innerHTML=templates.reference({orders:arr});
 }
 
 function setTab(name){
@@ -316,9 +286,6 @@ document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>setTab(b.dataset.tab)
 document.getElementById('newSetBtn').onclick=startQuiz;
 document.getElementById('modeSelect').onchange=syncCountOptions;
 document.getElementById('countRange').oninput=()=>{document.getElementById('countValue').textContent=document.getElementById('countRange').value};
-function toggleProgress(){const drawer=document.querySelector('.side');const toggles=document.querySelectorAll('#progressToggle,#progressInnerToggle');const innerToggle=document.getElementById('progressInnerToggle');const open=drawer.classList.toggle('open');toggles.forEach(toggle=>toggle.setAttribute('aria-expanded',String(open)));innerToggle.textContent=open?'<':'Progress';innerToggle.setAttribute('aria-label',open?'Close progress drawer':'Open progress drawer');document.getElementById('progressToggle').classList.toggle('is-hidden',open)}
-document.getElementById('progressToggle').onclick=toggleProgress;
-document.getElementById('progressInnerToggle').onclick=toggleProgress;
 document.getElementById('flashCard').onclick=()=>document.getElementById('flashCard').classList.toggle('flipped');
 document.getElementById('flipFlash').onclick=()=>document.getElementById('flashCard').classList.toggle('flipped');
 document.getElementById('prevFlash').onclick=()=>moveFlash(-1);document.getElementById('nextFlash').onclick=()=>moveFlash(1);
@@ -327,7 +294,6 @@ document.getElementById('flashMode').onchange=renderFlash;
 document.getElementById('startSpeed').onclick=startSpeed;
 renderSpeedHighScore();
 document.getElementById('refSearch').oninput=renderReference;document.getElementById('refFilter').onchange=renderReference;
-document.getElementById('resetProgress').onclick=()=>{if(confirm('Reset all saved study progress?')){stats={};orders.forEach(o=>stats[o.order]={c:0,w:0});totalAnswered=0;totalCorrect=0;save()}};
 document.addEventListener('keydown',e=>{
   const active=document.querySelector('.tab.active')?.dataset.tab;
   if(active==='practice'&&!answered&&['1','2','3','4'].includes(e.key)){document.querySelectorAll('.option')[Number(e.key)-1]?.click()}
@@ -341,7 +307,6 @@ document.addEventListener('keydown',e=>{
   else if(active==='speed'&&speedTimer&&['1','2','3','4'].includes(e.key)){document.querySelectorAll('.speedOpt')[Number(e.key)-1]?.click()}
 });
 
-renderStats();
 renderReference();
 renderFlash();
 renderLesson();

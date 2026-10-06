@@ -1,0 +1,83 @@
+  <div class="tabs">
+    <button class="tab active" data-tab="learn">Learn</button>
+    <button class="tab" data-tab="practice">Practice</button>
+    <button class="tab" data-tab="flashcards">Flashcards</button>
+    <button class="tab" data-tab="speed">Speed Round</button>
+    <button class="tab" data-tab="reference">Reference</button>
+  </div>
+
+  <div class="grid">
+    <main class="card main-card">
+      <section id="learnPane">
+        <div class="learn-nav" id="learnNav"></div>
+        <div id="lessonArea"></div>
+      </section>
+
+      <section id="practicePane" class="hidden">
+        <div class="practice-setup" id="practiceSetup">
+          <div><div class="eyebrow">Practice setup</div><h2>Choose your session</h2></div>
+          <p>Select a question style and set the length before you begin.</p>
+          <div class="practice-control">
+            <label for="modeSelect">Question type</label>
+            <select id="modeSelect">
+              <option value="mixed">Mixed practice</option>
+              <option value="common">Common name → order</option>
+              <option value="traits">Description → order</option>
+              <option value="feature">Order → key feature</option>
+              <option value="fill">Fill in the blanks</option>
+              <option value="visual">Photo visual ID</option>
+              <option value="scenario">Challenge question bank</option>
+              <option value="confusion">Confusing orders</option>
+              <option value="weak">Weak spots only</option>
+            </select>
+          </div>
+          <div class="practice-control">
+            <label for="countRange">Number of questions</label>
+            <div class="range-row"><input id="countRange" type="range" min="5" max="100" value="20" step="1"><output class="range-value" id="countValue" for="countRange">20</output></div>
+          </div>
+          <button class="primary" id="newSetBtn">Start new set</button>
+        </div>
+        <div id="quizArea"></div>
+      </section>
+
+      <section id="flashcardsPane" class="hidden">
+        <div class="controls">
+          <label>Front side
+            <select id="flashMode"><option value="order">Order name</option><option value="common">Common name</option><option value="clue">Recognition clue</option></select>
+          </label>
+          <button class="secondary" id="shuffleFlash">Shuffle</button>
+        </div>
+        <div class="flash-wrap">
+          <div class="flash" id="flashCard">
+            <div class="face front" id="flashFront"></div>
+            <div class="face back" id="flashBack"></div>
+          </div>
+        </div>
+        <div class="flash-actions">
+          <button class="secondary" id="prevFlash">← Previous</button>
+          <button class="primary" id="flipFlash">Flip card</button>
+          <button class="secondary" id="nextFlash">Next →</button>
+        </div>
+        <p class="mini" style="text-align:center">Keyboard: <span class="kbd">Space</span> flip • <span class="kbd">←</span>/<span class="kbd">→</span> move</p>
+      </section>
+
+      <section id="speedPane" class="hidden">
+        <div class="speed">
+          <button class="primary" id="startSpeed">Start 60-second round</button>
+          <span class="timer" id="timer">1:00</span>
+          <span class="subtle" id="speedScore">Score: 0</span>
+          <span class="subtle" id="speedHighScore">High score: 0</span>
+        </div>
+        <div id="speedArea"><p class="subtle">Rapid-fire common-name and trait recognition. Answer as many as you can in one minute.</p></div>
+      </section>
+
+      <section id="referencePane" class="hidden">
+        <div class="ref-toolbar">
+          <input id="refSearch" type="text" placeholder="Search order, common name, or trait..." style="min-width:280px;flex:1" />
+          <select id="refFilter"><option value="all">All 28 orders</option><option value="wingless">Mostly wingless</option><option value="hemi">Incomplete metamorphosis</option><option value="holo">Complete metamorphosis</option></select>
+        </div>
+        <div class="ref-grid" id="refGrid"></div>
+      </section>
+    </main>
+
+  </div>
