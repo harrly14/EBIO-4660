@@ -32,6 +32,28 @@ ordersAndGroups.forEach(item => addTaxon(...item));
   ['Caelifera', 'suborder', 'Orthoptera', 'Polyneoptera'], ['Ensifera', 'suborder', 'Orthoptera', 'Polyneoptera'],
   ['Sternorrhyncha', 'suborder', 'Hemiptera', 'Paraneoptera'], ['Auchenorrhyncha', 'suborder', 'Hemiptera', 'Paraneoptera'], ['Heteroptera', 'suborder', 'Hemiptera', 'Paraneoptera']
 ].forEach(item => addTaxon(...item));
+const practicalCommonNames = {
+  Arthropoda: 'arthropods', Hexapoda: 'six-legged arthropods', Entognatha: 'entognaths', Insecta: 'insects',
+  Apterygote: 'wingless insects', Paleoptera: 'ancient-winged insects', Neoptera: 'new-winged insects',
+  Polyneoptera: 'polyneopterans', Dictyoptera: 'roaches and mantises', Paraneoptera: 'paraneopterans',
+  Collembola: 'springtails', Diplura: 'two-pronged bristletails', Protura: 'coneheads',
+  Archaeognatha: 'jumping bristletails', Zygentoma: 'silverfish and firebrats', Ephemeroptera: 'mayflies',
+  Odonata: 'dragonflies and damselflies', Orthoptera: 'grasshoppers, crickets, and katydids',
+  Phasmatodea: 'stick and leaf insects', Dermaptera: 'earwigs', Plecoptera: 'stoneflies',
+  Blattodea: 'cockroaches and termites', Mantodea: 'mantises', Hemiptera: 'true bugs, cicadas, and aphids',
+  Psocodea: 'booklice and barklice', Thysanoptera: 'thrips', Anisoptera: 'dragonflies',
+  Zygoptera: 'damselflies', Caelifera: 'grasshoppers', Ensifera: 'crickets and katydids',
+  Sternorrhyncha: 'aphids, whiteflies, and scale insects', Auchenorrhyncha: 'cicadas, treehoppers, and leafhoppers',
+  Heteroptera: 'true bugs', Aeshnidae: 'darners', Libellulidae: 'skimmers',
+  Acrididae: 'short-horned grasshoppers', Gryllidae: 'true crickets', Tettigoniidae: 'katydids',
+  Rhaphidophoridae: 'cave and camel crickets', Aphididae: 'aphids', Coccoidae: 'scale insects',
+  Cicadidae: 'cicadas', Membracidae: 'treehoppers', Cicadellidae: 'leafhoppers',
+  Cercopidae: 'spittlebugs', Fulgoroidea: 'planthoppers', Belostomatidae: 'giant water bugs',
+  Corixidae: 'water boatmen', Gerridae: 'water striders', Cimicidae: 'bed bugs',
+  Pentatomidae: 'stink bugs', Scutelleridae: 'shield-backed bugs', Reduviidae: 'assassin bugs',
+  Coreidae: 'leaf-footed bugs', Lygaeidae: 'seed bugs', Miridae: 'plant bugs'
+};
+practicalTaxa.forEach(taxon => { taxon.commonName = practicalCommonNames[taxon.name] || 'common name not specified'; });
 [
   ['Aeshnidae', 'family', 'Odonata → Anisoptera', 'Paleoptera'], ['Libellulidae', 'family', 'Odonata → Anisoptera', 'Paleoptera'],
   ['Acrididae', 'family', 'Orthoptera → Caelifera', 'Polyneoptera'], ['Gryllidae', 'family', 'Orthoptera → Ensifera', 'Polyneoptera'], ['Tettigoniidae', 'family', 'Orthoptera → Ensifera', 'Polyneoptera'], ['Rhaphidophoridae', 'family', 'Orthoptera → Ensifera', 'Polyneoptera'],
