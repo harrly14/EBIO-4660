@@ -27,14 +27,14 @@ const anatomyDetails = {
   cerci: ['posterior abdomen', 'small appendages at the end of the abdomen'], terga: ['dorsal body surface', 'the dorsal sclerites'],
   heart: ['abdomen', 'the portion of the dorsal vessel perforated with ostia'],
   aorta: ['anterior to the heart', 'the portion of the dorsal vessel lacking ostia'],
-  'dorsal vessel': ['posterior abdomen into the head region', 'the dorsal longitudinal vessel carrying hemolymph'],
+  'dorsal vessel': ['posterior abdomen into the head region', 'the dorsal vessel, also called the dorsal longitudinal vessel, carries hemolymph'],
   trunk: ['throughout the body', 'a distinct tracheal branch'],
   tracheoles: ['throughout the body', 'the smallest tubes where gas exchange occurs'],
-  taenidea: ['tracheal system', 'the supplied guide term; the detailed notes do not clearly define this term; the notes use a different spelling'],
+  taenidea: ['inside the tracheal cuticle', 'circumferential transverse thickenings that reinforce tracheae and tracheoles and help prevent collapse'],
   crop: ['foregut', 'storage and initial food processing'], proventriculus: ['foregut', 'mechanical breakdown and initial food processing'],
-  'gastric caecum': ['digestive system', 'the source materials conflict on foregut versus midgut placement; placement is not tested'],
+  'gastric caecum': ['midgut', 'a caecum associated with the midgut; the midgut is responsible for digestion and absorption'],
   ventriculus: ['midgut', 'digestion and absorption'],
-  'peritrophic membrane': ['midgut', 'the guide term for the digestive matrix; terminology conflicts with the notes'],
+  'peritrophic membrane': ['midgut', 'the peritrophic matrix associated with the midgut; it is made of chitin and glycoproteins and is essential for digestion'],
   'Malpighian tubule': ['hindgut', 'excretion and water regulation'], ileum: ['hindgut', 'excretion and water regulation'],
   colon: ['hindgut', 'excretion and water regulation'], rectum: ['hindgut', 'excretion and water regulation'],
   ganglia: ['nervous system', 'receive and respond to sensory input']
@@ -50,11 +50,11 @@ const morphologyTypes = morphology.flatMap(([category, terms, descriptions]) => 
   category, term, description: descriptions.split('; ').find(description => description.toLowerCase().startsWith(term.split('/')[0].toLowerCase())) || descriptions
 })));
 const sourceClarifications = [
-  'The official guide says Coccoidae; the detailed notes and key say Coccoidea.',
-  'The official guide places gastric caecum under the foregut; the detailed notes place caeca with the midgut.',
-  'The official guide says dorsal vessel; the detailed notes say dorsal longitudinal vessel.',
-  'The official guide says taenidea; the detailed notes do not clearly define that term.',
-  'The official guide says peritrophic membrane; the detailed notes say peritrophic matrix.'
+  'Instructor resolution: use Coccoidae; recognize Coccoidea as the alternate source spelling.',
+  'Instructor resolution: place gastric caecum/caeca with the midgut.',
+  'Instructor resolution: use dorsal vessel; dorsal longitudinal vessel is the detailed-notes synonym.',
+  'Instructor resolution: taenidea/taenidia are transverse or circumferential thickenings of the tracheal cuticle that reinforce tracheae and tracheoles and help prevent collapse.',
+  'Instructor resolution: use peritrophic matrix; recognize peritrophic membrane as the official-guide wording.'
 ];
 const groups = [
   ['Arthropoda', 'Phylum', 'Hexapoda'],
@@ -82,7 +82,7 @@ const comparisonData = [
   ['Caelifera vs Ensifera', 'Caelifera have shorter antennae, a small ovipositor, and tympana on the first abdominal segment; Ensifera have longer antennae, usually long ovipositors, and tympana when present on the fore tibiae.'],
   ['Gryllidae vs Tettigoniidae', 'Both have long antennae and fore-tibial tympana, but Gryllidae have 3 tarsomeres and Tettigoniidae have 4; Tettigoniidae also have a blade-like ovipositor.'],
   ['Tettigoniidae vs Rhaphidophoridae', 'Both have long antennae and 4 tarsomeres; Tettigoniidae have fore-tibial tympana, while Rhaphidophoridae lack tympanal organs entirely and are wingless.'],
-  ['Aphididae vs Coccoidea', 'Aphididae have cornicles and always three pairs of legs; Coccoidea lack cornicles and females are often legless.'],
+  ['Aphididae vs Coccoidae', 'Aphididae have cornicles and always three pairs of legs; Coccoidae lack cornicles and females are often legless.'],
   ['Cicadellidae vs Cercopidae', 'Cicadellidae have rows of smaller hind-tibial spines; Cercopidae have 1–2 stout spines and an apical ring of spines.'],
   ['Membracidae vs other Auchenorrhyncha', 'Membracidae have a pronotum greatly expanded and extending over the abdomen.'],
   ['Fulgoroidea vs other Auchenorrhyncha', 'Fulgoroidea have aristate antennae with a bulbous pedicel below the eyes and a Y-shaped anal vein.'],
@@ -110,7 +110,7 @@ const questionBankExtras = [
 const questionBankExtrasWithComparisons = [
   ...questionBankExtras,
   ...comparisonData.map(([pair, distinction]) => ({ type: 'comparison', category: 'Comparison', prompt: `Which distinction is supported for <strong>${pair}</strong>?`, answer: distinction, choices: [distinction, ...comparisonData.filter(item => item[0] !== pair).slice(0, 3).map(item => item[1])], explanation: distinction })),
-  { type: 'yes-no-feature', category: 'Yes/no feature', taxon: 'Aphididae', prompt: 'Do Aphididae have cornicles near the posterior end of the abdomen?', answer: 'Yes', choices: ['Yes', 'No'], explanation: 'The Hemiptera key uses cornicles to separate Aphididae from Coccoidea.' },
+  { type: 'yes-no-feature', category: 'Yes/no feature', taxon: 'Aphididae', prompt: 'Do Aphididae have cornicles near the posterior end of the abdomen?', answer: 'Yes', choices: ['Yes', 'No'], explanation: 'The Hemiptera key uses cornicles to separate Aphididae from Coccoidae.' },
   { type: 'yes-no-feature', category: 'Yes/no feature', taxon: 'Rhaphidophoridae', prompt: 'Do Rhaphidophoridae lack tympanal organs entirely?', answer: 'Yes', choices: ['Yes', 'No'], explanation: 'The supplied Orthoptera notes state that Rhaphidophoridae lack tympanal organs entirely.' }
 ];
 const keyFamilies = { Odonata: ['Aeshnidae', 'Libellulidae'], Orthoptera: ['Acrididae', 'Gryllidae', 'Tettigoniidae', 'Rhaphidophoridae'], Hemiptera: ['Aphididae', 'Coccoidae', 'Fulgoroidea', 'Cicadidae', 'Membracidae', 'Cercopidae', 'Cicadellidae', 'Belostomatidae', 'Corixidae', 'Gerridae', 'Cimicidae', 'Pentatomidae', 'Scutelleridae', 'Reduviidae', 'Coreidae', 'Lygaeidae', 'Miridae'] };
@@ -221,7 +221,7 @@ function makePracticeQuestions(focus) {
     const terms = item[2].split(';').map(term => term.trim());
     const identification = terms.map(term => ({ type: 'anatomy-identification', category: item[0], prompt: `Which structure belongs to the <strong>${esc(item[1])}</strong>?`, answer: term, choices: [...new Set([term, ...terms])].slice(0, 4), explanation: item[3] }));
     const location = terms.map(term => ({ type: 'anatomy-location', category: item[0], prompt: `Where should you locate <strong>${esc(term)}</strong>?`, answer: item[1], choices: [...new Set([item[1], ...anatomy.map(candidate => candidate[1])])], explanation: item[3] }));
-    const functions = terms.filter(term => anatomyDetails[term] && term !== 'gastric caecum').map(term => ({ type: 'anatomy-function', category: item[0], prompt: `Which function or relationship belongs to <strong>${esc(term)}</strong>?`, answer: anatomyDetails[term][1], choices: [anatomyDetails[term][1], ...terms.filter(candidate => candidate !== term && anatomyDetails[candidate] && candidate !== 'gastric caecum').slice(0, 3).map(candidate => anatomyDetails[candidate][1])], explanation: `${term}: ${anatomyDetails[term][1]}.` }));
+    const functions = terms.filter(term => anatomyDetails[term]).map(term => ({ type: 'anatomy-function', category: item[0], prompt: `Which function or relationship belongs to <strong>${esc(term)}</strong>?`, answer: anatomyDetails[term][1], choices: [anatomyDetails[term][1], ...terms.filter(candidate => candidate !== term && anatomyDetails[candidate]).slice(0, 3).map(candidate => anatomyDetails[candidate][1])], explanation: `${term}: ${anatomyDetails[term][1]}.` }));
     return [...identification, ...location, ...functions];
   });
   const taxonomyQuestions = practicalTaxa.filter(taxon => (taxon.rank === 'order' || taxon.rank === 'suborder') && !taxon.sourceLimitation).flatMap(taxon => taxon.diagnosticTraits.slice(0, 2).map(clue => ({ type: `${taxon.rank}-identification`, taxon: taxon.name, prompt: `Which ${taxon.rank} matches this supported clue? <strong>${esc(clue)}</strong>`, answer: taxon.name, choices: [taxon.name, ...practicalTaxa.filter(candidate => candidate.rank === taxon.rank && candidate.name !== taxon.name && !candidate.sourceLimitation).slice(0, 3).map(candidate => candidate.name)], explanation: `${taxon.name}: ${clue}. Orders and suborders are recognition objectives and should be identified without a key.` })));
@@ -289,7 +289,7 @@ function simulationQuestions() {
   const familyQs = ['Aeshnidae', 'Gryllidae', 'Aphididae'].map(answer => ({ category: 'Family key', prompt: `Use the available family key to reach <strong>${answer}</strong>. Which family is the answer?`, answer, choices: [answer, ...families.filter(family => family !== answer).slice(0, 3)], explanation: `${answer}: ${byName(answer)?.diagnosticTraits.join('; ') || 'Follow the supplied couplets.'}` }));
   const comparison = { category: 'Comparison', prompt: 'How do you distinguish Aeshnidae from Libellulidae?', answer: 'Compare wing triangles and the hindwing anal loop', choices: ['Compare wing triangles and the hindwing anal loop', 'Count abdominal spiracles', 'Inspect cornicles', 'Look for a cuneus'], explanation: 'Aeshnidae have similar triangles pointing the same direction and no foot-shaped anal loop; Libellulidae differ.' };
   const truth = { category: 'True statements', prompt: 'Which statement is true about Rhaphidophoridae?', answer: 'They lack tympanal organs entirely', choices: ['They lack tympanal organs entirely', 'They have 3 tarsomeres', 'They have short antennae', 'They have raptorial forelegs'], explanation: 'Rhaphidophoridae are wingless, have long antennae, lack tympana, and have 4 tarsomeres.' };
-  const yesNo = { category: 'Feature check', prompt: 'Do Aphididae have cornicles near the posterior end of the abdomen?', answer: 'Yes', choices: ['Yes', 'No'], explanation: 'The Hemiptera key uses cornicles to separate Aphididae from Coccoidea.' };
+  const yesNo = { category: 'Feature check', prompt: 'Do Aphididae have cornicles near the posterior end of the abdomen?', answer: 'Yes', choices: ['Yes', 'No'], explanation: 'The Hemiptera key uses cornicles to separate Aphididae from Coccoidae.' };
   const ecology = { category: 'Ecology/function', prompt: 'Why are Belostomatidae forelegs notable?', answer: 'They are massive raptorial forelegs used in predation', choices: ['They are massive raptorial forelegs used in predation', 'They are scoop-shaped for algae', 'They are hydrophobic walking legs', 'They are wing-folding structures'], explanation: 'Belostomatidae are predatory and have massive raptorial forelegs.' };
   return [...orderQs, ...external, ...morphologyQs, ...internal, ...familyQs, comparison, truth, yesNo, ecology];
 }
