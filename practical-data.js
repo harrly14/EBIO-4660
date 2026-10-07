@@ -132,6 +132,251 @@ trait('Miridae', { diagnosticTraits: ['cuneus', '1–2 closed cells in membrane'
 trait('Psocodea', { diagnosticTraits: ['book lice, bark lice, and parasitic lice'], lifeHistory: ['parasitic forms evolved from free-living dander feeders'] });
 trait('Thysanoptera', { diagnosticTraits: ['fringed wings', 'asymmetric mouthparts', 'left mandible thin stylet; right mandible virtually absent'], ecology: ['feed on flowers/fungi by piercing cells'], notableStructures: ['eversible adhesive pretarsal bladders'] });
 
+const practicalReferenceKeys = {
+  Odonata: {
+    title: 'Key to Common Families of Adult Odonata',
+    couplets: [
+      {
+        number: '1',
+        text: 'Forewing and hindwing differ in size and shape, with hindwing much broader basally than forewing [suborder Anisoptera]',
+        result: 'go to 2'
+      },
+      {
+        number: '1′',
+        text: 'Forewing and hindwing similar in size and shape',
+        result: 'suborder Zygoptera'
+      },
+      {
+        number: '2',
+        text: 'Triangles in forewing and hindwing similar in shape and pointing the same direction; hindwing without a foot-shaped anal loop',
+        result: 'Aeshnidae'
+      },
+      {
+        number: '2′',
+        text: 'Triangles in forewing and hindwing differ in shape and pointing in different directions; hindwing with a foot-shaped anal loop',
+        result: 'Libellulidae'
+      }
+    ]
+  },
+
+  Orthoptera: {
+    title: 'Key to Common Families of Orthoptera',
+    couplets: [
+      {
+        number: '1',
+        text: 'Antennae relatively short (shorter than body); ovipositor small; tympana on first abdominal segment [suborder Caelifera]',
+        result: 'Acrididae'
+      },
+      {
+        number: '1′',
+        text: 'Antennae longer than body; ovipositor usually long and conspicuous; tympana (when present) on fore tibiae [suborder Ensifera]',
+        result: 'go to 2'
+      },
+      {
+        number: '2',
+        text: 'Tarsi with 3 tarsomeres',
+        result: 'Gryllidae'
+      },
+      {
+        number: '2′',
+        text: 'Tarsi with 4 tarsomeres',
+        result: 'go to 3'
+      },
+      {
+        number: '3',
+        text: 'Tympana present on foretibiae',
+        result: 'Tettigoniidae'
+      },
+      {
+        number: '3′',
+        text: 'Fore tibiae without tympana',
+        result: 'Rhaphidophoridae'
+      }
+    ]
+  },
+
+  Hemiptera: {
+    title: 'Key to Common Families of Hemiptera',
+    couplets: [
+      {
+        number: '1',
+        text: 'Mouthparts originate below or behind the eyes; scutellum usually reduced and indistinct; forewings not hemelytra, held rooflike over abdomen',
+        result: 'go to 2'
+      },
+      {
+        number: '1′',
+        text: 'Mouthparts originate in front of eyes; scutellum large and distinct; forewings in the form of hemelytra, held flat over abdomen [suborder Heteroptera]',
+        result: 'go to 8'
+      },
+
+      {
+        number: '2',
+        text: 'Antennae long, threadlike [suborder Sternorrhyncha]',
+        result: 'go to 3'
+      },
+      {
+        number: '2′',
+        text: 'Antennae short, bristlelike (setaceous or aristate) [suborder Auchenorrhyncha]',
+        result: 'go to 4'
+      },
+
+      {
+        number: '3',
+        text: 'Cornicles present near the posterior end of abdomen; wingless or with 2 pairs of wings; 3 pairs of legs always present',
+        result: 'Aphididae'
+      },
+      {
+        number: '3′',
+        text: 'Cornicles absent; wingless or with 1 pair of wings; females often legless',
+        result: 'superfamily Coccoidea'
+      },
+
+      {
+        number: '4',
+        text: 'Aristate antennae with a bulbous pedicel; antennae originate below the eyes',
+        result: 'superfamily Fulgoroidea'
+      },
+      {
+        number: '4′',
+        text: 'Antennae usually setaceous, pedicel not particularly enlarged; antennae originate in front of or between the eyes',
+        result: 'go to 5'
+      },
+
+      {
+        number: '5',
+        text: 'Relatively large insects (usually 3 cm or more in length); 3 prominent ocelli',
+        result: 'Cicadidae'
+      },
+      {
+        number: '5′',
+        text: 'Usually much smaller insects; 2 ocelli (not always obvious)',
+        result: 'go to 6'
+      },
+
+      {
+        number: '6',
+        text: 'Pronotum greatly expanded and extending over the abdomen',
+        result: 'Membracidae'
+      },
+      {
+        number: '6′',
+        text: 'Pronotum not expanded',
+        result: 'go to 7'
+      },
+
+      {
+        number: '7',
+        text: 'Hind tibiae with 1 or 2 stout spines and an apical ring of spines',
+        result: 'Cercopidae'
+      },
+      {
+        number: '7′',
+        text: 'Hind tibiae with 1 or more rows of smaller spines',
+        result: 'Cicadellidae'
+      },
+
+      {
+        number: '8',
+        text: 'Antennae very short; aquatic species',
+        result: 'go to 9'
+      },
+      {
+        number: '8′',
+        text: 'Antennae longer than head; aquatic or terrestrial species',
+        result: 'go to 10'
+      },
+
+      {
+        number: '9',
+        text: 'Large, raptorial forelegs; relatively long, thin beak',
+        result: 'Belostomatidae'
+      },
+      {
+        number: '9′',
+        text: 'Forelegs reduced, tarsi scoop-shaped; beak small, short, broad, and rounded',
+        result: 'Corixidae'
+      },
+
+      {
+        number: '10',
+        text: 'Aquatic bugs that live on the water surface; middle and hind legs very long and slender',
+        result: 'Gerridae'
+      },
+      {
+        number: '10′',
+        text: 'Terrestrial bugs; middle and hind legs usually not so long and slender',
+        result: 'go to 11'
+      },
+
+      {
+        number: '11',
+        text: 'Scutellum very large, extending to the end of abdomen',
+        result: 'Scutelleridae'
+      },
+      {
+        number: '11′',
+        text: 'Scutellum smaller, not reaching end of abdomen',
+        result: 'go to 12'
+      },
+
+      {
+        number: '12',
+        text: 'Body flat and oval-shaped; wings vestigial and non-functional',
+        result: 'Cimicidae'
+      },
+      {
+        number: '12′',
+        text: 'Wings not vestigial',
+        result: 'go to 13'
+      },
+
+      {
+        number: '13',
+        text: 'Antennae 5-segmented; body shield-shaped; scutellum large',
+        result: 'Pentatomidae'
+      },
+      {
+        number: '13′',
+        text: 'Antennae 4-segmented; body usually more elongate; scutellum smaller',
+        result: 'go to 14'
+      },
+
+      {
+        number: '14',
+        text: 'Beak 3-segmented; wing venation simple',
+        result: 'Reduviidae'
+      },
+      {
+        number: '14′',
+        text: 'Beak 4-segmented; wing venation simple or complex',
+        result: 'go to 15'
+      },
+
+      {
+        number: '15',
+        text: 'Membrane of hemelytra with many veins',
+        result: 'Coreidae'
+      },
+      {
+        number: '15′',
+        text: 'Membrane of hemelytra with no more than 5 veins',
+        result: 'go to 16'
+      },
+
+      {
+        number: '16',
+        text: 'Cuneus present; membrane of hemelytra with 1 or 2 closed cells',
+        result: 'Miridae'
+      },
+      {
+        number: '16′',
+        text: 'Cuneus absent; membrane of hemelytra with 4 or 5 veins',
+        result: 'Lygaeidae'
+      }
+    ]
+  }
+};
+
 const practicalFamilyKeys = {
   Odonata: { title: 'Adult Odonata suborder/family key', nodes: [
     { id: 'o1', feature: 'Wing shape', prompt: 'Are the forewing and hindwing similar in size and shape?', yes: 'Zygoptera', no: 'o2' },

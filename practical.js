@@ -316,10 +316,81 @@ function renderReference() {
     return (searchTerm && !searchable.toLowerCase().includes(searchTerm)) ? '' : `<article class="reference-comparison-card" data-reference-search="${esc(searchable)}"><h3>${esc(pair)}</h3><p>${esc(explanation)}</p></article>`;
   }).join('') || '<p class="empty-state">No comparison matches this search.</p>';
 
-  const referenceKeys = Object.entries(practicalFamilyKeys).map(([order, key]) => {
-    const searchable = [order, key.title, ...key.nodes.map(node => `${node.feature} ${node.prompt} ${node.yes || ''} ${node.no || ''}`)].join(' ');
-    return (searchTerm && !searchable.toLowerCase().includes(searchTerm)) ? '' : `<article class="reference-key-card" data-reference-search="${esc(searchable)}"><h3>${esc(order)}</h3><p class="subtle">${esc(key.title)}</p><ul>${key.nodes.slice(0, 5).map(node => `<li><strong>${esc(node.feature)}</strong>: ${esc(node.prompt)}</li>`).join('')}</ul></article>`;
-  }).join('') || '<p class="empty-state">No key entries match this search.</p>';
+const renderReferenceKey = (order, key) => {
+  const searchable = [
+    order,
+    key.title,
+    ...key.couplets.flatMap(couplet => [
+      couplet.number,
+      couplet.text,
+      couplet.result
+    ])
+  ].join(' ');
+
+  return `
+    <article
+      class="reference-key-card"
+      data-reference-search="${esc(searchable)}"
+    >
+      <div class="reference-card-header">
+        <div>
+          <h3>${esc(order)}</h3>
+          <p class="subtle">${esc(key.title)}</p>
+        </div>
+      </div>
+
+      <div class="reference-table-wrap">
+        <table class="reference-table reference-key-table">
+          <thead>
+            <tr>
+              <th>Couplet</th>
+              <th>Character</th>
+              <th>Go to / identification</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            ${key.couplets.map(couplet => `
+              <tr>
+                <td>
+                  <strong>${esc(couplet.number)}</strong>
+                </td>
+
+                <td>
+                  ${esc(couplet.text)}
+                </td>
+
+                <td>
+                  <strong>${esc(couplet.result)}</strong>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    </article>
+  `;
+};
+
+const referenceKeys = Object.entries(practicalReferenceKeys)
+  .map(([order, key]) => {
+    const searchable = [
+      order,
+      key.title,
+      ...key.couplets.flatMap(couplet => [
+        couplet.number,
+        couplet.text,
+        couplet.result
+      ])
+    ].join(' ');
+
+    if (searchTerm && !searchable.toLowerCase().includes(searchTerm)) {
+      return '';
+    }
+
+    return renderReferenceKey(order, key);
+  })
+  .join('') || '<p class="empty-state">No key entries match this search.</p>';
 
   const anatomyRowsAll = anatomy.flatMap(([kind, region, structures]) => structures.split(';').map(str => {
     const term = str.trim();
@@ -345,11 +416,28 @@ function renderReference() {
       if (!matches.length) return '';
       return matches.map(([pair, explanation]) => `<article class="reference-comparison-card" data-reference-search="${esc(`${pair} ${explanation}`)}"><h3>${esc(pair)}</h3><p>${esc(explanation)}</p></article>`).join('');
     })()],
-    ['Keys', (() => {
-      const matches = Object.entries(practicalFamilyKeys).filter(([order, key]) => [order, key.title, ...key.nodes.map(node => `${node.feature} ${node.prompt}`)].join(' ').toLowerCase().includes(searchTerm));
-      if (!matches.length) return '';
-      return matches.map(([order, key]) => `<article class="reference-key-card" data-reference-search="${esc([order, key.title].join(' '))}"><h3>${esc(order)}</h3><p class="subtle">${esc(key.title)}</p><ul>${key.nodes.slice(0, 5).map(node => `<li><strong>${esc(node.feature)}</strong>: ${esc(node.prompt)}</li>`).join('')}</ul></article>`).join('');
-    })()]
+  ['Keys', (() => {
+    const matches = Object.entries(practicalReferenceKeys)
+      .filter(([order, key]) => {
+        const searchable = [
+          order,
+          key.title,
+          ...key.couplets.flatMap(couplet => [
+            couplet.number,
+            couplet.text,
+            couplet.result
+          ])
+        ].join(' ').toLowerCase();
+
+        return searchable.includes(searchTerm);
+      });
+
+    if (!matches.length) return '';
+
+    return matches
+      .map(([order, key]) => renderReferenceKey(order, key))
+      .join('');
+  })()]
   ].filter(([, content]) => content).map(([title, content]) => `<section class="reference-search-group"><h3>${esc(title)}</h3>${content}</section>`): [];
   const renderCurrentTab = () => {
     if (tab === 'taxa') return `<div class="reference-panel reference-taxonomy">${referenceTaxaCards || '<p class="empty-state">No taxa match that filter or search.</p>'}</div>`;
