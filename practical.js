@@ -481,16 +481,28 @@ function startPracticeQuestion() {
   }
   let index = 0;
   let score = 0;
+  let skipped = 0;
+  const finishSet = () => {
+    const answered = index - skipped;
+    area.innerHTML = `<div class="speed-end"><div class="eyebrow">Set ended early</div><h2>${score}/${answered} correct</h2><p>Answered ${answered} of ${questions.length}; skipped ${skipped}.</p><div class="next-row"><button class="secondary" id="restartPracticeSet">Try another set</button><button class="primary" id="returnPracticeSetup">Return to setup</button></div></div>`;
+    document.getElementById('restartPracticeSet').onclick = () => startPracticeQuestion();
+    document.getElementById('returnPracticeSetup').onclick = () => { practicalState.practiceSession = null; practicalState.practiceSetupVisible = true; renderTab(); };
+  };
   const next = () => {
     if (index >= questions.length) {
-      area.innerHTML = `<div class="speed-end"><h2>${score}/${questions.length}</h2><p>Review the explanations, then try another set or return to setup.</p><div class="next-row"><button class="secondary" id="restartPracticeSet">Try another set</button><button class="primary" id="returnPracticeSetup">Return to setup</button></div></div>`;
+      const answered = questions.length - skipped;
+      area.innerHTML = `<div class="speed-end"><div class="eyebrow">Set complete</div><h2>${score}/${answered} correct</h2><p>Answered ${answered} of ${questions.length}; skipped ${skipped}.</p><div class="next-row"><button class="secondary" id="restartPracticeSet">Try another set</button><button class="primary" id="returnPracticeSetup">Return to setup</button></div></div>`;
       document.getElementById('restartPracticeSet').onclick = () => startPracticeQuestion();
       document.getElementById('returnPracticeSetup').onclick = () => { practicalState.practiceSession = null; practicalState.practiceSetupVisible = true; renderTab(); };
       return;
     }
     const question = questions[index];
-    const options = question.type === 'select-all' ? question.choices.map(choice => `<label class="option"><input type="checkbox" class="practice-select" value="${esc(choice)}"> ${esc(choice)}</label>`).join('') : question.choices.sort(() => Math.random() - 0.5).map(choice => `<button class="option practice-answer" data-choice="${esc(choice)}">${esc(choice)}</button>`).join('');
-    area.innerHTML = `<div class="question-area"><div class="eyebrow">${esc(focus)} • ${index + 1}/${questions.length}</div><h2 class="question">${question.prompt}</h2><div class="options">${options}</div>${question.type === 'select-all' ? '<button class="primary" id="submitSelectAll">Submit selections</button>' : ''}<div id="practiceFeedback" class="explain"></div></div>`;
+    const options = question.type === 'select-all'
+      ? question.choices.map(choice => `<label class="option"><input type="checkbox" class="practice-select" value="${esc(choice)}"> ${esc(choice)}</label>`).join('')
+      : (question.type === 'yes-no-feature' ? ['Yes', 'No'] : question.choices.sort(() => Math.random() - 0.5)).map(choice => `<button class="option practice-answer" data-choice="${esc(choice)}">${esc(choice)}</button>`).join('');
+    area.innerHTML = `<div class="question-area"><div class="eyebrow">${esc(focus)} • ${index + 1}/${questions.length}</div><h2 class="question">${question.prompt}</h2><div class="options">${options}</div>${question.type === 'select-all' ? '<button class="primary" id="submitSelectAll">Submit selections</button>' : ''}<div id="practiceFeedback" class="explain"></div><div class="next-row practice-actions"><button class="secondary" id="skipPractice">Unsure / Skip</button><button class="secondary" id="finishPractice">Finish early</button></div></div>`;
+    document.getElementById('skipPractice').onclick = () => { skipped += 1; index += 1; next(); };
+    document.getElementById('finishPractice').onclick = finishSet;
     document.querySelectorAll('.practice-answer').forEach(button => button.onclick = () => {
       document.querySelectorAll('.practice-answer').forEach(item => { item.disabled = true; if ((question.acceptedAnswers || [question.answer]).includes(item.dataset.choice)) item.classList.add('correct'); });
       const correct = (question.acceptedAnswers || [question.answer]).includes(button.dataset.choice);
