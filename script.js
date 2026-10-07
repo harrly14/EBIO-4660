@@ -16,7 +16,7 @@ function renderLesson(){
     cards:l.cards?.map(c=>({order:c[0],label:c[1],detail:c[2],mnemonic:c[3]})),
     comparisons:l.comparisons?.map(c=>({comparison:c[0],orderA:c[1],detailA:c[2],orderB:c[3],detailB:c[4]})),
     algorithm:l.algorithm?.map(c=>({step:c[0],title:c[1],detail:c[2]})),
-    check:{question:l.check.q,choices:numbered(l.check.choices),answer:l.check.answer,explain:l.check.explain}};
+    check:{question:l.check.q,choices:numbered(shuffled(l.check.choices)),answer:l.check.answer,explain:l.check.explain}};
   document.getElementById('lessonArea').innerHTML=templates.lesson(lesson);
   document.querySelectorAll('.learnOpt').forEach(b=>b.onclick=()=>{
     document.querySelectorAll('.learnOpt').forEach(x=>{x.disabled=true;if(x.dataset.answer===l.check.answer)x.classList.add('correct')});
@@ -89,16 +89,21 @@ function getStoredHighScore(){return getCookie('insectSpeedHighScore')||localSto
 function storeHighScore(score){setCookie('insectSpeedHighScore',String(score));localStorage.setItem('insectSpeedHighScore',String(score))}
 function renderSpeedHighScore(){const highScore=document.getElementById('speedHighScore');highScore.textContent=`High score: ${getStoredHighScore()}`}
 function sample(arr){return arr[Math.floor(Math.random()*arr.length)]}
-function shuffled(arr){return [...arr].sort(()=>Math.random()-.5)}
+function shuffled(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
-function makeChoices(correct,pool=orders.map(o=>o.order)){let vals=[correct,...shuffled(pool.filter(x=>x!==correct)).slice(0,3)];return shuffled(vals)}
-function confusableFor(order){let g=confusionGroups.find(g=>g.includes(order));return g?g:orders.map(o=>o.order)}
+function makeChoices(correct,near=[]){
+  const all=orders.map(o=>o.order).filter(x=>x!==correct);
+  const close=shuffled(near.filter(x=>x!==correct&&all.includes(x)));
+  const rest=shuffled(all.filter(x=>!close.includes(x)));
+  return shuffled([correct,...[...close,...rest].slice(0,3)]);
+}
+function confusableFor(order){return [...new Set(confusionGroups.filter(g=>g.includes(order)).flat())].filter(x=>x!==order)}
 const orderBasedPracticeModes=new Set(['common','traits','feature','fill','visual']);
 function practiceQuestionTotal(mode){
   if(orderBasedPracticeModes.has(mode))return orders.length;
-  if(mode==='scenario')return challengeBank.length;
+  if(mode==='scenario')return candidatesFor('scenario').length;
   if(mode==='confusion')return confusionGroups.reduce((total,group)=>total+group.length,0);
-  if(mode==='mixed')return orders.length*5+challengeBank.length+confusionGroups.reduce((total,group)=>total+group.length,0);
+  if(mode==='mixed')return orders.length*5+candidatesFor('scenario').length+confusionGroups.reduce((total,group)=>total+group.length,0);
   return orders.length;
 }
 function syncCountOptions(){
@@ -111,53 +116,56 @@ function syncCountOptions(){
   document.getElementById('countValue').textContent=count.value;
 }
 
-function challengeQuestion(){
-  const x=sample(challengeBank), correct=x[0], distract=x[3];
-  return {type:'scenario',label:'Challenge question',prompt:esc(x[1]),correct,choices:shuffled([correct,...distract]),order:correct,why:x[2]};
+/* ---- seen-question tracking (localStorage): unseen questions are served first; a new round starts only when a pool is used up ---- */
+const SEEN_KEY='ebioOrdersSeen';
+const seenFallback=new Set();
+function loadSeen(){try{return new Set(JSON.parse(localStorage.getItem(SEEN_KEY)||'[]'))}catch(e){return new Set(seenFallback)}}
+function saveSeen(seen){try{localStorage.setItem(SEEN_KEY,JSON.stringify([...seen]))}catch(e){seenFallback.clear();seen.forEach(x=>seenFallback.add(x))}}
+function markSeen(id){if(!id)return;const seen=loadSeen();seen.add(id);saveSeen(seen)}
+
+function commonQuestion(o,label){return {type:'common',label:'Common name → order',prompt:`Which order does <strong>${esc(label)}</strong> belong to?`,correct:o.order,choices:makeChoices(o.order),order:o.order,why:`${o.order}: ${o.key}.`}}
+function traitsQuestion(o,pair){const selected=shuffled(pair);return {type:'traits',label:'Description → order',prompt:`Identify the order: <strong>${esc(selected[0])}</strong>; ${esc(selected[1])}.`,correct:o.order,choices:makeChoices(o.order),order:o.order,why:`These clues point to ${o.order}. Key giveaway: ${o.key}.`}}
+function featureQuestion(o){const distract=shuffled(orders.filter(x=>x.order!==o.order)).slice(0,3).map(x=>x.key);return {type:'feature',label:'Order → feature',prompt:`Which feature is the best match for <strong>${esc(o.order)}</strong>?`,correct:o.key,choices:shuffled([o.key,...distract]),order:o.order,why:`${o.order} (${o.common}) is best recognized by: ${o.key}.`}}
+function fillQuestion(o){return {type:'fill',label:'Fill in the blanks',prompt:`${esc(o.common)} are recognized by: <strong>${esc(o.key)}</strong>. Type the insect order:`,correct:o.order,order:o.order,why:`${o.common} belong to ${o.order}.`}}
+function visualQuestion(o,photoUrl){return {type:'visual',label:'Photo visual ID',prompt:'Which order does the insect in this real specimen photograph belong to?',correct:o.order,choices:makeChoices(o.order,confusableFor(o.order)),order:o.order,why:`Look for this giveaway: ${o.key}.`,visual:true,photoUrl}}
+function confusionQuestion(group,order){const target=byOrder[order];return {type:'confusion',label:'Confusing orders',prompt:`Among commonly confused orders, which one matches: <strong>${esc(target.key)}</strong>?`,correct:target.order,choices:makeChoices(target.order,group),order:target.order,why:`${target.order} = ${target.key}. Compare it with ${group.filter(x=>x!==target.order).join(' / ')}.`}}
+function challengeQuestion(x){return {type:'scenario',label:'Challenge question',prompt:esc(x[1]),correct:x[0],choices:shuffled([x[0],...x[3]]),order:x[0],why:x[2]}}
+
+const candidateCache={};
+function candidatesFor(type){
+  if(candidateCache[type])return candidateCache[type];
+  let list=[];
+  if(type==='common')list=orders.flatMap(o=>[o.common,...o.aliases].map(label=>({id:`common|${o.order}|${label}`,build:()=>commonQuestion(o,label)})));
+  else if(type==='traits')list=orders.flatMap(o=>o.traits.flatMap((a,i)=>o.traits.slice(i+1).map(b=>({id:`traits|${o.order}|${a}|${b}`,build:()=>traitsQuestion(o,[a,b])}))));
+  else if(type==='feature')list=orders.map(o=>({id:`feature|${o.order}`,build:()=>featureQuestion(o)}));
+  else if(type==='fill')list=orders.map(o=>({id:`fill|${o.order}`,build:()=>fillQuestion(o)}));
+  else if(type==='visual')list=orders.flatMap(o=>normalizePhotoPool(o.order).map(url=>({id:`visual|${photoKey(url)}`,build:()=>visualQuestion(o,url)})));
+  else if(type==='confusion')list=confusionGroups.flatMap(group=>group.map(order=>({id:`confusion|${order}|${group.join('+')}`,build:()=>confusionQuestion(group,order)})));
+  else if(type==='scenario'){const byPrompt=new Map();challengeBank.filter(Array.isArray).forEach(x=>{if(!byPrompt.has(x[1]))byPrompt.set(x[1],x)});list=[...byPrompt.values()].map(x=>({id:`scenario|${x[1]}`,build:()=>challengeQuestion(x)}))}
+  candidateCache[type]=list;return list;
 }
-function fillQuestion(order){
-  const o=order||sample(orders);
-  return {type:'fill',label:'Fill in the blanks',prompt:`${esc(o.common)} are recognized by: <strong>${esc(o.key)}</strong>. Type the insect order:`,correct:o.order,order:o.order,why:`${o.common} belong to ${o.order}.`};
+const mixedTypes=['common','traits','feature','fill','visual','confusion','scenario','scenario'];
+function drawQuestion(mode,used){
+  const types=mode==='mixed'?mixedTypes:[mode];
+  const seen=loadSeen();
+  const fresh=t=>candidatesFor(t).filter(c=>!seen.has(c.id)&&!used.has(c.id));
+  let open=types.filter(t=>fresh(t).length);
+  if(!open.length){ /* everything in scope has been seen: start a new round */
+    types.forEach(t=>candidatesFor(t).forEach(c=>seen.delete(c.id)));saveSeen(seen);
+    open=types.filter(t=>fresh(t).length);
+  }
+  const candidate=open.length?sample(fresh(sample(open))):sample(candidatesFor(sample(types)));
+  used.add(candidate.id);
+  return {...candidate.build(),id:candidate.id};
 }
-function questionFor(mode='mixed'){
-  let type=mode;
-  if(mode==='mixed') type=sample(['common','traits','feature','fill','visual','confusion','scenario','scenario']);
-  if(type==='scenario') return challengeQuestion();
-  if(type==='fill') return fillQuestion();
-  let o=sample(orders);
-  if(type==='scenario'){
-    const candidates=challengeBank.filter(x=>x[0]===o.order);
-    if(candidates.length){const x=sample(candidates);return {type:'scenario',label:'Weak-spot challenge',prompt:esc(x[1]),correct:x[0],choices:shuffled([x[0],...x[3]]),order:x[0],why:x[2]}}
-  }
-  if(type==='common'){
-    const alias=Math.random()<.55?sample(o.aliases):o.common;
-    return {type,label:'Common name → order',prompt:`Which order does <strong>${esc(alias)}</strong> belong to?`,correct:o.order,choices:makeChoices(o.order),order:o.order,why:`${o.order}: ${o.key}.`};
-  }
-  if(type==='traits'){
-    let selected=shuffled(o.traits).slice(0,2);
-    return {type,label:'Description → order',prompt:`Identify the order: <strong>${esc(selected[0])}</strong>; ${esc(selected[1])}.`,correct:o.order,choices:makeChoices(o.order),order:o.order,why:`These clues point to ${o.order}. Key giveaway: ${o.key}.`};
-  }
-  if(type==='feature'){
-    let correct=o.key; let distract=shuffled(orders.filter(x=>x.order!==o.order)).slice(0,3).map(x=>x.key);
-    return {type,label:'Order → feature',prompt:`Which feature is the best match for <strong>${o.order}</strong>?`,correct,choices:shuffled([correct,...distract]),order:o.order,why:`${o.order} (${o.common}) is best recognized by: ${o.key}.`};
-  }
-  if(type==='visual'){
-    return {type,label:'Photo visual ID',prompt:'Which order does the insect in this real specimen photograph belong to?',correct:o.order,choices:makeChoices(o.order,confusableFor(o.order).length>=4?confusableFor(o.order):orders.map(x=>x.order)),order:o.order,why:`Look for the this giveaway: ${o.key}.`,visual:true,photoUrl:randomPhotoFor(o.order)};
-  }
-  if(type==='confusion'){
-    const group=sample(confusionGroups), target=byOrder[sample(group)];
-    let clue=target.key;
-    return {type,label:'Confusing orders',prompt:`Among commonly confused orders, which one matches: <strong>${esc(clue)}</strong>?`,correct:target.order,choices:makeChoices(target.order,[...new Set([...group,...orders.map(x=>x.order)])]),order:target.order,why:`${target.order} = ${target.key}. Compare it with ${group.filter(x=>x!==target.order).join(' / ')}.`};
-  }
-}
-function questionSignature(question){return `${question.type}|${question.prompt}`}
-function uniqueQuestionFor(mode,used){
-  let question;
-  for(let attempt=0;attempt<200;attempt++){
-    question=questionFor(mode);
-    if(!used.has(questionSignature(question))){used.add(questionSignature(question));return question}
-  }
-  return question;
+function seenCount(){const ids=new Set(['common','traits','feature','fill','visual','confusion','scenario'].flatMap(t=>candidatesFor(t).map(c=>c.id)));return [...loadSeen()].filter(id=>ids.has(id)).length}
+function totalCandidates(){return ['common','traits','feature','fill','visual','confusion','scenario'].reduce((n,t)=>n+candidatesFor(t).length,0)}
+function renderSeenStatus(){
+  const setup=document.getElementById('practiceSetup');if(!setup)return;
+  let box=document.getElementById('seenStatus');
+  if(!box){box=document.createElement('p');box.id='seenStatus';box.className='subtle';setup.appendChild(box)}
+  box.innerHTML=`${seenCount()} of ${totalCandidates()} questions seen. Unseen questions are served first. <button type="button" class="secondary" id="resetSeen">Reset</button>`;
+  document.getElementById('resetSeen').onclick=()=>{try{localStorage.removeItem(SEEN_KEY)}catch(e){}seenFallback.clear();renderSeenStatus()};
 }
 function startQuiz(){
   const mode=document.getElementById('modeSelect').value;
@@ -166,11 +174,11 @@ function startQuiz(){
   const n=Math.min(Number(document.getElementById('countRange').value),maxQuestions);
   document.getElementById('practiceSetup').classList.add('hidden');
   const usedQuestions=new Set();
-  quiz=mode==='fill'?shuffled(orders).slice(0,n).map(o=>fillQuestion(o)):Array.from({length:n},()=>uniqueQuestionFor(mode,usedQuestions));qIndex=0;setAnswered=0;setCorrect=0;setReview=[];practiceView='quiz';renderQuestion();
+  quiz=Array.from({length:n},()=>drawQuestion(mode,usedQuestions));qIndex=0;setAnswered=0;setCorrect=0;setReview=[];practiceView='quiz';renderQuestion();
 }
 function renderQuestion(){
   if(qIndex>=quiz.length){document.body.classList.remove('fill-active');renderQuizEnd();return}
-  answered=false; const q=quiz[qIndex];
+  answered=false; const q=quiz[qIndex]; markSeen(q.id);
   document.body.classList.toggle('fill-active',q.type==='fill');
   document.getElementById('quizArea').innerHTML=templates.question({...q,position:qIndex+1,total:quiz.length,fill:q.type==='fill',choices:numbered(q.choices||[])});
   document.querySelectorAll('.option').forEach(b=>b.addEventListener('click',()=>answerQuestion(b,q)));
@@ -246,6 +254,7 @@ function renderPracticeSetup(){
   document.body.classList.remove('fill-active');
   document.getElementById('quizArea').innerHTML='';
   document.getElementById('practiceSetup').classList.remove('hidden');
+  renderSeenStatus();
 }
 
 function renderFlash(){
@@ -263,7 +272,7 @@ function startSpeed(){
   speedTimer=setInterval(()=>{speedLeft--;document.getElementById('timer').textContent=`0:${String(speedLeft).padStart(2,'0')}`;if(speedLeft<=0)endSpeed()},1000);
 }
 function nextSpeed(){
-  speedCurrent=uniqueQuestionFor(Math.random()<.6?'common':'traits',speedUsedQuestions);
+  speedCurrent=drawQuestion(Math.random()<.6?'common':'traits',speedUsedQuestions);markSeen(speedCurrent.id);
   document.getElementById('speedArea').innerHTML=templates['speed-question']({...speedCurrent,choices:numbered(speedCurrent.choices)});
   document.querySelectorAll('.speedOpt').forEach(b=>b.onclick=()=>{  const choice=b.dataset.choice;const ok=choice===speedCurrent.correct;speedReview.push({q:speedCurrent,answer:choice,ok});if(ok)speedPoints++;document.getElementById('speedScore').textContent='Score: '+speedPoints;nextSpeed()});
 }
@@ -277,6 +286,7 @@ function renderReference(){
 
 function setTab(name){
   if(name!=='practice')document.body.classList.remove('fill-active');
+  if(name==='practice')renderSeenStatus();
   document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));
   ['learn','practice','flashcards','speed','reference'].forEach(n=>document.getElementById(n+'Pane').classList.toggle('hidden',n!==name));
   if(name==='reference')renderReference();if(name==='flashcards')renderFlash();if(name==='learn')renderLesson();

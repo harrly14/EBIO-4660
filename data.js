@@ -25,7 +25,7 @@ const orders = [
 {order:'Zoraptera',common:'Angel insects / zorapterans',aliases:['angel insect','zorapteran'],traits:['Very small, soft-bodied insects','Often found under bark or in rotting wood','Winged and wingless forms occur'],key:'Tiny soft-bodied termite-like insect',meta:'hemi',tags:['tiny','soft-bodied','under bark']},
 {order:'Thysanoptera',common:'Thrips',aliases:['thrips'],traits:['Very small, slender insects','Narrow wings with conspicuous fringes of hairs','Asymmetrical rasping-sucking mouthparts'],key:'Tiny insect with narrow fringed wings',meta:'hemi',tags:['fringed wings','tiny','slender']},
 {order:'Hemiptera',common:'True bugs, aphids, cicadas, and hoppers',aliases:['true bug','aphid','cicada','leafhopper','planthopper','stink bug','assassin bug'],traits:['Piercing-sucking beak or rostrum','True bugs often have partly hardened forewings','Includes aphids, cicadas, and many hoppers'],key:'Piercing-sucking beak',meta:'hemi',tags:['beak','piercing-sucking','true bug']},
-{order:'Neuroptera',common:'Lacewings, antlions, and owlflies',aliases:['lacewing','antlion','owlfly'],traits:['Two pairs of delicate, similarly sized net-veined wings','Adults often look fragile compared with Megaloptera','Many species are predatory'],key:'Delicate net-veined wings',meta:'holo',tags:['net wings','delicate','predator']},
+{order:'Neuroptera',common:'Lacewings, antlions, and owlflies',aliases:['lacewing','antlion','owlfly'],traits:['Two pairs of delicate, similarly sized net-veined wings','Adults often look delicate and fragile','Many species are predatory'],key:'Delicate net-veined wings',meta:'holo',tags:['net wings','delicate','predator']},
 {order:'Zygentoma',common:'Silverfish',aliases:['silverfish','firebrat'],traits:['Wingless, flattened, carrot-shaped body','Three long tail filaments of roughly similar prominence','Body often covered in scales; fast runner'],key:'Flat wingless runner with 3 tails',meta:'wingless',tags:['3 tails','flat','scales']}
 ];
 
@@ -427,13 +427,13 @@ const challengeBank = [
 ['Blattodea','Which order includes insects with flattened bodies, long antennae, and a large pronotum covering part of the head?','Those are common cockroach traits, identifying Blattodea.',['Coleoptera','Hemiptera','Orthoptera']],
 
 ['Plecoptera','What order do stoneflies belong to?','Stoneflies belong to Plecoptera.',['Ephemeroptera','Trichoptera','Megaloptera']],
-['Plecoptera','Which order has aquatic nymphs that usually have two tail filaments?','Stonefly nymphs in Plecoptera usually have two cerci.',['Ephemeroptera','Odonata','Trichoptera']],
+['Plecoptera','Which order has aquatic nymphs that usually have two tail filaments?','Stonefly nymphs in Plecoptera usually have two cerci.',['Megaloptera','Odonata','Trichoptera']],
 
 ['Embioptera','What order includes webspinners?','Webspinners belong to Embioptera.',['Trichoptera','Zoraptera','Psocodea']],
 ['Embioptera','Which order lives in silk tunnels and produces silk using the front legs?','Webspinners in Embioptera make silk with glands in their front tarsi.',['Trichoptera','Thysanoptera','Zoraptera']],
 
 ['Orthoptera','What order do crickets and grasshoppers belong to?','Crickets and grasshoppers belong to Orthoptera.',['Phasmatodea','Mantodea','Dermaptera']],
-['Orthoptera','Which order commonly has enlarged hind femora adapted for jumping?','Large jumping hind legs are characteristic of Orthoptera.',['Mantodea','Hemiptera','Blattodea']],
+['Orthoptera','Which order commonly has enlarged hind femora adapted for jumping?','Large jumping hind legs are characteristic of Orthoptera.',['Mantodea','Dermaptera','Blattodea']],
 
 ['Phasmatodea','What order do stick insects belong to?','Stick insects belong to Phasmatodea.',['Mantodea','Orthoptera','Mantophasmatodea']],
 ['Phasmatodea','Which order is known for camouflage that makes insects resemble twigs or leaves?','Twig and leaf mimicry is characteristic of Phasmatodea.',['Mantodea','Orthoptera','Embioptera']],
@@ -445,7 +445,7 @@ const challengeBank = [
 ['Megaloptera','Which order includes large aquatic larvae called hellgrammites?','Hellgrammites are larval dobsonflies in Megaloptera.',['Plecoptera','Odonata','Neuroptera']],
 
 ['Raphidioptera','What order do snakeflies belong to?','Snakeflies belong to Raphidioptera.',['Mecoptera','Neuroptera','Megaloptera']],
-['Raphidioptera','Which order is recognized by a long prothorax that gives the insect a neck-like appearance?','The long prothorax is characteristic of Raphidioptera.',['Mecoptera','Neuroptera','Mantodea']],
+['Raphidioptera','Which order is recognized by a long prothorax that gives the insect a neck-like appearance?','The long prothorax is characteristic of Raphidioptera.',['Mecoptera','Neuroptera','Trichoptera']],
 
 ['Coleoptera','What order includes beetles?','Beetles belong to Coleoptera.',['Hemiptera','Orthoptera','Neuroptera']],
 ['Coleoptera','Which order has hardened forewings that protect the hindwings underneath?','Hardened forewings called elytra identify Coleoptera.',['Hemiptera','Dermaptera','Orthoptera']],
@@ -457,7 +457,7 @@ const challengeBank = [
 ['Mecoptera','Which order commonly has an elongated, beak-like head?','The elongated rostrum is characteristic of Mecoptera.',['Diptera','Neuroptera','Raphidioptera']],
 
 ['Diptera','What order do true flies belong to?','True flies belong to Diptera.',['Hymenoptera','Lepidoptera','Mecoptera']],
-['Diptera','Which order has halteres instead of a second functional pair of wings?','Halteres are characteristic of Diptera.',['Strepsiptera','Hymenoptera','Neuroptera']],
+['Diptera','Which order has hindwings reduced to halteres?','Halteres (reduced hindwings) are characteristic of Diptera. Strepsiptera also have a reduced pair, but theirs are the forewings.',['Strepsiptera','Hymenoptera','Neuroptera']],
 
 ['Lepidoptera','What order contains butterflies and moths?','Butterflies and moths belong to Lepidoptera.',['Trichoptera','Diptera','Neuroptera']],
 ['Lepidoptera','Which order has adults with wings covered in overlapping scales?','Scaled wings are characteristic of Lepidoptera.',['Trichoptera','Neuroptera','Hymenoptera']],
@@ -466,7 +466,7 @@ const challengeBank = [
 ['Hymenoptera','Which order includes bees, ants, wasps, and sawflies?','These insects belong to Hymenoptera.',['Diptera','Blattodea','Neuroptera']],
 
 ['Zoraptera','What order do angel insects belong to?','Angel insects belong to Zoraptera.',['Embioptera','Psocodea','Mantophasmatodea']],
-['Zoraptera','Which order contains tiny insects often found under bark or in rotting wood?','Zorapterans are small insects commonly associated with decaying wood.',['Psocodea','Embioptera','Blattodea']],
+['Zoraptera','Which order contains tiny insects often found under bark or in rotting wood?','Zorapterans are small insects commonly associated with decaying wood.',['Mantophasmatodea','Grylloblattodea','Raphidioptera']],
 
 ['Thysanoptera','What order do thrips belong to?','Thrips belong to Thysanoptera.',['Psocodea','Trichoptera','Hemiptera']],
 ['Thysanoptera','Which order has tiny insects with narrow, fringed wings?','Fringed wings are characteristic of Thysanoptera.',['Trichoptera','Diptera','Psocodea']],
@@ -475,10 +475,10 @@ const challengeBank = [
 ['Hemiptera','Which order is characterized by piercing-sucking mouthparts?','Piercing-sucking mouthparts are characteristic of Hemiptera.',['Coleoptera','Neuroptera','Orthoptera']],
 
 ['Neuroptera','What order do lacewings belong to?','Lacewings belong to Neuroptera.',['Megaloptera','Raphidioptera','Trichoptera']],
-['Neuroptera','Which order includes insects with two similar pairs of highly net-veined wings?','Net-veined wings are characteristic of Neuroptera.',['Megaloptera','Odonata','Mecoptera']],
+['Neuroptera','Which order has delicate, fragile-looking adults with two similar pairs of net-veined wings?','Delicate net-veined wings are characteristic of Neuroptera; Megaloptera are larger and more robust.',['Megaloptera','Mecoptera','Trichoptera']],
 
 ['Zygentoma','What order do silverfish belong to?','Silverfish belong to Zygentoma.',['Archaeognatha','Psocodea','Zoraptera']],
-['Zygentoma','Which order has flattened, wingless insects with three tail filaments and a carrot-shaped body?','That body shape is characteristic of Zygentoma.',['Archaeognatha','Ephemeroptera','Dermaptera']]
+['Zygentoma','Which order has flattened, wingless insects with three tail filaments and a carrot-shaped body?','That body shape is characteristic of Zygentoma.',['Archaeognatha','Ephemeroptera','Dermaptera']],
 
 ['Archaeognatha','Which order is wingless, humped, has three tail filaments, and can jump?','The humped jumping bristletails are Archaeognatha.',['Zygentoma','Grylloblattodea','Zoraptera']],
 ['Archaeognatha','Which order has large eyes, a humped body, and a middle tail filament longer than the other two?','Archaeognatha are jumping bristletails; the humped body and long median filament separate them from silverfish.',['Zygentoma','Dermaptera','Plecoptera']],
@@ -540,7 +540,7 @@ const challengeBank = [
 ['Mecoptera','Which order has a long beak-like rostrum and, in males, a scorpion-like abdominal tip?','That combination is the classic scorpionfly, Mecoptera.',['Raphidioptera','Megaloptera','Diptera']],
 ['Mecoptera','What order do scorpionflies and hangingflies belong to?','They are Mecoptera.',['Raphidioptera','Siphonaptera','Neuroptera']],
 
-['Diptera','Which order has one pair of functional wings and a pair of halteres?','One wing pair plus halteres identifies Diptera.',['Hymenoptera','Lepidoptera','Strepsiptera']],
+['Diptera','Which order has one pair of functional forewings and hindwings reduced to halteres?','One wing pair plus hindwing halteres identifies Diptera.',['Hymenoptera','Lepidoptera','Strepsiptera']],
 ['Diptera','What order includes mosquitoes, house flies, gnats, and midges?','True flies and mosquitoes are Diptera.',['Hymenoptera','Mecoptera','Neuroptera']],
 
 ['Lepidoptera','Which order has wings covered in scales and a caterpillar larval stage?','Scaly wings and caterpillars indicate Lepidoptera.',['Trichoptera','Neuroptera','Hymenoptera']],
@@ -549,7 +549,7 @@ const challengeBank = [
 ['Hymenoptera','What order do bees belong to?','Bees belong to Hymenoptera.',['Diptera','Lepidoptera','Hemiptera']],
 ['Hymenoptera','What order includes ants, bees, wasps, hornets, and sawflies?','Those groups are Hymenoptera.',['Blattodea','Coleoptera','Diptera']],
 
-['Zoraptera','Which order contains tiny, soft-bodied insects that live under bark or in decaying wood and can occur in winged or wingless forms?','That rare combination describes Zoraptera.',['Psocodea','Blattodea','Grylloblattodea']],
+['Zoraptera','Which order contains tiny, soft-bodied insects that live under bark or in decaying wood and can occur in winged or wingless forms?','That rare combination describes Zoraptera.',['Mantophasmatodea','Plecoptera','Grylloblattodea']],
 ['Zoraptera','What order do angel insects belong to?','Angel insects / zorapterans are Zoraptera.',['Embioptera','Mantophasmatodea','Psocodea']],
 
 ['Thysanoptera','Which order has very narrow wings edged with long hairs?','Narrow fringed wings identify Thysanoptera.',['Trichoptera','Psocodea','Diptera']],
@@ -558,7 +558,7 @@ const challengeBank = [
 ['Hemiptera','Which order has piercing-sucking mouthparts forming a beak or rostrum?','Piercing-sucking rostrum plus those common names indicates Hemiptera.',['Coleoptera','Hymenoptera','Orthoptera']],
 ['Hemiptera','What order do stink bugs and assassin bugs belong to?','True bugs such as stink bugs and assassin bugs are Hemiptera.',['Coleoptera','Dermaptera','Neuroptera']],
 
-['Neuroptera','Which order has two pairs of transparent wings with many fine veins?','Delicate net-veined wings are characteristic of Neuroptera.',['Megaloptera','Raphidioptera','Odonata']],
+['Neuroptera','Which order includes delicate, lacy-winged adults whose larvae are predatory (as in antlions)?','Lacewings, antlions, and owlflies are Neuroptera.',['Lepidoptera','Mecoptera','Diptera']],
 ['Neuroptera','What order includes lacewings, antlions, and owlflies?','Those groups make up Neuroptera.',['Megaloptera','Raphidioptera','Mecoptera']],
 
 ['Zygentoma','Which order is wingless, flattened, and carrot-shaped with three long tail filaments?','That is the silverfish body plan: Zygentoma.',['Archaeognatha','Plecoptera','Dermaptera']],
