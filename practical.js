@@ -116,21 +116,21 @@ const questionBankExtrasWithComparisons = [
 const keyFamilies = { Odonata: ['Aeshnidae', 'Libellulidae'], Orthoptera: ['Acrididae', 'Gryllidae', 'Tettigoniidae', 'Rhaphidophoridae'], Hemiptera: ['Aphididae', 'Coccoidae', 'Fulgoroidea', 'Cicadidae', 'Membracidae', 'Cercopidae', 'Cicadellidae', 'Belostomatidae', 'Corixidae', 'Gerridae', 'Cimicidae', 'Pentatomidae', 'Scutelleridae', 'Reduviidae', 'Coreidae', 'Lygaeidae', 'Miridae'] };
 const esc = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[char]));
 const list = value => `<ul>${value.split(';').map(item => `<li>${esc(item.trim())}</li>`).join('')}</ul>`;
-let practicalState = { tab: 'learn', score: 0, asked: 0, flashIndex: 0, flashFlipped: false, key: {}, missedOnly: false, lessonIndex: 0, practiceSession: null, practiceIndex: 0, practiceScore: 0, practiceSetupVisible: true };
+let practicalState = { tab: 'learn', score: 0, asked: 0, flashIndex: 0, flashFlipped: false, key: {}, missedOnly: false, lessonIndex: 0, practiceSession: null, practiceIndex: 0, practiceScore: 0, practiceSetupVisible: true, referenceTab: 'taxa', referenceQuery: '', referenceTaxaFilter: 'all', referenceAnatomyTab: 'external', referenceAnatomyCategory: 'Head', referenceMorphologyTab: 'Legs' };
 function getProgress() { try { return JSON.parse(localStorage.getItem('ebioPracticalProgress') || '{"answered":0,"correct":0,"topics":{},"misses":{}}'); } catch (error) { return { answered: 0, correct: 0, topics: {}, misses: {} }; } }
 function recordProgress(question, correct) { const progress = getProgress(); progress.answered += 1; progress.correct += correct ? 1 : 0; progress.topics[question.category || question.topic || 'general'] = (progress.topics[question.category || question.topic || 'general'] || 0) + (correct ? 1 : -1); if (!correct) progress.misses[question.taxon || question.answer] = (progress.misses[question.taxon || question.answer] || 0) + 1; localStorage.setItem('ebioPracticalProgress', JSON.stringify(progress)); }
 function progressCard() { const progress = getProgress(); const accuracy = progress.answered ? Math.round((progress.correct / progress.answered) * 100) : 0; const misses = Object.entries(progress.misses).sort((a, b) => b[1] - a[1]).slice(0, 5).map(item => `${item[0]} (${item[1]})`).join(', ') || 'None yet'; return card('Progress', `<p><strong>${accuracy}% accuracy</strong> across ${progress.answered} answered questions.</p><p class="subtle">Most-missed concepts: ${esc(misses)}</p><button class="secondary" data-missed-practice>Practice missed material</button>`); }
 function card(title, body, className = '') { return `<article class="practical-card ${className}"><h3>${esc(title)}</h3>${body}</article>`; }
 const practicalLessons = [
-  { kicker: 'Lesson 1', title: 'What the practical expects', intro: 'The practical rewards close observation, not memorizing a wall of names. You need to recognize taxa quickly, explain the feature that supports each ID, and link the feature to anatomy or ecology.', cards: [['Observe', 'Find the feature', 'Look for a visible character before naming the group.'], ['Group', 'Choose the smallest defensible unit', 'Order or suborder first; family only when the key is supplied.'], ['Explain', 'State the evidence', 'Name the diagnostic trait and what it means.']] },
+  { kicker: 'Lesson 1', title: 'What the practical expects', intro: 'You need to recognize taxa quickly, explain the feature that supports each ID, and link the feature to anatomy or ecology.', cards: [['Observe', 'Find the feature', 'Look for a visible character before naming the group.'], ['Group', 'Choose the smallest defensible unit', 'Order or suborder first; family only when the key is supplied.'], ['Explain', 'State the evidence', 'Name the diagnostic trait and what it means.']] },
   { kicker: 'Lesson 2', title: 'External anatomy', intro: 'Focus on the head, thorax, legs, and abdomen. Learn where structures sit and what they do before working through taxonomic identifications.', cards: [['Head', 'compound eyes, ocellus, antennae', 'Sensory input and sight.'], ['Mouthparts', 'labrum, mandibles, maxilla, labium', 'Feeding structures and function.'], ['Thorax', 'prothorax, mesothorax, metathorax', 'Leg and wing attachment points.'], ['Abdomen', 'spiracles, cerci, terga, sterna', 'Breathing and posterior structures.']] },
   { kicker: 'Lesson 3', title: 'Internal anatomy', intro: 'Internal anatomy is usually less about huge memorization and more about the relationship between structure and function: respiration, circulation, digestion, and neural coordination.', cards: [['Circulation', 'heart + aorta + dorsal vessel', 'Moves hemolymph through the body.'], ['Respiration', 'tracheae, tracheoles, taenidia', 'Delivers oxygen to tissues.'], ['Digestion', 'crop, ventriculus, Malpighian tubules', 'Processes and moves nutrients and waste.']] },
-  { kicker: 'Lesson 4', title: 'Legs, wings, mouthparts & antennae', intro: 'These functional traits are frequently tested as morphology questions. Learn the basic type, its function, and what feature distinguishes it from a similar structure.', cards: [['Legs', 'saltatorial, fossorial, raptorial, natatorial', 'Jumping, digging, grasping, swimming.'], ['Wings', 'tegmina, elytra, hemelytra, fringed wings', 'Leathery, membranous, or fringe-winged forms.'], ['Antennae', 'serrate, plumose, filiform, geniculate', 'Saw-like, feather-like, thread-like, elbowed.']] },
-  { kicker: 'Lesson 5', title: 'Taxonomic hierarchy and major groups', intro: 'Keep the hierarchy clear: order, suborder, family, and grouping. The practical often expects you to identify a group by a combination of characters rather than a single detail.', cards: [['Major groups', 'Apterygote, Paleoptera, Neoptera', 'Primitive and derived lineages.'], ['Orders', 'Ephemeroptera, Odonata, Orthoptera, Hemiptera', 'Use orders as the core recognition target.'], ['Suborders', 'Zygoptera, Anisoptera, Ensifera, Heteroptera', 'Look for the correct subordinate grouping.']] },
+  { kicker: 'Lesson 4', title: 'Legs, wings, mouthparts & antennae', intro: 'Learn the basic type, its function, and what feature distinguishes it from a similar structure.', cards: [['Legs', 'saltatorial, fossorial, raptorial, natatorial', 'Jumping, digging, grasping, swimming.'], ['Wings', 'tegmina, elytra, hemelytra, fringed wings', 'Leathery, membranous, or fringe-winged forms.'], ['Antennae', 'serrate, plumose, filiform, geniculate', 'Saw-like, feather-like, thread-like, elbowed.']] },
+  { kicker: 'Lesson 5', title: 'Taxonomic hierarchy and major groups', intro: 'Keep the hierarchy clear: order, suborder, family, and grouping. The practical likely expects you to identify a group by a combination of characters rather than a single detail.', cards: [['Major groups', 'Apterygote, Paleoptera, Neoptera', 'Primitive and derived lineages.'], ['Orders', 'Ephemeroptera, Odonata, Orthoptera, Hemiptera', 'Use orders as the core recognition target.'], ['Suborders', 'Zygoptera, Anisoptera, Ensifera, Heteroptera', 'Look for the correct subordinate grouping.']] },
   { kicker: 'Lesson 6', title: 'Orders & suborders: how to recognize them', intro: 'A strong answer usually names the specific trait that distinguishes one order or suborder from the others. Practice from a clue to the taxon, then reverse it and say why the answer matches.', cards: [['Odonata', 'strong flyers, aquatic nymphs, hinged mask', 'Often obvious by wing plan and predatory nymphs.'], ['Orthoptera', 'saltatorial hind legs, tegmina, tympana', 'Classic jumping grasshopper and cricket clues.'], ['Hemiptera', 'piercing-sucking beak, often hemelytra or wings', 'A beak and stylized mouthparts are the key giveaway.']] },
   { kicker: 'Lesson 7', title: 'Polyneoptera & Dictyoptera', intro: 'These groups are best recognized by the combination of morphology and life history. Focus on wing form, mouthparts, and the presence of a distinctive body plan or feeding habit.', cards: [['Polyneoptera', 'Orthoptera, Phasmatodea, Dermaptera, Plecoptera', 'Diverse assemblage with major morphological variation.'], ['Dictyoptera', 'Blattodea, Mantodea', 'Commonly recognized by body plan and forewing features.']] },
-  { kicker: 'Lesson 8', title: 'Hemiptera and its suborders', intro: 'Hemiptera is a major practical anchor. Learn the three suborders and the common family-level key characters that the supplied keys rely on in practice.', cards: [['Sternorrhyncha', 'aphids, scale insects', 'Often soft-bodied and plant-feeding.'], ['Auchenorrhyncha', 'cicadas, leafhoppers', 'Membranous wings and hind leg/wing patterns often matter.'], ['Heteroptera', 'true bugs', 'Beak-based predators and plant feeders, often with hemelytra.']] },
-  { kicker: 'Lesson 9', title: 'Families: what features the provided keys use', intro: 'Family questions are not random. The course keys depend on a small set of structures: wing veins, beak segments, abdomen shape, and foreleg specialization. Learn those features and the decision points.', cards: [['Odonata key', 'triangle shape, anal loop, wing position', 'The family key begins with wing characters.'], ['Orthoptera key', 'antenna length, ovipositor, ear position', 'Suborder-level cues feed into family-level distinctions.'], ['Hemiptera key', 'beak, wing structure, tarsi, cornicles', 'These are the most common decision points in the family key.']] },
+  { kicker: 'Lesson 8', title: 'Hemiptera and its suborders', intro: 'Learn the three suborders and the common family-level key characters that the supplied keys rely on in practice.', cards: [['Sternorrhyncha', 'aphids, scale insects', 'Often soft-bodied and plant-feeding.'], ['Auchenorrhyncha', 'cicadas, leafhoppers', 'Membranous wings and hind leg/wing patterns often matter.'], ['Heteroptera', 'true bugs', 'Beak-based predators and plant feeders, often with hemelytra.']] },
+  { kicker: 'Lesson 9', title: 'Families: what features the provided keys use', intro: 'The study guide says that they will provide a key for the families, so you don\'t have to memorize them. The course keys depend on a small set of structures: wing veins, beak segments, abdomen shape, and foreleg specialization.', cards: [['Odonata key', 'triangle shape, anal loop, wing position', 'The family key begins with wing characters.'], ['Orthoptera key', 'antenna length, ovipositor, ear position', 'Suborder-level cues feed into family-level distinctions.'], ['Hemiptera key', 'beak, wing structure, tarsi, cornicles', 'These are the most common decision points in the family key.']] },
   { kicker: 'Lesson 10', title: 'Final practical strategy', intro: 'Start with the biggest visible clue, then narrow down by order, suborder, and any supplied key characters. Do not chase every tiny detail: choose the strongest, most identifying trait and explain it.', cards: [['Step 1', 'Find the main feature', 'Wing plan, mouthparts, leg type, or body form.'], ['Step 2', 'Match the group', 'Use the smallest group that fits the evidence.'], ['Step 3', 'State the reason', 'Explain which characteristic makes that answer strongest.']] }
 ];
 function renderLearn() {
@@ -160,9 +160,109 @@ function renderFamilies() {
 function renderComparisons() { return `<div class="practical-grid">${comparisonData.map(item => card(item[0], `<p>${esc(item[1])}</p><button class="secondary compare-reveal">Reveal study prompt</button><div class="hidden compare-answer"><strong>Observable-feature check:</strong> write the feature and the course-note couplet that separates the two groups.</div>`)).join('')}</div>`; }
 function renderFlashcards() { const terms = [...anatomy.flatMap(item => item[2].split(';').map(term => term.trim())), ...practicalTaxa.map(taxon => taxon.name)]; const term = terms[(practicalState.flashIndex + terms.length) % terms.length]; const entry = practicalTaxa.find(taxon => taxon.name === term); const detail = entry ? [...entry.diagnosticTraits, ...entry.practicalFacts].join('; ') : anatomy.find(item => item[2].includes(term))?.[3] || 'Use the official study guide to recall its location and function.'; return `<div class="flash-wrap"><div class="flash ${practicalState.flashFlipped ? 'flipped' : ''}" id="practicalFlash"><div class="face front"><span class="eyebrow">Term</span><h2>${esc(term)}</h2><p class="subtle">What should you identify, locate, or explain?</p></div><div class="face back"><span class="eyebrow">Recall check</span><h2>${esc(term)}</h2><p>${esc(detail)}</p></div></div></div><div class="flash-actions"><button class="secondary" id="prevPracticalFlash">← Previous</button><button class="primary" id="flipPracticalFlash">Flip card</button><button class="secondary" id="nextPracticalFlash">Next →</button></div>`; }
 function renderReference() {
-  const entries = [...practicalTaxa.map(taxon => [taxon.rank, taxon.name, taxon]), ...anatomy.map(item => [item[0], item[1], { diagnosticTraits: item[2].split(';'), practicalFacts: [item[3]], aliases: item[2].split(';').flatMap(term => anatomyAliases[term.trim()] || []) }]), ...morphologyTypes.map(item => [item.category, item.term, { diagnosticTraits: [item.description] }])];
-  const keyCards = Object.entries(practicalFamilyKeys).map(([order, key]) => `<article class="ref-card" data-search="${esc([order, key.title, ...key.nodes.slice(0, 4).map(node => `${node.feature} ${node.prompt}`)].join(' '))}"><span class="tag">Key</span><h3>${esc(order)}</h3><p class="subtle">${esc(key.title)}</p>${key.nodes.slice(0, 4).map(node => `<p><strong>${esc(node.feature)}</strong>: ${esc(node.prompt)}</p>`).join('')}</article>`).join('');
-  return `<div class="ref-toolbar"><input id="practicalSearch" type="search" placeholder="Search orders, families, structures, or morphology…"><span class="pill">${entries.length} scoped entries</span></div><div class="ref-grid" id="practicalReference">${keyCards}${entries.map(entry => { const aliases = entry[2].aliases || []; const searchable = [entry[0], entry[1], ...aliases, ...(entry[2].diagnosticTraits || []), ...(entry[2].practicalFacts || [])].join(' '); return `<article class="ref-card" data-search="${esc(searchable)}"><span class="tag">${esc(entry[0])}</span><h3>${esc(entry[1])}</h3>${aliases.length ? `<p class="subtle">Also listed as: ${esc(aliases.join(', '))}</p>` : ''}${entry[2].diagnosticTraits?.length ? `<p><strong>How to recognize/use:</strong> ${esc(entry[2].diagnosticTraits.join('; '))}</p>` : ''}${entry[2].ecology?.length ? `<p><strong>Ecology:</strong> ${esc(entry[2].ecology.join('; '))}</p>` : ''}${entry[2].lifeHistory?.length ? `<p><strong>Life history:</strong> ${esc(entry[2].lifeHistory.join('; '))}</p>` : ''}${entry[2].sourceLimitation ? `<p class="explain show"><strong>Source limitation:</strong> ${esc(entry[2].sourceLimitation)}</p>` : ''}${entry[2].requiresKey !== undefined ? `<p class="subtle">${entry[2].requiresKey ? 'Use the family key.' : 'Memorize order/suborder recognition.'}</p>` : ''}</article>`; }).join('')}</div>`;
+  const searchTerm = '';
+  const tab = practicalState.referenceTab || 'taxa';
+  const taxaFilter = practicalState.referenceTaxaFilter || 'all';
+  const anatomyTab = practicalState.referenceAnatomyTab || 'external';
+  const morphologyTab = ['Legs', 'Mouthparts', 'Wings', 'Antennae'].includes(practicalState.referenceMorphologyTab) ? practicalState.referenceMorphologyTab : 'Legs';
+
+  const listItems = items => items && items.length ? `<ul>${items.map(item => `<li>${esc(item)}</li>`).join('')}</ul>` : '';
+  const cardList = (title, items) => items && items.length ? `<div class="reference-card-block"><h4>${esc(title)}</h4>${listItems(items)}</div>` : '';
+
+  const taxaEntries = practicalTaxa.filter(taxon => {
+    if (taxaFilter === 'all') return true;
+    if (taxaFilter === 'major') return ['grouping', 'phylum', 'subphylum', 'class'].includes(taxon.rank) || ['Arthropoda', 'Hexapoda', 'Insecta', 'Entognatha', 'Apterygote', 'Paleoptera', 'Neoptera', 'Polyneoptera', 'Dictyoptera', 'Paraneoptera'].includes(taxon.name);
+    if (taxaFilter === 'orders') return taxon.rank === 'order';
+    if (taxaFilter === 'suborders') return taxon.rank === 'suborder';
+    return ['family', 'superfamily'].includes(taxon.rank);
+  });
+
+  const referenceTaxaCards = taxaEntries.map(taxon => {
+    const label = taxon.rank === 'phylum' ? 'Phylum' : taxon.rank === 'subphylum' ? 'Subphylum' : taxon.rank === 'class' ? 'Class' : taxon.rank === 'grouping' ? 'Major group' : taxon.rank === 'order' ? 'Order' : taxon.rank === 'suborder' ? 'Suborder' : taxon.rank === 'family' ? 'Family' : 'Superfamily';
+    const classification = [taxon.parent, taxon.grouping].filter(Boolean).join(' › ');
+    const aliases = (taxon.aliases || []).filter(Boolean);
+    const searchable = [taxon.name, label, classification, ...(taxon.diagnosticTraits || []), ...(taxon.ecology || []), ...(taxon.lifeHistory || []), ...(taxon.practicalFacts || []), ...(taxon.confusionTaxa || []), ...(taxon.distinctions || []), ...(aliases || [])].join(' ');
+    if (searchTerm && !searchable.toLowerCase().includes(searchTerm)) return '';
+    const sections = [];
+    sections.push(cardList('How to identify', taxon.diagnosticTraits || []));
+    sections.push(cardList('Ecology / biology', taxon.ecology || []));
+    sections.push(cardList('Life history', taxon.lifeHistory || []));
+    sections.push(cardList('Relevant morphology', [taxon.legType ? `Legs: ${taxon.legType}` : '', taxon.wingType ? `Wings: ${taxon.wingType}` : '', taxon.mouthpartType ? `Mouthparts: ${taxon.mouthpartType}` : '', taxon.antennaType ? `Antennae: ${taxon.antennaType}` : ''].filter(Boolean)));
+    sections.push(cardList('Important practical facts', taxon.practicalFacts || []));
+    sections.push(cardList('Confusion taxa', taxon.confusionTaxa || []));
+    sections.push(cardList('Distinctions', taxon.distinctions || []));
+    if (taxon.sourceLimitation) sections.push(`<div class="reference-card-block reference-note"><h4>Source limitation</h4><p>${esc(taxon.sourceLimitation)}</p></div>`);
+    return `<article class="reference-taxon-row reference-rank-${esc(taxon.rank)}" data-reference-search="${esc(searchable)}"><div><span class="tag">${esc(label)}</span><h3>${esc(taxon.name)}</h3><p class="common-name">${esc(taxon.commonName)}</p>${classification ? `<p class="subtle">${esc(classification)}</p>` : ''}</div><button class="secondary reference-details-button" data-reference-taxon="${esc(taxon.name)}">View details</button><div class="reference-taxon-details" data-reference-details="${esc(taxon.name)}" hidden>${sections.join('')}</div></article>`;
+  }).join('');
+
+  const anatomyRows = anatomy.filter(([kind]) => kind === (anatomyTab === 'external' ? 'External anatomy' : 'Internal anatomy')).flatMap(([kind, region, structures]) => structures.split(';').map(str => {
+    const term = str.trim();
+    const detail = anatomyDetails[term] || ['',''];
+    return { term, location: detail[0], function: detail[1] };
+  }));
+
+  const referenceAnatomyCards = `<div class="reference-controls"><div class="reference-segmented">${['external', 'internal'].map(mode => `<button class="segment-button ${anatomyTab === mode ? 'active' : ''}" data-reference-anatomy-tab="${mode}">${mode === 'external' ? 'External' : 'Internal'}</button>`).join('')}</div></div><div class="reference-table-wrap"><table class="reference-table"><thead><tr><th>Region</th><th>Structure</th><th>Location</th><th>Function</th></tr></thead><tbody>${anatomyRows.length ? anatomyRows.map(row => `<tr data-reference-search="${esc([row.term, row.location, row.function].join(' '))}"><td>${esc(row.region)}</td><td>${esc(row.term)}</td><td>${esc(row.location)}</td><td>${esc(row.function)}</td></tr>`).join('') : `<tr><td colspan="4" class="empty-state">No supporting entries for this anatomy category yet.</td></tr>`}</tbody></table></div>`;
+
+  const morphologyCategories = ['Legs', 'Mouthparts', 'Wings', 'Antennae'];
+  const morphologyRows = morphology
+    .filter(([category]) => category === (morphologyTab === 'Legs' ? 'Leg types' : morphologyTab === 'Mouthparts' ? 'Mouthpart types' : morphologyTab === 'Wings' ? 'Wing types' : 'Antenna types'))
+    .flatMap(([category, terms, descriptions]) => terms.map((term, index) => ({ term, description: descriptions[index] || descriptions[0] })));
+  const referenceMorphology = `<div class="reference-controls"><div class="reference-segmented">${morphologyCategories.map(value => `<button class="segment-button ${morphologyTab === value ? 'active' : ''}" data-reference-morphology-tab="${value}">${esc(value)}</button>`).join('')}</div></div><div class="reference-table-wrap"><table class="reference-table"><thead><tr><th>Type</th><th>Description</th></tr></thead><tbody>${morphologyRows.length ? morphologyRows.map(row => `<tr data-reference-search="${esc([row.term, row.description].join(' '))}"><td>${esc(row.term)}</td><td>${esc(row.description)}</td></tr>`).join('') : `<tr><td colspan="2" class="empty-state">No morphological entries available.</td></tr>`}</tbody></table></div>`;
+
+  const referenceComparisons = comparisonData.map(([pair, explanation]) => {
+    const searchable = `${pair} ${explanation}`;
+    return (searchTerm && !searchable.toLowerCase().includes(searchTerm)) ? '' : `<article class="reference-comparison-card" data-reference-search="${esc(searchable)}"><h3>${esc(pair)}</h3><p>${esc(explanation)}</p></article>`;
+  }).join('') || '<p class="empty-state">No comparison matches this search.</p>';
+
+  const referenceKeys = Object.entries(practicalFamilyKeys).map(([order, key]) => {
+    const searchable = [order, key.title, ...key.nodes.map(node => `${node.feature} ${node.prompt} ${node.yes || ''} ${node.no || ''}`)].join(' ');
+    return (searchTerm && !searchable.toLowerCase().includes(searchTerm)) ? '' : `<article class="reference-key-card" data-reference-search="${esc(searchable)}"><h3>${esc(order)}</h3><p class="subtle">${esc(key.title)}</p><ul>${key.nodes.slice(0, 5).map(node => `<li><strong>${esc(node.feature)}</strong>: ${esc(node.prompt)}</li>`).join('')}</ul></article>`;
+  }).join('') || '<p class="empty-state">No key entries match this search.</p>';
+
+  const anatomyRowsAll = anatomy.flatMap(([kind, region, structures]) => structures.split(';').map(str => {
+    const term = str.trim();
+    const detail = anatomyDetails[term] || ['',''];
+    return { kind, region, term, location: detail[0], function: detail[1], searchable: `${kind} ${region} ${term} ${detail[0]} ${detail[1]}` };
+  }));
+  const morphologyRowsAll = morphology.flatMap(([category, terms, descriptions]) => terms.map((term, index) => ({ category, term, recognition: term, function: descriptions[index] || descriptions[0], searchable: `${category} ${term} ${descriptions[index] || descriptions[0]}` })));
+
+  const searchResults = searchTerm ? [
+    ['Taxa', taxaEntries.filter(taxon => [taxon.name, taxon.parent, taxon.grouping, ...(taxon.diagnosticTraits || []), ...(taxon.ecology || []), ...(taxon.lifeHistory || []), ...(taxon.practicalFacts || []), ...(taxon.confusionTaxa || []), ...(taxon.distinctions || [])].join(' ').toLowerCase().includes(searchTerm)).map(taxon => { const label = taxon.rank === 'phylum' ? 'Phylum' : taxon.rank === 'subphylum' ? 'Subphylum' : taxon.rank === 'class' ? 'Class' : taxon.rank === 'grouping' ? 'Major group' : taxon.rank === 'order' ? 'Order' : taxon.rank === 'suborder' ? 'Suborder' : taxon.rank === 'family' ? 'Family' : 'Superfamily'; return `<article class="reference-card" data-reference-search="${esc([taxon.name, label, taxon.parent, taxon.grouping].join(' '))}"><div class="reference-card-header"><div><span class="tag">${esc(label)}</span><h3>${esc(taxon.name)}</h3><p class="subtle">${esc([taxon.parent, taxon.grouping].filter(Boolean).join(' › '))}</p></div></div>${cardList('How to identify', taxon.diagnosticTraits || '') || ''}${cardList('Important practical facts', taxon.practicalFacts || '') || ''}</article>`; }).join('')],
+    ['Anatomy', (() => {
+      const rows = anatomyRowsAll.filter(row => row.searchable.toLowerCase().includes(searchTerm));
+      if (!rows.length) return '';
+      return `<table class="reference-table"><thead><tr><th>Section</th><th>Structure</th><th>Location</th><th>Function</th></tr></thead><tbody>${rows.map(row => `<tr data-reference-search="${esc(row.searchable)}"><td>${esc(row.kind.replace(' anatomy', ''))}</td><td>${esc(row.term)}</td><td>${esc(row.location)}</td><td>${esc(row.function)}</td></tr>`).join('')}</tbody></table>`;
+    })()],
+    ['Morphology', (() => {
+      const rows = morphologyRowsAll.filter(row => row.searchable.toLowerCase().includes(searchTerm));
+      if (!rows.length) return '';
+      return `<table class="reference-table"><thead><tr><th>Category</th><th>Type</th><th>Function</th></tr></thead><tbody>${rows.map(row => `<tr data-reference-search="${esc(row.searchable)}"><td>${esc(row.category)}</td><td>${esc(row.term)}</td><td>${esc(row.function)}</td></tr>`).join('')}</tbody></table>`;
+    })()],
+    ['Comparisons', (() => {
+      const matches = comparisonData.filter(([pair, explanation]) => `${pair} ${explanation}`.toLowerCase().includes(searchTerm));
+      if (!matches.length) return '';
+      return matches.map(([pair, explanation]) => `<article class="reference-comparison-card" data-reference-search="${esc(`${pair} ${explanation}`)}"><h3>${esc(pair)}</h3><p>${esc(explanation)}</p></article>`).join('');
+    })()],
+    ['Keys', (() => {
+      const matches = Object.entries(practicalFamilyKeys).filter(([order, key]) => [order, key.title, ...key.nodes.map(node => `${node.feature} ${node.prompt}`)].join(' ').toLowerCase().includes(searchTerm));
+      if (!matches.length) return '';
+      return matches.map(([order, key]) => `<article class="reference-key-card" data-reference-search="${esc([order, key.title].join(' '))}"><h3>${esc(order)}</h3><p class="subtle">${esc(key.title)}</p><ul>${key.nodes.slice(0, 5).map(node => `<li><strong>${esc(node.feature)}</strong>: ${esc(node.prompt)}</li>`).join('')}</ul></article>`).join('');
+    })()]
+  ].filter(([, content]) => content).map(([title, content]) => `<section class="reference-search-group"><h3>${esc(title)}</h3>${content}</section>`): [];
+  const renderCurrentTab = () => {
+    if (tab === 'taxa') return `<div class="reference-panel reference-taxonomy">${referenceTaxaCards || '<p class="empty-state">No taxa match that filter or search.</p>'}</div>`;
+    if (tab === 'anatomy') return `<div class="reference-panel">${referenceAnatomyCards}</div>`;
+    if (tab === 'morphology') return `<div class="reference-panel">${referenceMorphology}</div>`;
+    if (tab === 'comparisons') return `<div class="reference-panel">${referenceComparisons}</div>`;
+    return `<div class="reference-panel">${referenceKeys}</div>`;
+  };
+
+  if (searchTerm) {
+    const hitGroups = searchResults.filter(Boolean);
+    return `<div class="reference-shell"><header class="reference-header"><div><h2>Reference</h2><p>Look up any taxon, anatomical structure, morphology type, comparison, or family-key character for Practical 1.</p></div></header><div class="reference-toolbar"><input id="practicalSearch" type="search" value="${esc(practicalState.referenceQuery || '')}" placeholder="Search reference..." /><span class="pill">${hitGroups.length} matching groups</span></div><nav class="reference-tabs" aria-label="Reference sections">${['taxa', 'anatomy', 'morphology', 'comparisons', 'keys'].map(name => `<button class="tab ${tab === name ? 'active' : ''}" data-reference-tab="${name}">${name === 'taxa' ? 'Taxa' : name === 'anatomy' ? 'Anatomy' : name === 'morphology' ? 'Morphology' : name === 'comparisons' ? 'Comparisons' : 'Keys'}</button>`).join('')}</nav><div class="reference-panel">${hitGroups.length ? hitGroups.join('') : '<p class="empty-state">No reference entries match that search.</p>'}</div></div>`;
+  }
+
+  return `<div class="reference-shell"><header class="reference-header"><div><h2>Reference</h2><p>Use the sections below to review taxa, anatomy, morphology, comparisons, and keys for Practical 1.</p></div></header><nav class="reference-tabs" aria-label="Reference sections">${['taxa', 'anatomy', 'morphology', 'comparisons', 'keys'].map(name => `<button class="tab ${tab === name ? 'active' : ''}" data-reference-tab="${name}">${name === 'taxa' ? 'Taxa' : name === 'anatomy' ? 'Anatomy' : name === 'morphology' ? 'Morphology' : name === 'comparisons' ? 'Comparisons' : 'Keys'}</button>`).join('')}</nav>${tab === 'taxa' ? `<div class="reference-chip-row">${['all', 'major', 'orders', 'suborders', 'families'].map(filter => `<button class="segment-button ${taxaFilter === filter ? 'active' : ''}" data-reference-filter="${filter}">${filter === 'all' ? 'All' : filter === 'major' ? 'Major Groups' : filter === 'orders' ? 'Orders' : filter === 'suborders' ? 'Suborders' : 'Families / Superfamilies'}</button>`).join('')}</div>` : ''}${renderCurrentTab()}${tab === 'taxa' ? '<div class="reference-dialog" id="referenceTaxonDialog" hidden><div class="reference-dialog-card" role="dialog" aria-modal="true" aria-labelledby="referenceDialogTitle"><button class="reference-dialog-close secondary" data-reference-dialog-close>Close</button><div id="referenceDialogContent"></div></div></div>' : ''}</div>`;
 }
 function syncPracticeCount() {
   const slider = document.getElementById('practiceCountRange');
@@ -212,7 +312,54 @@ function bindTabEvents() {
   document.querySelectorAll('.compare-reveal').forEach(button => button.onclick = () => { button.nextElementSibling.classList.toggle('hidden'); button.textContent = button.nextElementSibling.classList.contains('hidden') ? 'Reveal study prompt' : 'Hide prompt'; });
   document.querySelectorAll('.open-key, .open-question-key').forEach(button => button.onclick = () => { const work = document.getElementById(`key-work-${button.dataset.order}`); if (work) { work.innerHTML = renderKeyWork(button.dataset.order); document.getElementById(`key-${button.dataset.order}`).classList.remove('hidden'); bindKeyEvents(); } });
   bindKeyEvents();
-  const search = document.getElementById('practicalSearch'); if (search) search.oninput = () => document.querySelectorAll('#practicalReference article').forEach(card => card.hidden = !card.dataset.search.toLowerCase().includes(search.value.toLowerCase()));
+  const search = document.getElementById('practicalSearch');
+  if (search) {
+    search.oninput = () => {
+      practicalState.referenceQuery = search.value;
+      document.getElementById('practicalContent').innerHTML = renderReference();
+      bindTabEvents();
+      requestAnimationFrame(() => {
+        const activeSearch = document.getElementById('practicalSearch');
+        if (activeSearch) {
+          activeSearch.focus();
+          activeSearch.setSelectionRange(activeSearch.value.length, activeSearch.value.length);
+        }
+      });
+    };
+  }
+  document.querySelectorAll('[data-reference-tab]').forEach(button => button.onclick = () => {
+    practicalState.referenceTab = button.dataset.referenceTab;
+    document.getElementById('practicalContent').innerHTML = renderReference();
+    bindTabEvents();
+  });
+  document.querySelectorAll('[data-reference-filter]').forEach(button => button.onclick = () => {
+    practicalState.referenceTaxaFilter = button.dataset.referenceFilter;
+    document.getElementById('practicalContent').innerHTML = renderReference();
+    bindTabEvents();
+  });
+  document.querySelectorAll('[data-reference-anatomy-tab]').forEach(button => button.onclick = () => {
+    practicalState.referenceAnatomyTab = button.dataset.referenceAnatomyTab;
+    document.getElementById('practicalContent').innerHTML = renderReference();
+    bindTabEvents();
+  });
+  document.querySelectorAll('[data-reference-morphology-tab]').forEach(button => button.onclick = () => {
+    practicalState.referenceMorphologyTab = button.dataset.referenceMorphologyTab;
+    document.getElementById('practicalContent').innerHTML = renderReference();
+    bindTabEvents();
+  });
+  document.querySelectorAll('[data-reference-taxon]').forEach(button => button.onclick = () => {
+    const dialog = document.getElementById('referenceTaxonDialog');
+    const content = document.getElementById('referenceDialogContent');
+    const taxon = practicalTaxa.find(item => item.name === button.dataset.referenceTaxon);
+    if (!dialog || !content || !taxon) return;
+    const details = document.querySelector(`[data-reference-details="${CSS.escape(taxon.name)}"]`);
+    content.innerHTML = `<div class="eyebrow">${esc(taxon.rank)}</div><h2 id="referenceDialogTitle">${esc(taxon.name)}</h2><p class="common-name">${esc(taxon.commonName)}</p><p class="subtle">${esc([taxon.parent, taxon.grouping].filter(Boolean).join(' › '))}</p>${details ? details.innerHTML : '<p class="subtle">No additional supporting information is available.</p>'}`;
+    dialog.hidden = false;
+  });
+  document.querySelectorAll('[data-reference-dialog-close]').forEach(button => button.onclick = () => {
+    const dialog = document.getElementById('referenceTaxonDialog');
+    if (dialog) dialog.hidden = true;
+  });
   const range = document.getElementById('practiceCountRange');
   if (range) {
     range.oninput = () => { syncPracticeCount(); };
