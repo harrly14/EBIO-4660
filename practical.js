@@ -116,7 +116,7 @@ const questionBankExtrasWithComparisons = [
 const keyFamilies = { Odonata: ['Aeshnidae', 'Libellulidae'], Orthoptera: ['Acrididae', 'Gryllidae', 'Tettigoniidae', 'Rhaphidophoridae'], Hemiptera: ['Aphididae', 'Coccoidae', 'Fulgoroidea', 'Cicadidae', 'Membracidae', 'Cercopidae', 'Cicadellidae', 'Belostomatidae', 'Corixidae', 'Gerridae', 'Cimicidae', 'Pentatomidae', 'Scutelleridae', 'Reduviidae', 'Coreidae', 'Lygaeidae', 'Miridae'] };
 const esc = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[char]));
 const list = value => `<ul>${value.split(';').map(item => `<li>${esc(item.trim())}</li>`).join('')}</ul>`;
-let practicalState = { tab: 'learn', score: 0, asked: 0, flashIndex: 0, flashFlipped: false, key: {}, missedOnly: false, lessonIndex: 0, practiceSession: null, practiceIndex: 0, practiceScore: 0, practiceSetupVisible: true, referenceTab: 'taxa', referenceQuery: '', referenceTaxaFilter: 'all', referenceAnatomyTab: 'external', referenceAnatomyCategory: 'Head', referenceMorphologyTab: 'Legs' };
+let practicalState = { tab: 'learn', score: 0, asked: 0, flashIndex: 0, flashFlipped: false, key: {}, missedOnly: false, lessonIndex: 0, practiceSession: null, practiceIndex: 0, practiceScore: 0, practiceSkipped: 0, practiceSetupVisible: true, referenceTab: 'taxa', referenceQuery: '', referenceTaxaFilter: 'all', referenceAnatomyTab: 'external', referenceAnatomyCategory: 'Head', referenceMorphologyTab: 'Legs' };
 function getProgress() { try { return JSON.parse(localStorage.getItem('ebioPracticalProgress') || '{"answered":0,"correct":0,"topics":{},"misses":{}}'); } catch (error) { return { answered: 0, correct: 0, topics: {}, misses: {} }; } }
 function recordProgress(question, correct) { const progress = getProgress(); progress.answered += 1; progress.correct += correct ? 1 : 0; progress.topics[question.category || question.topic || 'general'] = (progress.topics[question.category || question.topic || 'general'] || 0) + (correct ? 1 : -1); if (!correct) progress.misses[question.taxon || question.answer] = (progress.misses[question.taxon || question.answer] || 0) + 1; localStorage.setItem('ebioPracticalProgress', JSON.stringify(progress)); }
 function progressCard() { const progress = getProgress(); const accuracy = progress.answered ? Math.round((progress.correct / progress.answered) * 100) : 0; const misses = Object.entries(progress.misses).sort((a, b) => b[1] - a[1]).slice(0, 5).map(item => `${item[0]} (${item[1]})`).join(', ') || 'None yet'; return card('Progress', `<p><strong>${accuracy}% accuracy</strong> across ${progress.answered} answered questions.</p><p class="subtle">Most-missed concepts: ${esc(misses)}</p><button class="secondary" data-missed-practice>Practice missed material</button>`); }
@@ -177,12 +177,8 @@ function renderReference() {
     return ['family', 'superfamily'].includes(taxon.rank);
   });
 
-  const referenceTaxaCards = taxaEntries.map(taxon => {
-    const label = taxon.rank === 'phylum' ? 'Phylum' : taxon.rank === 'subphylum' ? 'Subphylum' : taxon.rank === 'class' ? 'Class' : taxon.rank === 'grouping' ? 'Major group' : taxon.rank === 'order' ? 'Order' : taxon.rank === 'suborder' ? 'Suborder' : taxon.rank === 'family' ? 'Family' : 'Superfamily';
-    const classification = [taxon.parent, taxon.grouping].filter(Boolean).join(' › ');
-    const aliases = (taxon.aliases || []).filter(Boolean);
-    const searchable = [taxon.name, label, classification, ...(taxon.diagnosticTraits || []), ...(taxon.ecology || []), ...(taxon.lifeHistory || []), ...(taxon.practicalFacts || []), ...(taxon.confusionTaxa || []), ...(taxon.distinctions || []), ...(aliases || [])].join(' ');
-    if (searchTerm && !searchable.toLowerCase().includes(searchTerm)) return '';
+  const rankLabels = { phylum: 'Phylum', subphylum: 'Subphylum', class: 'Class', grouping: 'Major group', order: 'Order', suborder: 'Suborder', family: 'Family', superfamily: 'Superfamily' };
+  const taxonDetails = taxon => {
     const sections = [];
     sections.push(cardList('How to identify', taxon.diagnosticTraits || []));
     sections.push(cardList('Ecology / biology', taxon.ecology || []));
@@ -192,8 +188,44 @@ function renderReference() {
     sections.push(cardList('Confusion taxa', taxon.confusionTaxa || []));
     sections.push(cardList('Distinctions', taxon.distinctions || []));
     if (taxon.sourceLimitation) sections.push(`<div class="reference-card-block reference-note"><h4>Source limitation</h4><p>${esc(taxon.sourceLimitation)}</p></div>`);
-    return `<article class="reference-taxon-row reference-rank-${esc(taxon.rank)}" data-reference-search="${esc(searchable)}"><div><span class="tag">${esc(label)}</span><h3>${esc(taxon.name)}</h3><p class="common-name">${esc(taxon.commonName)}</p>${classification ? `<p class="subtle">${esc(classification)}</p>` : ''}</div><button class="secondary reference-details-button" data-reference-taxon="${esc(taxon.name)}">View details</button><div class="reference-taxon-details" data-reference-details="${esc(taxon.name)}" hidden>${sections.join('')}</div></article>`;
-  }).join('');
+    return sections.join('');
+  };
+  // Tree parent: families use the last segment of "Order → Suborder"; orders hang off their major group when it differs from their parent.
+  const taxonByName = Object.fromEntries(practicalTaxa.map(t => [t.name, t]));
+  const treeParent = taxon => {
+    if (taxon.rank === 'family' || taxon.rank === 'superfamily') return (taxon.parent || '').split('→').pop().trim();
+    if (taxon.rank === 'order' && taxon.grouping && taxon.grouping !== taxon.parent && taxonByName[taxon.grouping]) return taxon.grouping;
+    return taxon.parent || '';
+  };
+  const childrenOf = {};
+  practicalTaxa.forEach(t => { const p = treeParent(t); (childrenOf[p] = childrenOf[p] || []).push(t); });
+  const countDescendants = name => (childrenOf[name] || []).reduce((n, c) => n + 1 + countDescendants(c.name), 0);
+  const expandedSet = practicalState.taxaExpanded = practicalState.taxaExpanded || new Set(['Arthropoda', 'Hexapoda', 'Insecta']);
+  const openSet = practicalState.taxaOpen = practicalState.taxaOpen || new Set();
+  const renderTaxonNode = taxon => {
+    const kids = childrenOf[taxon.name] || [];
+    const hasKids = kids.length > 0;
+    const expanded = hasKids && expandedSet.has(taxon.name);
+    const open = openSet.has(taxon.name);
+    const hasDetails = Boolean(taxonDetails(taxon));
+    const label = rankLabels[taxon.rank] || taxon.rank;
+    const common = taxon.commonName && taxon.commonName !== 'common name not specified' ? taxon.commonName : '';
+    return `<li class="taxon-node taxon-rank-${esc(taxon.rank)}${expanded ? ' is-expanded' : ''}${open ? ' is-open' : ''}" data-taxon-node="${esc(taxon.name)}">
+      <div class="taxon-row">
+        ${hasKids ? `<button class="taxon-toggle" data-taxon-toggle="${esc(taxon.name)}" aria-expanded="${expanded}" aria-label="Expand ${esc(taxon.name)}"><span class="taxon-chevron">▸</span></button>` : '<span class="taxon-toggle taxon-toggle-leaf" aria-hidden="true"><span class="taxon-dot"></span></span>'}
+        <button class="taxon-label" data-taxon-info="${esc(taxon.name)}" aria-expanded="${open}">
+          <span class="tag">${esc(label)}</span>
+          <span class="taxon-name">${esc(taxon.name)}</span>
+          ${common ? `<span class="taxon-common">${esc(common)}</span>` : ''}
+          ${hasKids ? `<span class="taxon-count">${kids.length} ${kids.length === 1 ? 'child' : 'children'}</span>` : ''}
+          <span class="taxon-info-hint">${open ? 'Hide details' : 'Details'}</span>
+        </button>
+      </div>
+      <div class="taxon-details"${open ? '' : ' hidden'}>${hasDetails ? taxonDetails(taxon) : '<p class="subtle">No additional supporting information is available.</p>'}</div>
+      ${hasKids ? `<ul class="taxon-children"${expanded ? '' : ' hidden'}>${kids.map(renderTaxonNode).join('')}</ul>` : ''}
+    </li>`;
+  };
+  const referenceTaxaCards = `<ul class="taxon-tree taxon-children-root">${(childrenOf[''] || []).map(renderTaxonNode).join('')}</ul>`;
 
   const anatomyRows = anatomy.filter(([kind]) => kind === (anatomyTab === 'external' ? 'External anatomy' : 'Internal anatomy')).flatMap(([kind, region, structures]) => structures.split(';').map(str => {
     const term = str.trim();
@@ -262,7 +294,7 @@ function renderReference() {
     return `<div class="reference-shell"><header class="reference-header"><div><h2>Reference</h2><p>Look up any taxon, anatomical structure, morphology type, comparison, or family-key character for Practical 1.</p></div></header><div class="reference-toolbar"><input id="practicalSearch" type="search" value="${esc(practicalState.referenceQuery || '')}" placeholder="Search reference..." /><span class="pill">${hitGroups.length} matching groups</span></div><nav class="reference-tabs" aria-label="Reference sections">${['taxa', 'anatomy', 'morphology', 'comparisons', 'keys'].map(name => `<button class="tab ${tab === name ? 'active' : ''}" data-reference-tab="${name}">${name === 'taxa' ? 'Taxa' : name === 'anatomy' ? 'Anatomy' : name === 'morphology' ? 'Morphology' : name === 'comparisons' ? 'Comparisons' : 'Keys'}</button>`).join('')}</nav><div class="reference-panel">${hitGroups.length ? hitGroups.join('') : '<p class="empty-state">No reference entries match that search.</p>'}</div></div>`;
   }
 
-  return `<div class="reference-shell"><header class="reference-header"><div><h2>Reference</h2><p>Use the sections below to review taxa, anatomy, morphology, comparisons, and keys for Practical 1.</p></div></header><nav class="reference-tabs" aria-label="Reference sections">${['taxa', 'anatomy', 'morphology', 'comparisons', 'keys'].map(name => `<button class="tab ${tab === name ? 'active' : ''}" data-reference-tab="${name}">${name === 'taxa' ? 'Taxa' : name === 'anatomy' ? 'Anatomy' : name === 'morphology' ? 'Morphology' : name === 'comparisons' ? 'Comparisons' : 'Keys'}</button>`).join('')}</nav>${tab === 'taxa' ? `<div class="reference-chip-row">${['all', 'major', 'orders', 'suborders', 'families'].map(filter => `<button class="segment-button ${taxaFilter === filter ? 'active' : ''}" data-reference-filter="${filter}">${filter === 'all' ? 'All' : filter === 'major' ? 'Major Groups' : filter === 'orders' ? 'Orders' : filter === 'suborders' ? 'Suborders' : 'Families / Superfamilies'}</button>`).join('')}</div>` : ''}${renderCurrentTab()}${tab === 'taxa' ? '<div class="reference-dialog" id="referenceTaxonDialog" hidden><div class="reference-dialog-card" role="dialog" aria-modal="true" aria-labelledby="referenceDialogTitle"><button class="reference-dialog-close secondary" data-reference-dialog-close>Close</button><div id="referenceDialogContent"></div></div></div>' : ''}</div>`;
+  return `<div class="reference-shell"><header class="reference-header"><div><h2>Reference</h2><p>Use the sections below to review taxa, anatomy, morphology, comparisons, and keys for Practical 1.</p></div></header><nav class="reference-tabs" aria-label="Reference sections">${['taxa', 'anatomy', 'morphology', 'comparisons', 'keys'].map(name => `<button class="tab ${tab === name ? 'active' : ''}" data-reference-tab="${name}">${name === 'taxa' ? 'Taxa' : name === 'anatomy' ? 'Anatomy' : name === 'morphology' ? 'Morphology' : name === 'comparisons' ? 'Comparisons' : 'Keys'}</button>`).join('')}</nav>${tab === 'taxa' ? `<div class="reference-chip-row taxon-controls"><button class="segment-button" data-taxa-expand-all>Expand all</button><button class="segment-button" data-taxa-collapse-all>Collapse all</button><button class="segment-button" data-taxa-close-details>Close all details</button></div>` : ''}${renderCurrentTab()}</div>`;
 }
 function syncPracticeCount() {
   const slider = document.getElementById('practiceCountRange');
@@ -277,7 +309,7 @@ function renderPractice() {
   const practiceSetupVisible = practicalState.practiceSetupVisible !== false;
   const activeQuestion = practicalState.practiceSession && practicalState.practiceIndex < practicalState.practiceSession.length ? practicalState.practiceSession[practicalState.practiceIndex] : null;
   const setupMarkup = `<div class="practice-setup ${practiceSetupVisible ? '' : 'hidden'}" id="practiceSetup"><div class="eyebrow">${missed ? 'Missed material' : 'Choose your session'}</div><h2>${missed ? 'Practice concepts you missed' : 'Mixed practical practice'}</h2><div class="practice-control"><label for="practiceFocus">Question type</label><select id="practiceFocus"><option value="mixed">Mixed practical</option><option value="order-suborder">Order &amp; suborder identification</option><option value="family-superfamily">Family &amp; superfamily identification</option><option value="anatomy">External anatomy &amp; internal anatomy</option><option value="morphology">Morphology types</option><option value="compare">Compare two groups</option><option value="select-all">Select all that apply</option><option value="yes-no">Yes / No feature</option><option value="ecology">Ecology &amp; life history</option><option value="simulation">Full practical simulation</option></select></div><div class="practice-control"><label for="practiceCountRange">Question count</label><div class="range-row"><input id="practiceCountRange" type="range" min="5" max="100" value="20" step="1"><output class="range-value" id="practiceCountValue" for="practiceCountRange">20</output></div></div><button class="primary" id="startPractice">Start practice</button></div>`;
-  const sessionMarkup = activeQuestion ? `<div class="question-area"><div class="eyebrow">${esc(activeQuestion.type || 'practical')} • ${practicalState.practiceIndex + 1}/${practicalState.practiceSession.length}</div><h2 class="question">${activeQuestion.prompt}</h2><div class="options">${(activeQuestion.choices || []).map(choice => `<button class="option practice-answer" data-choice="${esc(choice)}">${esc(choice)}</button>`).join('')}</div><div id="practiceFeedback" class="explain"></div></div>` : '';
+  const sessionMarkup = activeQuestion ? `<div class="question-area"><div class="eyebrow">${esc(activeQuestion.type || 'practical')} • ${practicalState.practiceIndex + 1}/${practicalState.practiceSession.length}</div><h2 class="question">${activeQuestion.prompt}</h2><div class="options">${activeQuestion.type === 'select-all' ? (activeQuestion.choices || []).map(choice => `<label class="option"><input type="checkbox" class="practice-select" value="${esc(choice)}"> ${esc(choice)}</label>`).join('') : (activeQuestion.type === 'yes-no-feature' ? ['Yes', 'No'] : (activeQuestion.choices || [])).map(choice => `<button class="option practice-answer" data-choice="${esc(choice)}">${esc(choice)}</button>`).join('')}</div>${activeQuestion.type === 'select-all' ? '<button class="primary" id="submitSelectAll">Submit selections</button>' : ''}<div id="practiceFeedback" class="explain"></div><div class="next-row practice-actions"><button class="secondary" id="skipPractice">Unsure / Skip</button><button class="secondary" id="finishPractice">Finish early</button></div></div>` : '';
   return `${setupMarkup}<div id="practiceQuestionArea">${sessionMarkup}</div>`;
 }
 function renderSimulation() { return `<div class="simulation-intro"><div class="eyebrow">No immediate feedback</div><h2>20-question practical simulation</h2><p>Mixed order/suborder ID, anatomy, morphology, family-key workflow, comparisons, true statements, feature checks, and functional morphology. Answers and explanations appear at the end.</p><button class="primary" id="startSimulation">Start simulation</button></div><div id="simulationArea"></div>`; }
@@ -347,19 +379,39 @@ function bindTabEvents() {
     document.getElementById('practicalContent').innerHTML = renderReference();
     bindTabEvents();
   });
-  document.querySelectorAll('[data-reference-taxon]').forEach(button => button.onclick = () => {
-    const dialog = document.getElementById('referenceTaxonDialog');
-    const content = document.getElementById('referenceDialogContent');
-    const taxon = practicalTaxa.find(item => item.name === button.dataset.referenceTaxon);
-    if (!dialog || !content || !taxon) return;
-    const details = document.querySelector(`[data-reference-details="${CSS.escape(taxon.name)}"]`);
-    content.innerHTML = `<div class="eyebrow">${esc(taxon.rank)}</div><h2 id="referenceDialogTitle">${esc(taxon.name)}</h2><p class="common-name">${esc(taxon.commonName)}</p><p class="subtle">${esc([taxon.parent, taxon.grouping].filter(Boolean).join(' › '))}</p>${details ? details.innerHTML : '<p class="subtle">No additional supporting information is available.</p>'}`;
-    dialog.hidden = false;
-  });
-  document.querySelectorAll('[data-reference-dialog-close]').forEach(button => button.onclick = () => {
-    const dialog = document.getElementById('referenceTaxonDialog');
-    if (dialog) dialog.hidden = true;
-  });
+  const taxaTree = document.querySelector('.taxon-tree');
+  if (taxaTree) {
+    const expanded = practicalState.taxaExpanded, openSet = practicalState.taxaOpen;
+    const nodeFor = name => taxaTree.querySelector(`[data-taxon-node="${CSS.escape(name)}"]`);
+    const setExpanded = (node, on) => {
+      const name = node.dataset.taxonNode;
+      const kids = node.querySelector(':scope > .taxon-children');
+      if (!kids) return;
+      kids.hidden = !on;
+      node.classList.toggle('is-expanded', on);
+      const btn = node.querySelector(':scope > .taxon-row .taxon-toggle');
+      if (btn) btn.setAttribute('aria-expanded', String(on));
+      on ? expanded.add(name) : expanded.delete(name);
+    };
+    const setOpen = (node, on) => {
+      const name = node.dataset.taxonNode;
+      node.querySelector(':scope > .taxon-details').hidden = !on;
+      node.classList.toggle('is-open', on);
+      const label = node.querySelector(':scope > .taxon-row .taxon-label');
+      label.setAttribute('aria-expanded', String(on));
+      label.querySelector('.taxon-info-hint').textContent = on ? 'Hide details' : 'Details';
+      on ? openSet.add(name) : openSet.delete(name);
+    };
+    taxaTree.onclick = event => {
+      const toggle = event.target.closest('[data-taxon-toggle]');
+      const info = event.target.closest('[data-taxon-info]');
+      if (toggle) { const node = nodeFor(toggle.dataset.taxonToggle); setExpanded(node, !node.classList.contains('is-expanded')); }
+      else if (info) { const node = nodeFor(info.dataset.taxonInfo); setOpen(node, !node.classList.contains('is-open')); }
+    };
+    document.querySelector('[data-taxa-expand-all]').onclick = () => taxaTree.querySelectorAll('.taxon-node').forEach(n => setExpanded(n, true));
+    document.querySelector('[data-taxa-collapse-all]').onclick = () => taxaTree.querySelectorAll('.taxon-node').forEach(n => setExpanded(n, false));
+    document.querySelector('[data-taxa-close-details]').onclick = () => taxaTree.querySelectorAll('.taxon-node').forEach(n => setOpen(n, false));
+  }
   const range = document.getElementById('practiceCountRange');
   if (range) {
     range.oninput = () => { syncPracticeCount(); };
@@ -368,6 +420,7 @@ function bindTabEvents() {
   const startPractice = document.getElementById('startPractice'); if (startPractice) startPractice.onclick = () => startPracticeQuestion();
   const returnSetup = document.getElementById('returnPracticeSetup'); if (returnSetup) returnSetup.onclick = () => { practicalState.practiceSession = null; practicalState.practiceSetupVisible = true; renderTab(); };
   const restartPractice = document.getElementById('restartPracticeSet'); if (restartPractice) restartPractice.onclick = () => startPracticeQuestion();
+  if (practicalState.tab === 'practice' && practicalState.practiceSession && practicalState.practiceSession[practicalState.practiceIndex]) bindResumedPracticeQuestion();
 }
 function bindKeyEvents() {
   document.querySelectorAll('.key-branch').forEach(button => button.onclick = () => { document.getElementById(`key-work-${button.dataset.order}`).innerHTML = renderKeyWork(button.dataset.order, button.dataset.node, JSON.parse(button.dataset.history)); bindKeyEvents(); });
@@ -471,6 +524,7 @@ function startPracticeQuestion() {
   practicalState.practiceSession = questions;
   practicalState.practiceIndex = 0;
   practicalState.practiceScore = 0;
+  practicalState.practiceSkipped = 0;
   practicalState.practiceSetupVisible = false;
   const setup = document.getElementById('practiceSetup');
   if (setup) setup.classList.add('hidden');
@@ -500,15 +554,15 @@ function startPracticeQuestion() {
     const options = question.type === 'select-all'
       ? question.choices.map(choice => `<label class="option"><input type="checkbox" class="practice-select" value="${esc(choice)}"> ${esc(choice)}</label>`).join('')
       : (question.type === 'yes-no-feature' ? ['Yes', 'No'] : question.choices.sort(() => Math.random() - 0.5)).map(choice => `<button class="option practice-answer" data-choice="${esc(choice)}">${esc(choice)}</button>`).join('');
-    area.innerHTML = `<div class="question-area"><div class="eyebrow">${esc(focus)} • ${index + 1}/${questions.length}</div><h2 class="question">${question.prompt}</h2><div class="options">${options}</div>${question.type === 'select-all' ? '<button class="primary" id="submitSelectAll">Submit selections</button>' : ''}<div id="practiceFeedback" class="explain"></div><div class="next-row practice-actions"><button class="secondary" id="skipPractice">Unsure / Skip</button><button class="secondary" id="finishPractice">Finish early</button></div></div>`;
-    document.getElementById('skipPractice').onclick = () => { skipped += 1; index += 1; next(); };
+    area.innerHTML = `<div class="question-area"><div class="eyebrow">${esc(focus)} • ${index + 1}/${questions.length}</div><h2 class="question">${question.prompt}</h2><div class="options">${options}</div>${question.type === 'select-all' ? '<button class="primary" id="submitSelectAll">Submit selections</button>' : ''}<div id="practiceFeedback" class="explain"></div><div class="next-row practice-actions"><div class="practice-secondary-actions"><button class="secondary" id="skipPractice">Unsure / Skip</button><button class="secondary" id="finishPractice">Finish early</button></div><button class="primary" id="nextPractice" disabled>Next question →</button></div></div>`;
+    document.getElementById('skipPractice').onclick = () => { skipped += 1; practicalState.practiceSkipped = skipped; index += 1; practicalState.practiceIndex = index; next(); };
     document.getElementById('finishPractice').onclick = finishSet;
     document.querySelectorAll('.practice-answer').forEach(button => button.onclick = () => {
       document.querySelectorAll('.practice-answer').forEach(item => { item.disabled = true; if ((question.acceptedAnswers || [question.answer]).includes(item.dataset.choice)) item.classList.add('correct'); });
       const correct = (question.acceptedAnswers || [question.answer]).includes(button.dataset.choice);
-      if (correct) score += 1; else button.classList.add('wrong');
+      if (correct) { score += 1; practicalState.practiceScore = score; } else button.classList.add('wrong');
       recordProgress(question, correct);
-      showPracticeFeedback(question, correct, () => { index += 1; next(); });
+      showPracticeFeedback(question, correct, () => { index += 1; practicalState.practiceIndex = index; next(); });
     });
     const submitSelectAll = document.getElementById('submitSelectAll');
     if (submitSelectAll) submitSelectAll.onclick = () => {
@@ -517,9 +571,9 @@ function startPracticeQuestion() {
       const correct = JSON.stringify(selected) === JSON.stringify(expected);
       document.querySelectorAll('.practice-select').forEach(input => { input.disabled = true; if (question.answer.includes(input.value)) input.parentElement.classList.add('correct'); });
       submitSelectAll.disabled = true;
-      if (correct) score += 1;
+      if (correct) { score += 1; practicalState.practiceScore = score; }
       recordProgress(question, correct);
-      showPracticeFeedback(question, correct, () => { index += 1; next(); });
+      showPracticeFeedback(question, correct, () => { index += 1; practicalState.practiceIndex = index; next(); });
     };
   };
   next();
@@ -528,8 +582,53 @@ function showPracticeFeedback(question, correct, advance) {
   const feedback = document.getElementById('practiceFeedback');
   feedback.className = 'explain show';
   const answer = Array.isArray(question.answer) ? question.answer.join('; ') : question.answer;
-  feedback.innerHTML = `<strong>${correct ? 'Correct.' : `Answer: ${esc(answer)}`}</strong><p>${esc(question.explanation)}</p><button class="secondary" id="nextPractice">Next</button>`;
-  document.getElementById('nextPractice').onclick = advance;
+  feedback.innerHTML = `<strong class="${correct ? 'feedback-correct' : 'feedback-incorrect'}">${correct ? 'Correct.' : `Answer: ${esc(answer)}`}</strong><p>${esc(question.explanation)}</p>`;
+  const nextButton = document.getElementById('nextPractice');
+  if (nextButton) {
+    nextButton.disabled = false;
+    nextButton.onclick = advance;
+  }
+  document.querySelectorAll('#skipPractice, #finishPractice').forEach(button => { button.disabled = true; });
+}
+function bindResumedPracticeQuestion() {
+  const question = practicalState.practiceSession[practicalState.practiceIndex];
+  const advance = () => { practicalState.practiceIndex += 1; renderTab(); };
+  document.querySelectorAll('.practice-answer').forEach(button => button.onclick = () => {
+    document.querySelectorAll('.practice-answer').forEach(item => {
+      item.disabled = true;
+      if ((question.acceptedAnswers || [question.answer]).includes(item.dataset.choice)) item.classList.add('correct');
+    });
+    const correct = (question.acceptedAnswers || [question.answer]).includes(button.dataset.choice);
+    if (correct) practicalState.practiceScore += 1; else button.classList.add('wrong');
+    recordProgress(question, correct);
+    showPracticeFeedback(question, correct, advance);
+  });
+  const submitSelectAll = document.getElementById('submitSelectAll');
+  if (submitSelectAll) submitSelectAll.onclick = () => {
+    const selected = [...document.querySelectorAll('.practice-select:checked')].map(input => input.value).sort();
+    const correct = JSON.stringify(selected) === JSON.stringify([...question.answer].sort());
+    document.querySelectorAll('.practice-select').forEach(input => {
+      input.disabled = true;
+      if (question.answer.includes(input.value)) input.parentElement.classList.add('correct');
+    });
+    submitSelectAll.disabled = true;
+    if (correct) practicalState.practiceScore += 1;
+    recordProgress(question, correct);
+    showPracticeFeedback(question, correct, advance);
+  };
+  const skip = document.getElementById('skipPractice');
+  if (skip) skip.onclick = () => {
+    practicalState.practiceSkipped += 1;
+    practicalState.practiceIndex += 1;
+    renderTab();
+  };
+  const finish = document.getElementById('finishPractice');
+  if (finish) finish.onclick = () => {
+    const answered = practicalState.practiceIndex - practicalState.practiceSkipped;
+    document.getElementById('practiceQuestionArea').innerHTML = `<div class="speed-end"><div class="eyebrow">Set ended early</div><h2>${practicalState.practiceScore}/${answered} correct</h2><p>Answered ${answered} of ${practicalState.practiceSession.length}; skipped ${practicalState.practiceSkipped}.</p><div class="next-row"><button class="secondary" id="restartPracticeSet">Try another set</button><button class="primary" id="returnPracticeSetup">Return to setup</button></div></div>`;
+    document.getElementById('restartPracticeSet').onclick = () => startPracticeQuestion();
+    document.getElementById('returnPracticeSetup').onclick = () => { practicalState.practiceSession = null; practicalState.practiceSetupVisible = true; renderTab(); };
+  };
 }
 function simulationQuestions() {
   const pick = (predicate, count) => shuffle(canonicalQuestions.filter(predicate)).slice(0, count);
