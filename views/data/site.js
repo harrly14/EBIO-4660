@@ -27,7 +27,8 @@ const pages = [
     template: 'pages/practical.hbs',
     output: 'practical.html',
     title: 'Lab Practical',
-    page: 'practical'
+    page: 'practical',
+    scripts: ['practical-data.js', 'practical.js']
   }
 ];
 

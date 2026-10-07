@@ -19,12 +19,30 @@
         <a href="practical.html">Lab Practical</a>
     </nav>
   </header>
-  <main class="card main-card">
-    <h2>Practical 1</h2>
-    <p class="subtle">Study materials for the first lab practical are coming soon!</p>
+  <main class="card main-card practical-app">
+    <div class="learn-hero">
+      <div class="eyebrow">EBIO 4660 • Practical 1</div>
+      <h2>Study by observing, identifying, and explaining</h2>
+      <p>Use the practical loop: observe diagnostic features → make an identification → explain why it fits. Orders and suborders are no-key recognition; family practice opens a key workflow.</p>
+    </div>
+    <div class="tabs practical-tabs" role="tablist" aria-label="Practical study modes">
+      <button class="tab active" data-practical-tab="learn">Learn</button>
+      <button class="tab" data-practical-tab="practice">Practice</button>
+      <button class="tab" data-practical-tab="groups">Order/Suborder ID</button>
+      <button class="tab" data-practical-tab="families">Family Key Practice</button>
+      <button class="tab" data-practical-tab="anatomy">Anatomy</button>
+      <button class="tab" data-practical-tab="comparisons">Comparisons</button>
+      <button class="tab" data-practical-tab="flashcards">Flashcards</button>
+      <button class="tab" data-practical-tab="speed">Speed Round</button>
+      <button class="tab" data-practical-tab="simulation">Practical Simulation</button>
+      <button class="tab" data-practical-tab="reference">Reference</button>
+    </div>
+    <div id="practicalContent"></div>
   </main>
   <footer class="footer-note">Please email me if something is wrong or broken! <a href="mailto:sully.harrer@colorado.edu">sully.harrer@colorado.edu</a></footer>
 </div>
 
+<script src="practical-data.js"></script>
+<script src="practical.js"></script>
 </body>
 </html>

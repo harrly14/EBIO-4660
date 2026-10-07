@@ -33,6 +33,12 @@ The Handlebars source pages live in `views/`:
 
 The build generates `index.html`, `orders-quiz.html`, and `practical.html` for static hosting. Edit the Handlebars files instead of editing generated HTML directly.
 
+`practical.html` is the Practical 1 study app. Its authoritative content layer
+lives in `practical-data.js`, and its interaction layer lives in
+`practical.js`, with scoped anatomy, taxonomy, grouping, family-key workflow,
+comparison, flashcard, speed-round, simulation, and reference views. The
+practical content is sourced from the supplied study guide and course notes.
+
 To add a page, add its template under `views/pages/` and a page entry to
 `views/data/site.js`. Use the existing layout partials rather than duplicating
 the document shell. Add reusable markup under `views/partials/`, register it in
