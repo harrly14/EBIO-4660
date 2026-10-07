@@ -135,7 +135,7 @@ const practicalFamilyKeys = {
     { id: 'h12', feature: 'Wings', prompt: 'Is the body flat and oval with vestigial, non-functional wings?', yes: 'Cimicidae', no: 'h13' },
     { id: 'h13', feature: 'Antennae and scutellum', prompt: 'Are antennae 5-segmented, with a shield-shaped body and large scutellum?', yes: 'Pentatomidae', no: 'h14' },
     { id: 'h14', feature: 'Beak segments', prompt: 'Is the beak 3-segmented and is wing venation simple?', yes: 'Reduviidae', no: 'h15' },
-    { id: 'h15', feature: 'Beak segments', prompt: 'Is the beak 4-segmented?', yes: 'h16', no: 'h16' },
+    { id: 'h15', feature: 'Beak segments', prompt: 'Is the beak 4-segmented?', yes: 'h16', no: 'h-invalid' },
     { id: 'h16', feature: 'Wing membrane', prompt: 'Does the hemelytral membrane have many veins?', yes: 'Coreidae', no: 'h17' },
     { id: 'h17', feature: 'Cuneus and cells', prompt: 'Is a cuneus present with 1–2 closed cells?', yes: 'Miridae', no: 'Lygaeidae' }
   ] }

@@ -116,10 +116,10 @@ const questionBankExtrasWithComparisons = [
 const keyFamilies = { Odonata: ['Aeshnidae', 'Libellulidae'], Orthoptera: ['Acrididae', 'Gryllidae', 'Tettigoniidae', 'Rhaphidophoridae'], Hemiptera: ['Aphididae', 'Coccoidae', 'Fulgoroidea', 'Cicadidae', 'Membracidae', 'Cercopidae', 'Cicadellidae', 'Belostomatidae', 'Corixidae', 'Gerridae', 'Cimicidae', 'Pentatomidae', 'Scutelleridae', 'Reduviidae', 'Coreidae', 'Lygaeidae', 'Miridae'] };
 const esc = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[char]));
 const list = value => `<ul>${value.split(';').map(item => `<li>${esc(item.trim())}</li>`).join('')}</ul>`;
-let practicalState = { tab: 'learn', score: 0, asked: 0, flashIndex: 0, flashFlipped: false, key: {} };
+let practicalState = { tab: 'learn', score: 0, asked: 0, flashIndex: 0, flashFlipped: false, key: {}, missedOnly: false };
 function getProgress() { try { return JSON.parse(localStorage.getItem('ebioPracticalProgress') || '{"answered":0,"correct":0,"topics":{},"misses":{}}'); } catch (error) { return { answered: 0, correct: 0, topics: {}, misses: {} }; } }
 function recordProgress(question, correct) { const progress = getProgress(); progress.answered += 1; progress.correct += correct ? 1 : 0; progress.topics[question.category || question.topic || 'general'] = (progress.topics[question.category || question.topic || 'general'] || 0) + (correct ? 1 : -1); if (!correct) progress.misses[question.taxon || question.answer] = (progress.misses[question.taxon || question.answer] || 0) + 1; localStorage.setItem('ebioPracticalProgress', JSON.stringify(progress)); }
-function progressCard() { const progress = getProgress(); const accuracy = progress.answered ? Math.round((progress.correct / progress.answered) * 100) : 0; const misses = Object.entries(progress.misses).sort((a, b) => b[1] - a[1]).slice(0, 5).map(item => `${item[0]} (${item[1]})`).join(', ') || 'None yet'; return card('Progress', `<p><strong>${accuracy}% accuracy</strong> across ${progress.answered} answered questions.</p><p class="subtle">Most-missed concepts: ${esc(misses)}</p><button class="secondary" data-jump="practice">Practice missed material</button>`); }
+function progressCard() { const progress = getProgress(); const accuracy = progress.answered ? Math.round((progress.correct / progress.answered) * 100) : 0; const misses = Object.entries(progress.misses).sort((a, b) => b[1] - a[1]).slice(0, 5).map(item => `${item[0]} (${item[1]})`).join(', ') || 'None yet'; return card('Progress', `<p><strong>${accuracy}% accuracy</strong> across ${progress.answered} answered questions.</p><p class="subtle">Most-missed concepts: ${esc(misses)}</p><button class="secondary" data-missed-practice>Practice missed material</button>`); }
 function card(title, body, className = '') { return `<article class="practical-card ${className}"><h3>${esc(title)}</h3>${body}</article>`; }
 function renderLearn() {
   return `<div class="practical-grid">${progressCard()}${card('What do I actually need to know?', '<div class="priority-list"><strong>Know cold:</strong> all orders and suborders, without a key.<br><strong>Be able to key out:</strong> listed families and superfamilies.<br><strong>Identify + function/location:</strong> external anatomy.<br><strong>Identify + function:</strong> internal anatomy.<br><strong>Recognize name + function:</strong> leg, wing, mouthpart, and antenna types.<br><strong>Know key traits/ecology:</strong> every taxon listed in the practical guide.</div>')}${card('Instructor clarification required', `<ul>${sourceClarifications.map(item => `<li>${esc(item)}</li>`).join('')}</ul>`)}${card('The practical loop', '<ol><li>Observe the visible feature.</li><li>Choose the smallest defensible group.</li><li>Explain which diagnostic evidence supports it.</li></ol><p class="subtle">Family identification is practiced through a supplied key; this app does not invent missing couplets.</p>')}${card('Study roadmap', '<div class="roadmap"><button class="secondary" data-jump="groups">1. Orders/suborders</button><button class="secondary" data-jump="anatomy">2. Anatomy</button><button class="secondary" data-jump="families">3. Families with a key</button><button class="secondary" data-jump="simulation">4. Simulate</button></div>')}</div>`;
@@ -132,7 +132,7 @@ function renderGroups() {
 }
 function groupPrompt() {
   const rank = document.getElementById('groupRank')?.value || 'order';
-  const pool = rank === 'order' ? orders.filter(name => practicalTaxa.find(taxon => taxon.name === name)?.diagnosticTraits.length) : rank === 'suborder' ? suborders.filter(name => practicalTaxa.find(taxon => taxon.name === name)?.diagnosticTraits.length) : groups.map(item => item[0]);
+  const pool = rank === 'order' ? orders.filter(name => { const taxon = practicalTaxa.find(item => item.name === name); return taxon?.diagnosticTraits.length && !taxon.sourceLimitation; }) : rank === 'suborder' ? suborders.filter(name => { const taxon = practicalTaxa.find(item => item.name === name); return taxon?.diagnosticTraits.length && !taxon.sourceLimitation; }) : groups.map(item => item[0]);
   const answer = pool[Math.floor(Math.random() * pool.length)];
   const entry = practicalTaxa.find(taxon => taxon.name === answer);
   const choices = [...new Set([answer, ...pool.sort(() => Math.random() - .5).slice(0, 3)])].sort(() => Math.random() - .5);
@@ -149,11 +149,14 @@ function renderReference() {
   const entries = [...practicalTaxa.map(taxon => [taxon.rank, taxon.name, taxon]), ...anatomy.map(item => [item[0], item[1], { diagnosticTraits: item[2].split(';'), practicalFacts: [item[3]], aliases: item[2].split(';').flatMap(term => anatomyAliases[term.trim()] || []) }]), ...morphologyTypes.map(item => [item.category, item.term, { diagnosticTraits: [item.description] }])];
   return `<div class="ref-toolbar"><input id="practicalSearch" type="search" placeholder="Search orders, families, structures, or morphology…"><span class="pill">${entries.length} scoped entries</span></div><div class="ref-grid" id="practicalReference">${entries.map(entry => { const aliases = entry[2].aliases || []; const searchable = [entry[0], entry[1], ...aliases, ...(entry[2].diagnosticTraits || []), ...(entry[2].practicalFacts || [])].join(' '); return `<article class="ref-card" data-search="${esc(searchable)}"><span class="tag">${esc(entry[0])}</span><h3>${esc(entry[1])}</h3>${aliases.length ? `<p class="subtle">Also listed as: ${esc(aliases.join(', '))}</p>` : ''}${entry[2].diagnosticTraits?.length ? `<p><strong>How to recognize/use:</strong> ${esc(entry[2].diagnosticTraits.join('; '))}</p>` : ''}${entry[2].ecology?.length ? `<p><strong>Ecology:</strong> ${esc(entry[2].ecology.join('; '))}</p>` : ''}${entry[2].lifeHistory?.length ? `<p><strong>Life history:</strong> ${esc(entry[2].lifeHistory.join('; '))}</p>` : ''}${entry[2].sourceLimitation ? `<p class="explain show"><strong>Source limitation:</strong> ${esc(entry[2].sourceLimitation)}</p>` : ''}${entry[2].requiresKey !== undefined ? `<p class="subtle">${entry[2].requiresKey ? 'Use the family key.' : 'Memorize order/suborder recognition.'}</p>` : ''}</article>`; }).join('')}</div>`;
 }
-function renderPractice() { return `<div class="practice-setup"><div class="eyebrow">Mixed practical practice</div><h2>Choose a focus</h2><select id="practiceFocus"><option value="mixed">Mixed practical</option><option value="anatomy">Anatomy</option><option value="taxonomy">Orders and suborders</option><option value="families">Family key workflow</option><option value="morphology">Leg, wing, mouthpart, antenna types</option></select><label>Question count <input id="practiceCount" type="number" min="1" max="10" value="5"></label><button class="primary" id="startPractice">Start practice</button></div><div id="practiceQuestionArea"></div>`; }
+function renderPractice() { const missed = practicalState.missedOnly; return `<div class="practice-setup"><div class="eyebrow">${missed ? 'Missed material' : 'Mixed practical practice'}</div><h2>${missed ? 'Practice concepts you missed' : 'Choose a focus'}</h2>${missed && !makePracticeQuestions('mixed', true).length ? '<p class="explain show">No missed concepts are recorded yet. Answer some practice questions first.</p>' : `<select id="practiceFocus"><option value="mixed">Mixed practical</option><option value="anatomy">Anatomy</option><option value="taxonomy">Orders and suborders</option><option value="families">Family key workflow</option><option value="morphology">Leg, wing, mouthpart, antenna types</option></select><label>Question count <input id="practiceCount" type="number" min="1" max="10" value="5"></label><button class="primary" id="startPractice">Start practice</button>`}</div><div id="practiceQuestionArea"></div>`; }
 function renderSimulation() { return `<div class="simulation-intro"><div class="eyebrow">No immediate feedback</div><h2>20-question practical simulation</h2><p>Mixed order/suborder ID, anatomy, morphology, family-key workflow, comparisons, true statements, feature checks, and functional morphology. Answers and explanations appear at the end.</p><button class="primary" id="startSimulation">Start simulation</button></div><div id="simulationArea"></div>`; }
 function renderSpeed() { return `<div class="speed"><button class="primary" id="startPracticalSpeed">Start 60-second round</button><span class="timer" id="practicalTimer">1:00</span><span id="practicalSpeedScore">Score: 0</span></div><div id="practicalSpeedArea"><p class="subtle">Fast recognition of the scoped orders, suborders, and anatomy terms.</p></div>`; }
 function renderKeyWork(order, nodeId = null, history = []) {
   const key = practicalFamilyKeys[order];
+  if (nodeId === 'h-invalid') {
+    return `<div class="key-result"><div class="eyebrow">Outside this branch</div><h3>Reconsider the previous couplet</h3><p>A beak that is not 4-segmented does not match the supported Coreidae/Lygaeidae branch. Return to the preceding couplet rather than forcing an identification.</p><button class="secondary key-back" data-order="${order}" data-history="${esc(JSON.stringify(history.slice(0, -1)))}">← Back</button><button class="secondary key-restart" data-order="${order}">Restart key</button></div>`;
+  }
   if (nodeId && !key.nodes.some(item => item.id === nodeId)) {
     const finalTaxon = practicalTaxa.find(taxon => taxon.name === nodeId);
     return `<div class="key-result"><div class="eyebrow">Identification</div><h3>${esc(nodeId)}</h3><p>${esc(finalTaxon?.diagnosticTraits.join('; ') || '')}</p><button class="secondary key-back" data-order="${order}" data-history="${esc(JSON.stringify(history.slice(0, -1)))}">← Back</button><button class="secondary key-restart" data-order="${order}">Restart key</button></div>`;
@@ -171,7 +174,8 @@ function renderTab() {
 function setPracticalTab(tab) { practicalState.tab = tab; renderTab(); }
 function bindTabEvents() {
   document.querySelectorAll('[data-practical-tab]').forEach(button => button.onclick = () => setPracticalTab(button.dataset.practicalTab));
-  document.querySelectorAll('[data-jump]').forEach(button => button.onclick = () => setPracticalTab(button.dataset.jump));
+  document.querySelectorAll('[data-jump]').forEach(button => button.onclick = () => { practicalState.missedOnly = false; setPracticalTab(button.dataset.jump); });
+  document.querySelectorAll('[data-missed-practice]').forEach(button => button.onclick = () => { practicalState.missedOnly = true; setPracticalTab('practice'); });
   document.querySelectorAll('.compare-reveal').forEach(button => button.onclick = () => { button.nextElementSibling.classList.toggle('hidden'); button.textContent = button.nextElementSibling.classList.contains('hidden') ? 'Reveal study prompt' : 'Hide prompt'; });
   document.querySelectorAll('.open-key, .open-question-key').forEach(button => button.onclick = () => { const work = document.getElementById(`key-work-${button.dataset.order}`); if (work) { work.innerHTML = renderKeyWork(button.dataset.order); document.getElementById(`key-${button.dataset.order}`).classList.remove('hidden'); bindKeyEvents(); } });
   bindKeyEvents();
@@ -179,15 +183,16 @@ function bindTabEvents() {
     const item = anatomy[Number(button.dataset.anatomy)];
     const terms = item[2].split(';').map(term => term.trim());
     const term = terms[Math.floor(Math.random() * terms.length)];
-    const choices = [...new Set([term, ...terms.sort(() => Math.random() - 0.5).slice(0, 3)])];
+    const question = shuffle(canonicalQuestions.filter(candidate => candidate.taxon === term))[0];
+    const choices = question?.choices || [...new Set([term, ...terms])];
     const area = document.getElementById('anatomyQuestionArea');
-    area.innerHTML = `<div class="question-area"><div class="eyebrow">${esc(item[0])} • direct identification</div><h2 class="question">Which structure belongs to the ${esc(item[1])}?</h2><p class="mystery-clue"><strong>${esc(item[3])}</strong></p><div class="options">${choices.sort(() => Math.random() - 0.5).map(choice => `<button class="option anatomy-answer" data-choice="${esc(choice)}" data-correct="${esc(term)}">${esc(choice)}</button>`).join('')}</div><div id="anatomyFeedback" class="explain"></div></div>`;
+    area.innerHTML = `<div class="question-area"><div class="eyebrow">${esc(item[0])} • selected structure</div><h2 class="question">${question?.prompt || `Which structure is <strong>${esc(term)}</strong>?`}</h2><div class="options">${choices.sort(() => Math.random() - 0.5).map(choice => `<button class="option anatomy-answer" data-choice="${esc(choice)}" data-correct="${esc(question?.answer || term)}">${esc(choice)}</button>`).join('')}</div><div id="anatomyFeedback" class="explain"></div></div>`;
     document.querySelectorAll('.anatomy-answer').forEach(answer => answer.onclick = () => {
       const correct = answer.dataset.choice === answer.dataset.correct;
       document.querySelectorAll('.anatomy-answer').forEach(option => { option.disabled = true; if (option.dataset.choice === option.dataset.correct) option.classList.add('correct'); });
       answer.classList.toggle('wrong', !correct);
       document.getElementById('anatomyFeedback').className = 'explain show';
-      document.getElementById('anatomyFeedback').innerHTML = `<strong>${correct ? 'Correct.' : `Answer: ${esc(term)}`}</strong><p>${esc(item[3])}</p>`;
+      document.getElementById('anatomyFeedback').innerHTML = `<strong>${correct ? 'Correct.' : `Answer: ${esc(question?.answer || term)}`}</strong><p>${esc(question?.explanation || item[3])}</p>`;
     });
   });
   const search = document.getElementById('practicalSearch'); if (search) search.oninput = () => document.querySelectorAll('#practicalReference article').forEach(card => card.hidden = !card.dataset.search.toLowerCase().includes(search.value.toLowerCase()));
@@ -216,30 +221,87 @@ function bindQuestionKeyEvents() {
   });
 }
 function bindGroupChoices() { document.querySelectorAll('.group-choice').forEach(button => button.onclick = () => { document.querySelectorAll('.group-choice').forEach(item => { item.disabled = true; if (item.dataset.correct === item.dataset.answer) item.classList.add('correct'); }); const ok = button.dataset.answer === button.dataset.correct; button.classList.toggle('wrong', !ok); document.getElementById('groupFeedback').className = 'explain show'; document.getElementById('groupFeedback').innerHTML = `<strong>${ok ? 'Correct.' : 'Use the guide to re-check this choice.'}</strong><p>The practical requires an observable diagnostic explanation, not only a name. Record the feature or grouping relationship that supports <strong>${esc(button.dataset.correct)}</strong>.</p>`; }); }
-function makePracticeQuestions(focus) {
-  const anatomyQuestions = anatomy.flatMap(item => {
-    const terms = item[2].split(';').map(term => term.trim());
-    const identification = terms.map(term => ({ type: 'anatomy-identification', category: item[0], prompt: `Which structure belongs to the <strong>${esc(item[1])}</strong>?`, answer: term, choices: [...new Set([term, ...terms])].slice(0, 4), explanation: item[3] }));
-    const location = terms.map(term => ({ type: 'anatomy-location', category: item[0], prompt: `Where should you locate <strong>${esc(term)}</strong>?`, answer: item[1], choices: [...new Set([item[1], ...anatomy.map(candidate => candidate[1])])], explanation: item[3] }));
-    const functions = terms.filter(term => anatomyDetails[term]).map(term => ({ type: 'anatomy-function', category: item[0], prompt: `Which function or relationship belongs to <strong>${esc(term)}</strong>?`, answer: anatomyDetails[term][1], choices: [anatomyDetails[term][1], ...terms.filter(candidate => candidate !== term && anatomyDetails[candidate]).slice(0, 3).map(candidate => anatomyDetails[candidate][1])], explanation: `${term}: ${anatomyDetails[term][1]}.` }));
-    return [...identification, ...location, ...functions];
+const shuffle = items => items.slice().sort(() => Math.random() - 0.5);
+const anatomyRecords = anatomy.flatMap(item => item[2].split(';').map(term => term.trim()).map(term => ({
+  term, region: item[1], category: item[0], detail: anatomyDetails[term], explanation: item[3]
+})));
+function buildCanonicalQuestions() {
+  const questions = practicalQuestionBank.map(question => ({
+    ...question, category: question.topic || question.category || 'general',
+    acceptedAnswers: question.acceptedAnswers || [question.answer],
+    choices: question.choices || []
+  }));
+  anatomyRecords.forEach(item => {
+    const alternatives = anatomyRecords.filter(candidate => candidate.term !== item.term);
+    questions.push(
+      { id: `anatomy-name-${item.term}`, type: 'external-anatomy', topic: item.category, taxon: item.term, answer: item.term, choices: [item.term, ...shuffle(alternatives.map(candidate => candidate.term)).slice(0, 3)], prompt: `Which structure is described as <strong>${esc(item.detail?.[1] || item.explanation)}</strong>?`, explanation: `${item.term} is the relevant ${item.region.toLowerCase()} structure. ${item.detail?.[1] || item.explanation}`, acceptedAnswers: [item.term] },
+      { id: `anatomy-location-${item.term}`, type: 'anatomy-location', topic: item.category, taxon: item.term, answer: item.region, choices: shuffle([...new Set([item.region, ...anatomy.map(candidate => candidate[1])])]), prompt: `Where should you locate <strong>${esc(item.term)}</strong>?`, explanation: `${item.term} belongs to the ${item.region.toLowerCase()}; ${item.detail?.[1] || item.explanation}`, acceptedAnswers: [item.region] }
+    );
+    if (item.detail) questions.push({
+      id: `anatomy-function-${item.term}`, type: 'reverse-anatomy', topic: item.category, taxon: item.term,
+      answer: item.term, choices: [item.term, ...shuffle(alternatives.filter(candidate => candidate.detail).map(candidate => candidate.term)).slice(0, 3)],
+      prompt: `Which structure <strong>${esc(item.detail[1])}</strong>?`, explanation: `${item.term}: ${item.detail[1]}.`, acceptedAnswers: [item.term]
+    });
   });
-  const taxonomyQuestions = practicalTaxa.filter(taxon => (taxon.rank === 'order' || taxon.rank === 'suborder') && !taxon.sourceLimitation).flatMap(taxon => taxon.diagnosticTraits.slice(0, 2).map(clue => ({ type: `${taxon.rank}-identification`, taxon: taxon.name, prompt: `Which ${taxon.rank} matches this supported clue? <strong>${esc(clue)}</strong>`, answer: taxon.name, choices: [taxon.name, ...practicalTaxa.filter(candidate => candidate.rank === taxon.rank && candidate.name !== taxon.name && !candidate.sourceLimitation).slice(0, 3).map(candidate => candidate.name)], explanation: `${taxon.name}: ${clue}. Orders and suborders are recognition objectives and should be identified without a key.` })));
-  const familyQuestions = Object.values(keyFamilies).flat().flatMap(answer => {
-    const entry = practicalTaxa.find(taxon => taxon.name === answer);
-    const acceptedAnswers = [answer, ...(entry?.aliases || [])];
-    const choices = [answer, ...(entry?.aliases || []), ...families.filter(family => family !== answer).slice(0, 3)];
-    return [...(entry?.diagnosticTraits || []).map(clue => ({ type: 'family-identification', taxon: answer, keyOrder: Object.keys(keyFamilies).find(order => keyFamilies[order].includes(answer)), prompt: `Which family or superfamily is supported by this diagnostic feature? <strong>${esc(clue)}</strong>`, answer, acceptedAnswers, choices, explanation: `${answer}: ${clue}.` })), { type: 'family-identification', taxon: answer, keyOrder: Object.keys(keyFamilies).find(order => keyFamilies[order].includes(answer)), prompt: 'Which family or superfamily should you reach through the supplied key?', answer, acceptedAnswers, choices, explanation: 'Open the supplied key, record the diagnostic couplet, and then submit the identification.' }];
+  practicalTaxa.filter(taxon => ['order', 'suborder'].includes(taxon.rank) && !taxon.sourceLimitation).forEach(taxon => {
+    taxon.diagnosticTraits.forEach((clue, index) => questions.push({
+      id: `id-${taxon.name}-${index}`, type: `${taxon.rank}-identification`, topic: 'taxonomy', taxon: taxon.name,
+      rank: taxon.rank, answer: taxon.name, choices: [taxon.name, ...shuffle(practicalTaxa.filter(candidate => candidate.rank === taxon.rank && candidate.name !== taxon.name && !candidate.sourceLimitation).map(candidate => candidate.name)).slice(0, 3)],
+      prompt: `Which ${taxon.rank} matches this supported clue? <strong>${esc(clue)}</strong>`, explanation: `${clue} supports ${taxon.name}; the other choices lack this supported combination.`, requiresKey: false
+    }));
   });
-  const morphologyQuestions = morphologyTypes.map(item => ({ type: 'morphology', category: item.category, prompt: `Which type is described by this course-note feature? <strong>${esc(item.description)}</strong>`, answer: item.term, choices: [item.term, ...morphologyTypes.filter(candidate => candidate.category === item.category && candidate.term !== item.term).slice(0, 3).map(candidate => candidate.term)], explanation: item.description }));
-  const extras = questionBankExtrasWithComparisons;
-  const all = focus === 'anatomy' ? [...anatomyQuestions, ...extras.filter(question => question.type.includes('anatomy'))] : focus === 'taxonomy' ? taxonomyQuestions : focus === 'families' ? familyQuestions : focus === 'morphology' ? [...morphologyQuestions, ...extras.filter(question => question.type === 'functional-morphology')] : [...anatomyQuestions, ...taxonomyQuestions, ...familyQuestions, ...morphologyQuestions, ...extras];
-  return all.sort(() => Math.random() - 0.5);
+  practicalTaxa.filter(taxon => taxon.requiresKey && !taxon.sourceLimitation).forEach(taxon => {
+    const keyOrder = Object.keys(keyFamilies).find(order => keyFamilies[order].includes(taxon.name));
+    taxon.diagnosticTraits.forEach((clue, index) => questions.push({
+      id: `family-id-${taxon.name}-${index}`, type: 'family-identification', topic: 'family key', taxon: taxon.name,
+      rank: taxon.rank, keyOrder, answer: taxon.name, acceptedAnswers: [taxon.name, ...(taxon.aliases || [])],
+      choices: [taxon.name, ...shuffle(families.filter(family => family !== taxon.name)).slice(0, 3)],
+      prompt: `Which family or superfamily is supported by this specimen feature? <strong>${esc(clue)}</strong>`,
+      explanation: `${taxon.name} is supported by ${clue}. Use the ${keyOrder || 'supplied'} key to confirm the couplet.`, requiresKey: true
+    }));
+  });
+  morphologyTypes.forEach(item => questions.push({
+    id: `morphology-${item.category}-${item.term}`, type: 'functional-morphology', topic: 'morphology',
+    answer: item.term, choices: [item.term, ...shuffle(morphologyTypes.filter(candidate => candidate.category === item.category && candidate.term !== item.term).map(candidate => candidate.term)).slice(0, 3)],
+    prompt: `Which type is described by this course-note feature? <strong>${esc(item.description)}</strong>`, explanation: item.description
+  }));
+  return [...questions, ...questionBankExtrasWithComparisons].map((question, index) => ({
+    id: question.id || `canonical-${index}`, ...question, category: question.category || question.topic || 'general',
+    acceptedAnswers: question.acceptedAnswers || [question.answer]
+  }));
+}
+const canonicalQuestions = buildCanonicalQuestions();
+window.practicalAudit = () => ({
+  total: canonicalQuestions.length,
+  byType: canonicalQuestions.reduce((counts, question) => { counts[question.type] = (counts[question.type] || 0) + 1; return counts; }, {}),
+  byTaxon: practicalTaxa.filter(taxon => ['order', 'suborder', 'family', 'superfamily'].includes(taxon.rank)).map(taxon => ({
+    taxon: taxon.name, questions: canonicalQuestions.filter(question => question.taxon === taxon.name).length,
+    types: [...new Set(canonicalQuestions.filter(question => question.taxon === taxon.name).map(question => question.type))],
+    sourceLimited: Boolean(taxon.sourceLimitation), usesKey: Boolean(taxon.requiresKey)
+  })),
+  limitations: practicalTaxa.filter(taxon => taxon.sourceLimitation).map(taxon => `${taxon.name}: ${taxon.sourceLimitation}`)
+});
+function makePracticeQuestions(focus, missedOnly = false) {
+  const progress = getProgress();
+  let pool = canonicalQuestions;
+  if (missedOnly) {
+    const missed = new Set(Object.keys(progress.misses));
+    pool = pool.filter(question => missed.has(question.taxon) || missed.has(question.answer) || missed.has(question.id));
+  }
+  if (focus === 'anatomy') pool = pool.filter(question => /anatomy|reverse-anatomy/.test(question.type));
+  if (focus === 'taxonomy') pool = pool.filter(question => ['order-identification', 'suborder-identification', 'grouping'].includes(question.type));
+  if (focus === 'families') pool = pool.filter(question => question.requiresKey);
+  if (focus === 'morphology') pool = pool.filter(question => /morphology/.test(question.type));
+  return shuffle(pool);
 }
 function startPracticeQuestion() {
   const focus = document.getElementById('practiceFocus').value;
   const count = Math.min(10, Math.max(1, Number(document.getElementById('practiceCount').value) || 5));
-  const questions = makePracticeQuestions(focus).slice(0, count);
+  const questions = makePracticeQuestions(focus, practicalState.missedOnly).slice(0, count);
+  if (!questions.length) {
+    area.innerHTML = '<div class="explain show">No questions match this focus or your recorded misses.</div>';
+    return;
+  }
   let index = 0;
   let score = 0;
   const area = document.getElementById('practiceQuestionArea');
@@ -280,18 +342,17 @@ function showPracticeFeedback(question, correct, advance) {
   document.getElementById('nextPractice').onclick = advance;
 }
 function simulationQuestions() {
-  const byName = name => practicalTaxa.find(taxon => taxon.name === name);
-  const taxonomy = practicalTaxa.filter(taxon => taxon.rank === 'order' || taxon.rank === 'suborder');
-  const orderQs = taxonomy.slice().sort(() => Math.random() - 0.5).slice(0, 5).map(taxon => ({ category: 'Order/suborder ID', prompt: `Identify this practical taxon from its clue: <strong>${esc(taxon.diagnosticTraits[0] || taxon.grouping)}</strong>.`, answer: taxon.name, choices: [taxon.name, ...taxonomy.filter(item => item.name !== taxon.name).slice(0, 3).map(item => item.name)], explanation: `${taxon.name}: ${taxon.diagnosticTraits.join('; ') || 'Use the memorized classification and visual diagnosis.'}` }));
-  const external = anatomy.filter(item => item[0] === 'External anatomy').slice(0, 3).map(item => ({ category: 'External anatomy', prompt: `Which region contains <strong>${esc(item[2].split(';')[0])}</strong>?`, answer: item[1], choices: anatomy.filter(candidate => candidate[0] === 'External anatomy').map(candidate => candidate[1]), explanation: item[3] }));
-  const internal = anatomy.filter(item => item[0] === 'Internal anatomy').slice(0, 3).map(item => ({ category: 'Internal anatomy', prompt: `Which system includes <strong>${esc(item[2].split(';')[0])}</strong>?`, answer: item[1], choices: anatomy.filter(candidate => candidate[0] === 'Internal anatomy').map(candidate => candidate[1]), explanation: item[3] }));
-  const morphologyQs = [{ category: 'Morphology', prompt: 'Which leg type has an enlarged hind femur for jumping?', answer: 'saltatorial', choices: ['saltatorial', 'raptorial', 'fossorial', 'natatorial'], explanation: 'Saltatorial legs have enlarged hind femora and are used for jumping.' }, { category: 'Morphology', prompt: 'Which wing type is basally hardened and apically membranous?', answer: 'hemelytra', choices: ['hemelytra', 'elytra', 'tegmina', 'fringed wings'], explanation: 'Hemelytra are the forewings of many Heteroptera.' }];
-  const familyQs = ['Aeshnidae', 'Gryllidae', 'Aphididae'].map(answer => ({ category: 'Family key', prompt: `Use the available family key to reach <strong>${answer}</strong>. Which family is the answer?`, answer, choices: [answer, ...families.filter(family => family !== answer).slice(0, 3)], explanation: `${answer}: ${byName(answer)?.diagnosticTraits.join('; ') || 'Follow the supplied couplets.'}` }));
-  const comparison = { category: 'Comparison', prompt: 'How do you distinguish Aeshnidae from Libellulidae?', answer: 'Compare wing triangles and the hindwing anal loop', choices: ['Compare wing triangles and the hindwing anal loop', 'Count abdominal spiracles', 'Inspect cornicles', 'Look for a cuneus'], explanation: 'Aeshnidae have similar triangles pointing the same direction and no foot-shaped anal loop; Libellulidae differ.' };
-  const truth = { category: 'True statements', prompt: 'Which statement is true about Rhaphidophoridae?', answer: 'They lack tympanal organs entirely', choices: ['They lack tympanal organs entirely', 'They have 3 tarsomeres', 'They have short antennae', 'They have raptorial forelegs'], explanation: 'Rhaphidophoridae are wingless, have long antennae, lack tympana, and have 4 tarsomeres.' };
-  const yesNo = { category: 'Feature check', prompt: 'Do Aphididae have cornicles near the posterior end of the abdomen?', answer: 'Yes', choices: ['Yes', 'No'], explanation: 'The Hemiptera key uses cornicles to separate Aphididae from Coccoidae.' };
-  const ecology = { category: 'Ecology/function', prompt: 'Why are Belostomatidae forelegs notable?', answer: 'They are massive raptorial forelegs used in predation', choices: ['They are massive raptorial forelegs used in predation', 'They are scoop-shaped for algae', 'They are hydrophobic walking legs', 'They are wing-folding structures'], explanation: 'Belostomatidae are predatory and have massive raptorial forelegs.' };
-  return [...orderQs, ...external, ...morphologyQs, ...internal, ...familyQs, comparison, truth, yesNo, ecology];
+  const pick = (predicate, count) => shuffle(canonicalQuestions.filter(predicate)).slice(0, count);
+  const order = pick(question => ['order-identification', 'suborder-identification'].includes(question.type) && !question.requiresKey, 5);
+  const external = pick(question => question.type === 'external-anatomy', 3);
+  const morphologyQs = pick(question => question.type === 'functional-morphology', 2);
+  const internal = pick(question => question.type === 'internal-anatomy' || (question.type === 'anatomy-location' && question.topic === 'Internal anatomy'), 3);
+  const familyQs = pick(question => question.type === 'family-identification' && question.requiresKey, 3);
+  const comparison = pick(question => question.type === 'comparison', 1);
+  const selectAll = pick(question => question.type === 'select-all', 1);
+  const yesNo = pick(question => question.type === 'yes-no-feature', 1);
+  const ecology = pick(question => question.type === 'ecology-life-history' || question.type === 'functional-morphology', 1);
+  return [...order, ...external, ...morphologyQs, ...internal, ...familyQs, ...comparison, ...selectAll, ...yesNo, ...ecology].slice(0, 20);
 }
 function startSimulationRun() {
   const questions = simulationQuestions();
@@ -305,9 +366,16 @@ function startSimulationRun() {
       return;
     }
     const question = questions[index];
-    area.innerHTML = `<div class="question-area"><div class="eyebrow">${esc(question.category)} • ${index + 1}/${questions.length}</div><h2 class="question">${question.prompt}</h2><div class="options">${question.choices.sort(() => Math.random() - 0.5).map(choice => `<button class="option simulation-answer" data-choice="${esc(choice)}">${esc(choice)}</button>`).join('')}</div><button class="secondary" id="skipSimulation">Skip</button></div>`;
-    const record = choice => { const correct = choice === question.answer; answers.push({ ...question, choice, correct }); recordProgress(question, correct); index += 1; show(); };
+    const key = question.requiresKey && question.keyOrder ? `<button class="secondary open-question-key" data-order="${question.keyOrder}">Open key</button><div class="key-body hidden" id="key-${question.keyOrder}"><div id="key-work-${question.keyOrder}"></div></div>` : '';
+    const options = question.type === 'select-all'
+      ? question.choices.map(choice => `<label class="option"><input type="checkbox" class="simulation-select" value="${esc(choice)}"> ${esc(choice)}</label>`).join('')
+      : question.choices.sort(() => Math.random() - 0.5).map(choice => `<button class="option simulation-answer" data-choice="${esc(choice)}">${esc(choice)}</button>`).join('');
+    area.innerHTML = `<div class="question-area"><div class="eyebrow">Station ${index + 1}/${questions.length}</div><h2 class="question">${question.prompt}</h2>${key}<div class="options">${options}</div>${question.type === 'select-all' ? '<button class="primary" id="submitSimulationSelectAll">Submit selections</button>' : ''}<button class="secondary" id="skipSimulation">Skip</button></div>`;
+    bindQuestionKeyEvents();
+    const record = choice => { const expected = Array.isArray(question.answer) ? question.answer.slice().sort().join('|') : question.answer; const actual = Array.isArray(choice) ? choice.slice().sort().join('|') : choice; const correct = actual === expected; answers.push({ ...question, choice: Array.isArray(choice) ? choice.join(', ') : choice, correct }); recordProgress(question, correct); index += 1; show(); };
     document.querySelectorAll('.simulation-answer').forEach(button => button.onclick = () => record(button.dataset.choice));
+    const submitAll = document.getElementById('submitSimulationSelectAll');
+    if (submitAll) submitAll.onclick = () => record([...document.querySelectorAll('.simulation-select:checked')].map(input => input.value));
     document.getElementById('skipSimulation').onclick = () => record('');
   };
   show();
