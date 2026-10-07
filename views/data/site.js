@@ -28,7 +28,7 @@ const pages = [
     output: 'practical.html',
     title: 'Lab Practical',
     page: 'practical',
-    scripts: ['practical-data.js', 'practical.js']
+    scripts: ['practical-data.js', 'practical-images.js', 'practical.js']
   }
 ];
 

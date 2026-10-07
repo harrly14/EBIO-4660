@@ -169,7 +169,6 @@ function pickFreshOne(candidates) {
   let fresh = candidates.filter(item => !seen.has(item.id));
   if (!fresh.length) { candidates.forEach(item => seen.delete(item.id)); saveSeen(seen); fresh = candidates; }
   const choice = fresh[Math.floor(Math.random() * fresh.length)];
-  seen.add(choice.id); saveSeen(seen);
   return choice;
 }
 let clueOwnerIndex = null;
@@ -219,10 +218,10 @@ function groupPrompt() {
     const clues = entry?.diagnosticTraits?.length ? entry.diagnosticTraits : [groupEntry ? `${groupEntry[1]} containing ${groupEntry[2]}` : 'a listed grouping'];
     return clues.map(clue => ({ id: `group|${rank}|${name}|${clue}`, answer: name, clue }));
   });
-  const { answer, clue } = pickFreshOne(candidates);
+  const { answer, clue, id } = pickFreshOne(candidates);
   const others = pool.filter(name => name !== answer && !sharesClue(name, clue));
   const choices = shuffle([answer, ...shuffle(others).slice(0, 3)]);
-  return `<div class="eyebrow">${rank === 'group' ? 'Grouping ID' : `${rank} ID`}</div><h2 class="question">Which ${rank} matches this observable clue?</h2><p class="mystery-clue"><strong>${esc(clue)}</strong></p><div class="options">${choices.map(choice => `<button class="option group-choice" data-answer="${esc(choice)}" data-correct="${esc(answer)}">${esc(choice)}</button>`).join('')}</div><div id="groupFeedback" class="explain"></div>`;
+  return `<div class="eyebrow">${rank === 'group' ? 'Grouping ID' : `${rank} ID`}</div><h2 class="question">Which ${rank} matches this observable clue?</h2><p class="mystery-clue"><strong>${esc(clue)}</strong></p><div class="options">${choices.map(choice => `<button class="option group-choice" data-answer="${esc(choice)}" data-correct="${esc(answer)}" data-question-id="${esc(id)}">${esc(choice)}</button>`).join('')}</div><div id="groupFeedback" class="explain"></div>`;
 }
 function renderFamilies() {
   return `<div class="practice-banner"><strong>Real course keys.</strong> Select an order, inspect the named feature, choose a branch, and use Back or Restart to work the couplets again. The Odonata key first identifies the suborder, then the applicable Anisoptera family.</div><div class="family-columns">${Object.entries(practicalFamilyKeys).map(([order, key]) => `<section class="family-key"><h3>${esc(key.title)}</h3><p class="subtle">${order}</p><button class="primary open-key" data-order="${order}">Open Key</button><div class="key-body hidden" id="key-${order}"><div id="key-work-${order}"></div></div></section>`).join('')}</div>`;
@@ -250,6 +249,7 @@ function renderReference() {
   const rankLabels = { phylum: 'Phylum', subphylum: 'Subphylum', class: 'Class', grouping: 'Major group', order: 'Order', suborder: 'Suborder', family: 'Family', superfamily: 'Superfamily' };
   const taxonDetails = taxon => {
     const sections = [];
+    sections.push(imageGallery(taxon));
     sections.push(cardList('How to identify', taxon.diagnosticTraits || []));
     sections.push(cardList('Ecology / biology', taxon.ecology || []));
     sections.push(cardList('Life history', taxon.lifeHistory || []));
@@ -379,7 +379,7 @@ function renderPractice() {
   const practiceSetupVisible = practicalState.practiceSetupVisible !== false;
   const activeQuestion = practicalState.practiceSession && practicalState.practiceIndex < practicalState.practiceSession.length ? practicalState.practiceSession[practicalState.practiceIndex] : null;
   const setupMarkup = `<div class="practice-setup ${practiceSetupVisible ? '' : 'hidden'}" id="practiceSetup"><div class="eyebrow">${missed ? 'Missed material' : 'Choose your session'}</div><h2>${missed ? 'Practice concepts you missed' : 'Mixed practical practice'}</h2><div class="practice-control"><label for="practiceFocus">Question type</label><select id="practiceFocus"><option value="mixed">Mixed practical</option><option value="order-suborder">Order &amp; suborder identification</option><option value="family-superfamily">Family &amp; superfamily identification</option><option value="anatomy">External anatomy &amp; internal anatomy</option><option value="morphology">Morphology types</option><option value="compare">Compare two groups</option><option value="select-all">Select all that apply</option><option value="yes-no">Yes / No feature</option><option value="ecology">Ecology &amp; life history</option><option value="simulation">Full practical simulation</option></select></div><div class="practice-control"><label for="practiceCountRange">Question count</label><div class="range-row"><input id="practiceCountRange" type="range" min="5" max="100" value="20" step="1"><output class="range-value" id="practiceCountValue" for="practiceCountRange">20</output></div></div><button class="primary" id="startPractice">Start practice</button><p class="subtle">${seenSummary()} of ${canonicalQuestions.length} questions seen. Unseen questions are served first. <button class="secondary" id="resetSeenQuestions" type="button">Reset</button></p></div>`;
-  const sessionMarkup = activeQuestion ? `<div class="question-area"><div class="eyebrow">${esc(activeQuestion.type || 'practical')} • ${practicalState.practiceIndex + 1}/${practicalState.practiceSession.length}</div><h2 class="question">${activeQuestion.prompt}</h2><div class="options">${activeQuestion.type === 'select-all' ? (activeQuestion.choices || []).map(choice => `<label class="option"><input type="checkbox" class="practice-select" value="${esc(choice)}"> ${esc(choice)}</label>`).join('') : (activeQuestion.type === 'yes-no-feature' ? ['Yes', 'No'] : (activeQuestion.choices || [])).map(choice => `<button class="option practice-answer" data-choice="${esc(choice)}">${esc(choice)}</button>`).join('')}</div>${activeQuestion.type === 'select-all' ? '<button class="primary" id="submitSelectAll">Submit selections</button>' : ''}<div id="practiceFeedback" class="explain"></div><div class="next-row practice-actions"><button class="secondary" id="skipPractice">Unsure / Skip</button><button class="secondary" id="finishPractice">Finish early</button></div></div>` : '';
+  const sessionMarkup = activeQuestion ? `<div class="question-area"><div class="eyebrow">${esc(activeQuestion.type || 'practical')} • ${practicalState.practiceIndex + 1}/${practicalState.practiceSession.length}</div>${questionImage(activeQuestion)}<h2 class="question">${activeQuestion.prompt}</h2><div class="options">${activeQuestion.type === 'select-all' ? (activeQuestion.choices || []).map(choice => `<label class="option"><input type="checkbox" class="practice-select" value="${esc(choice)}"> ${esc(choice)}</label>`).join('') : (activeQuestion.type === 'yes-no-feature' ? ['Yes', 'No'] : (activeQuestion.choices || [])).map(choice => `<button class="option practice-answer" data-choice="${esc(choice)}">${esc(choice)}</button>`).join('')}</div>${activeQuestion.type === 'select-all' ? '<button class="primary" id="submitSelectAll">Submit selections</button>' : ''}<div id="practiceFeedback" class="explain"></div><div class="next-row practice-actions"><button class="secondary" id="skipPractice">Unsure / Skip</button><button class="secondary" id="finishPractice">Finish early</button></div></div>` : '';
   return `${setupMarkup}<div id="practiceQuestionArea">${sessionMarkup}</div>`;
 }
 function renderSimulation() { return `<div class="simulation-intro"><div class="eyebrow">No immediate feedback</div><h2>20-question practical simulation</h2><p>Mixed order/suborder ID, anatomy, morphology, family-key workflow, comparisons, true statements, feature checks, and functional morphology. Answers and explanations appear at the end.</p><button class="primary" id="startSimulation">Start simulation</button></div><div id="simulationArea"></div>`; }
@@ -507,7 +507,7 @@ function bindQuestionKeyEvents() {
     }
   });
 }
-function bindGroupChoices() { document.querySelectorAll('.group-choice').forEach(button => button.onclick = () => { document.querySelectorAll('.group-choice').forEach(item => { item.disabled = true; if (item.dataset.correct === item.dataset.answer) item.classList.add('correct'); }); const ok = button.dataset.answer === button.dataset.correct; button.classList.toggle('wrong', !ok); document.getElementById('groupFeedback').className = 'explain show'; document.getElementById('groupFeedback').innerHTML = `<strong>${ok ? 'Correct.' : 'Use the guide to re-check this choice.'}</strong><p>The practical requires an observable diagnostic explanation, not only a name. Record the feature or grouping relationship that supports <strong>${esc(button.dataset.correct)}</strong>.</p>`; }); }
+function bindGroupChoices() { document.querySelectorAll('.group-choice').forEach(button => button.onclick = () => { document.querySelectorAll('.group-choice').forEach(item => { item.disabled = true; if (item.dataset.correct === item.dataset.answer) item.classList.add('correct'); }); const ok = button.dataset.answer === button.dataset.correct; if (ok) markSeen(button.dataset.questionId); button.classList.toggle('wrong', !ok); document.getElementById('groupFeedback').className = 'explain show'; document.getElementById('groupFeedback').innerHTML = `<strong>${ok ? 'Correct.' : 'Use the guide to re-check this choice.'}</strong><p>The practical requires an observable diagnostic explanation, not only a name. Record the feature or grouping relationship that supports <strong>${esc(button.dataset.correct)}</strong>.</p>`; }); }
 const shuffle = items => { const copy = items.slice(); for (let i = copy.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [copy[i], copy[j]] = [copy[j], copy[i]]; } return copy; };
 const anatomyRecords = anatomy.flatMap(item => item[2].split(';').map(term => term.trim()).map(term => ({
   term, region: item[1], category: item[0], detail: anatomyDetails[term], explanation: item[3]
@@ -522,6 +522,18 @@ function choicesForTaxon(taxon, clue) {
   const preferred = keyed ? item => orderOf(item) === orderOf(taxon) : taxon.rank === 'order' ? item => item.grouping === taxon.grouping : item => item.parent === taxon.parent;
   return shuffle([taxon.name, ...pickDistractors(candidates, preferred).map(item => item.name)]);
 }
+const practicalImagesByTaxon = practicalImages.reduce((groups, image) => {
+  (groups[image.taxon] = groups[image.taxon] || []).push(image);
+  return groups;
+}, {});
+const imageAttribution = image => `Image: ${image.creator || 'Creator information supplied by Wikimedia Commons'} · ${image.license}`;
+const imageGallery = taxon => {
+  const images = practicalImagesByTaxon[taxon.name] || [];
+  if (!images.length) return '';
+  return `<div class="practical-image-gallery"><h4>Approved specimen images</h4><div class="practical-image-grid">${images.map(image => `<figure><img src="${esc(image.src)}" alt="${esc(`${taxon.name} specimen`)}" loading="lazy"><figcaption><a href="${esc(image.sourceUrl)}" target="_blank" rel="noopener">Image source</a><span>${esc(imageAttribution(image))}</span></figcaption></figure>`).join('')}</div></div>`;
+};
+const questionImage = question => question.image ? `<figure class="question-image"><img src="${esc(question.image.src)}" alt="Insect specimen for identification"><figcaption>Specimen image for identification</figcaption></figure>` : '';
+const answeredImageAttribution = question => question.image ? `<div class="image-attribution"><a href="${esc(question.image.sourceUrl)}" target="_blank" rel="noopener">Image source</a> · ${esc(imageAttribution(question.image))}</div>` : '';
 function buildCanonicalQuestions() {
   const questions = [];
   const describe = record => record.detail?.[1] || record.explanation;
@@ -550,6 +562,14 @@ function buildCanonicalQuestions() {
       choices: choicesForTaxon(taxon, clue),
       prompt: `Which family or superfamily is supported by this specimen feature? <strong>${esc(clue)}</strong>`,
       explanation: `${taxon.name} is supported by ${clue}. Use the ${keyOrder || 'supplied'} key to confirm the couplet.`, requiresKey: true
+    }));
+    (practicalImagesByTaxon[taxon.name] || []).filter(image => image.quiz).forEach(image => questions.push({
+      id: `family-image-${image.id}`, type: 'family-image-identification', topic: 'family key', taxon: taxon.name,
+      rank: taxon.rank, keyOrder, answer: taxon.name, acceptedAnswers: [taxon.name, ...(taxon.aliases || [])],
+      image, choices: choicesForTaxon(taxon, (taxon.diagnosticTraits || []).join('|')),
+      prompt: 'What family or superfamily is this specimen?',
+      explanation: `${taxon.name}: useful family characters include ${(taxon.diagnosticTraits || []).join('; ') || 'the supplied family-key characters'}. Image-associated study traits include ${image.visibleTraits.join('; ')}. These traits are diagnostic for the taxon, not a claim that every feature is visible in this photograph.`,
+      requiresKey: true
     }));
   });
   morphologyTypes.forEach(item => questions.push({
@@ -639,17 +659,16 @@ function startPracticeQuestion() {
       return;
     }
     const question = questions[index];
-    markSeen(question.id);
     const options = question.type === 'select-all'
       ? question.choices.map(choice => `<label class="option"><input type="checkbox" class="practice-select" value="${esc(choice)}"> ${esc(choice)}</label>`).join('')
       : (question.type === 'yes-no-feature' ? ['Yes', 'No'] : shuffle(question.choices)).map(choice => `<button class="option practice-answer" data-choice="${esc(choice)}">${esc(choice)}</button>`).join('');
-    area.innerHTML = `<div class="question-area"><div class="eyebrow">${esc(focus)} • ${index + 1}/${questions.length}</div><h2 class="question">${question.prompt}</h2><div class="options">${options}</div>${question.type === 'select-all' ? '<button class="primary" id="submitSelectAll">Submit selections</button>' : ''}<div id="practiceFeedback" class="explain"></div><div class="next-row practice-actions"><div class="practice-secondary-actions"><button class="secondary" id="skipPractice">Unsure / Skip</button><button class="secondary" id="finishPractice">Finish early</button></div><button class="primary" id="nextPractice" disabled>Next question →</button></div></div>`;
+    area.innerHTML = `<div class="question-area"><div class="eyebrow">${esc(focus)} • ${index + 1}/${questions.length}</div>${questionImage(question)}<h2 class="question">${question.prompt}</h2><div class="options">${options}</div>${question.type === 'select-all' ? '<button class="primary" id="submitSelectAll">Submit selections</button>' : ''}<div id="practiceFeedback" class="explain"></div><div class="next-row practice-actions"><div class="practice-secondary-actions"><button class="secondary" id="skipPractice">Unsure / Skip</button><button class="secondary" id="finishPractice">Finish early</button></div><button class="primary" id="nextPractice" disabled>Next question →</button></div></div>`;
     document.getElementById('skipPractice').onclick = () => { skipped += 1; practicalState.practiceSkipped = skipped; index += 1; practicalState.practiceIndex = index; next(); };
     document.getElementById('finishPractice').onclick = finishSet;
     document.querySelectorAll('.practice-answer').forEach(button => button.onclick = () => {
       document.querySelectorAll('.practice-answer').forEach(item => { item.disabled = true; if ((question.acceptedAnswers || [question.answer]).includes(item.dataset.choice)) item.classList.add('correct'); });
       const correct = (question.acceptedAnswers || [question.answer]).includes(button.dataset.choice);
-      if (correct) { score += 1; practicalState.practiceScore = score; } else button.classList.add('wrong');
+      if (correct) { score += 1; practicalState.practiceScore = score; markSeen(question.id); } else button.classList.add('wrong');
       recordProgress(question, correct);
       showPracticeFeedback(question, correct, () => { index += 1; practicalState.practiceIndex = index; next(); });
     });
@@ -660,7 +679,7 @@ function startPracticeQuestion() {
       const correct = JSON.stringify(selected) === JSON.stringify(expected);
       document.querySelectorAll('.practice-select').forEach(input => { input.disabled = true; if (question.answer.includes(input.value)) input.parentElement.classList.add('correct'); });
       submitSelectAll.disabled = true;
-      if (correct) { score += 1; practicalState.practiceScore = score; }
+      if (correct) { score += 1; practicalState.practiceScore = score; markSeen(question.id); }
       recordProgress(question, correct);
       showPracticeFeedback(question, correct, () => { index += 1; practicalState.practiceIndex = index; next(); });
     };
@@ -671,7 +690,7 @@ function showPracticeFeedback(question, correct, advance) {
   const feedback = document.getElementById('practiceFeedback');
   feedback.className = 'explain show';
   const answer = Array.isArray(question.answer) ? question.answer.join('; ') : question.answer;
-  feedback.innerHTML = `<strong class="${correct ? 'feedback-correct' : 'feedback-incorrect'}">${correct ? 'Correct.' : `Answer: ${esc(answer)}`}</strong><p>${esc(question.explanation)}</p>`;
+  feedback.innerHTML = `<strong class="${correct ? 'feedback-correct' : 'feedback-incorrect'}">${correct ? 'Correct.' : `Answer: ${esc(answer)}`}</strong><p>${esc(question.explanation)}</p>${answeredImageAttribution(question)}`;
   const nextButton = document.getElementById('nextPractice');
   if (nextButton) {
     nextButton.disabled = false;
@@ -688,7 +707,7 @@ function bindResumedPracticeQuestion() {
       if ((question.acceptedAnswers || [question.answer]).includes(item.dataset.choice)) item.classList.add('correct');
     });
     const correct = (question.acceptedAnswers || [question.answer]).includes(button.dataset.choice);
-    if (correct) practicalState.practiceScore += 1; else button.classList.add('wrong');
+    if (correct) { practicalState.practiceScore += 1; markSeen(question.id); } else button.classList.add('wrong');
     recordProgress(question, correct);
     showPracticeFeedback(question, correct, advance);
   });
@@ -701,7 +720,7 @@ function bindResumedPracticeQuestion() {
       if (question.answer.includes(input.value)) input.parentElement.classList.add('correct');
     });
     submitSelectAll.disabled = true;
-    if (correct) practicalState.practiceScore += 1;
+    if (correct) markSeen(question.id);
     recordProgress(question, correct);
     showPracticeFeedback(question, correct, advance);
   };
@@ -730,7 +749,7 @@ function simulationQuestions() {
   const external = pick(question => question.type === 'external-anatomy', 3);
   const morphologyQs = pick(question => question.type === 'functional-morphology', 2);
   const internal = pick(question => question.type === 'internal-anatomy' || (question.type === 'anatomy-location' && question.topic === 'Internal anatomy'), 3);
-  const familyQs = pick(question => question.type === 'family-identification' && question.requiresKey, 3);
+  const familyQs = pick(question => /family-(identification|image-identification)|mystery-specimen/.test(question.type) && question.requiresKey, 3);
   const comparison = pick(question => question.type === 'comparison', 1);
   const selectAll = pick(question => question.type === 'select-all', 1);
   const yesNo = pick(question => question.type === 'yes-no-feature', 1);
@@ -749,14 +768,13 @@ function startSimulationRun() {
       return;
     }
     const question = questions[index];
-    markSeen(question.id);
-    const key = question.requiresKey && question.keyOrder ? `<button class="secondary open-question-key" data-order="${question.keyOrder}">Open key</button><div class="key-body hidden" id="key-${question.keyOrder}"><div id="key-work-${question.keyOrder}"></div></div>` : '';
+    const key = question.requiresKey && question.keyOrder && question.type !== 'family-image-identification' ? `<button class="secondary open-question-key" data-order="${question.keyOrder}">Open key</button><div class="key-body hidden" id="key-${question.keyOrder}"><div id="key-work-${question.keyOrder}"></div></div>` : '';
     const options = question.type === 'select-all'
       ? question.choices.map(choice => `<label class="option"><input type="checkbox" class="simulation-select" value="${esc(choice)}"> ${esc(choice)}</label>`).join('')
       : shuffle(question.choices).map(choice => `<button class="option simulation-answer" data-choice="${esc(choice)}">${esc(choice)}</button>`).join('');
-    area.innerHTML = `<div class="question-area"><div class="eyebrow">Station ${index + 1}/${questions.length}</div><h2 class="question">${question.prompt}</h2>${key}<div class="options">${options}</div>${question.type === 'select-all' ? '<button class="primary" id="submitSimulationSelectAll">Submit selections</button>' : ''}<button class="secondary" id="skipSimulation">Skip</button></div>`;
+    area.innerHTML = `<div class="question-area"><div class="eyebrow">Station ${index + 1}/${questions.length}</div>${questionImage(question)}<h2 class="question">${question.prompt}</h2>${key}<div class="options">${options}</div>${question.type === 'select-all' ? '<button class="primary" id="submitSimulationSelectAll">Submit selections</button>' : ''}<button class="secondary" id="skipSimulation">Skip</button></div>`;
     bindQuestionKeyEvents();
-    const record = choice => { const expected = Array.isArray(question.answer) ? question.answer.slice().sort().join('|') : question.answer; const actual = Array.isArray(choice) ? choice.slice().sort().join('|') : choice; const correct = actual === expected; answers.push({ ...question, choice: Array.isArray(choice) ? choice.join(', ') : choice, correct }); recordProgress(question, correct); index += 1; show(); };
+    const record = choice => { const expected = Array.isArray(question.answer) ? question.answer.slice().sort().join('|') : question.answer; const actual = Array.isArray(choice) ? choice.slice().sort().join('|') : choice; const correct = actual === expected; if (correct) markSeen(question.id); answers.push({ ...question, choice: Array.isArray(choice) ? choice.join(', ') : choice, correct }); recordProgress(question, correct); index += 1; show(); };
     document.querySelectorAll('.simulation-answer').forEach(button => button.onclick = () => record(button.dataset.choice));
     const submitAll = document.getElementById('submitSimulationSelectAll');
     if (submitAll) submitAll.onclick = () => record([...document.querySelectorAll('.simulation-select:checked')].map(input => input.value));
