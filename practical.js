@@ -871,5 +871,28 @@ function startSimulationRun() {
   show();
 }
 function startPracticalSpeed() { let left = 60, score = 0, deck = []; const area = document.getElementById('practicalSpeedArea'); const timer = document.getElementById('practicalTimer'); const scoreNode = document.getElementById('practicalSpeedScore'); const tick = () => { timer.textContent = `0:${String(left).padStart(2, '0')}`; }; const ask = () => { if (!deck.length) deck = shuffle([...orders, ...suborders, ...anatomy.flatMap(item => item[2].split(';'))].map(item => item.trim())); const term = deck.pop(); area.innerHTML = `<div class="question-area"><h2 class="question">What should you recall about <strong>${esc(term)}</strong>?</h2><button class="primary" id="speedPoint">I know it</button><button class="secondary" id="speedSkip">Skip</button></div>`; document.getElementById('speedPoint').onclick = () => { score += 1; scoreNode.textContent = `Score: ${score}`; ask(); }; document.getElementById('speedSkip').onclick = ask; }; tick(); ask(); const interval = setInterval(() => { left -= 1; tick(); if (left <= 0) { clearInterval(interval); area.innerHTML = `<div class="speed-end"><h2>${score} points</h2><p>Review the terms you skipped, then try again.</p></div>`; } }, 1000); }
+document.addEventListener('keydown', event => {
+  if (practicalState.tab !== 'practice' || event.ctrlKey || event.metaKey || event.altKey) return;
+  if (event.target instanceof HTMLInputElement || event.target instanceof HTMLSelectElement || event.target instanceof HTMLTextAreaElement) return;
+
+  const questionArea = document.getElementById('practiceQuestionArea');
+  if (!questionArea || !questionArea.querySelector('.question-area')) return;
+
+  if (['1', '2', '3', '4'].includes(event.key)) {
+    questionArea.querySelectorAll('.practice-answer')[Number(event.key) - 1]?.click();
+    return;
+  }
+
+  if (event.key !== 'Enter') return;
+  const nextButton = document.getElementById('nextPractice');
+  const submitSelectAll = document.getElementById('submitSelectAll');
+  if (nextButton && !nextButton.disabled) {
+    event.preventDefault();
+    nextButton.click();
+  } else if (submitSelectAll && !submitSelectAll.disabled) {
+    event.preventDefault();
+    submitSelectAll.click();
+  }
+});
 document.addEventListener('click', event => { if (event.target && event.target.id === 'resetSeenQuestions') { try { localStorage.removeItem(SEEN_KEY); } catch (error) { /* ignore */ } renderTab(); } });
 renderTab();
