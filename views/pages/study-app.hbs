@@ -1,0 +1,7 @@
+  <main class="card main-card" data-study-app="{{app}}">
+    <h2 class="card-title">{{heading}}</h2>
+    <nav class="tabs" role="tablist" aria-label="Study modes">
+      {{#each site.studyTabs}}<button class="tab" type="button" role="tab" data-tab="{{id}}">{{label}}</button>{{/each}}
+    </nav>
+    {{#each site.studyTabs}}<section class="hidden" role="tabpanel" data-pane="{{id}}"></section>{{/each}}
+  </main>

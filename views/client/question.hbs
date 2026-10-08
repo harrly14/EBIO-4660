@@ -1,0 +1,26 @@
+<div class="question-area">
+  <div class="eyebrow">{{label}} • {{position}} of {{total}}</div>
+  <div class="question">{{{prompt}}}</div>
+  {{#if image}}<div class="visual-box"><img src="{{image.src}}" alt="Unlabeled specimen photograph" decoding="async"></div>{{/if}}
+  {{#if isFill}}
+    <div class="fill-answer">
+      <input data-role="fill" type="text" autocomplete="off" placeholder="{{placeholder}}" aria-label="Your answer">
+      <button class="primary" type="button" data-action="submit-fill">Check answer</button>
+    </div>
+  {{else if isSelectAll}}
+    <div class="options">
+      {{#each choices}}<label class="option"><input type="checkbox" data-role="select" value="{{value}}"><span class="num">{{number}}</span>{{value}}</label>{{/each}}
+    </div>
+    <div class="next-row"><button class="primary" type="button" data-action="submit-select">Submit selections</button></div>
+  {{else}}
+    {{> options choices=choices action="choose"}}
+  {{/if}}
+  <div class="explain" data-role="explain"></div>
+  <div class="next-row practice-actions">
+    <div class="button-row">
+      <button class="secondary" type="button" data-action="skip">Unsure / Skip</button>
+      <button class="secondary" type="button" data-action="finish">Finish early</button>
+    </div>
+    <button class="primary" type="button" data-action="next" disabled>Next question →</button>
+  </div>
+</div>

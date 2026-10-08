@@ -1,0 +1,733 @@
+[
+  {
+    "name": "Arthropoda",
+    "rank": "phylum",
+    "grouping": "Arthropoda",
+    "commonName": "arthropods"
+  },
+  {
+    "name": "Hexapoda",
+    "rank": "subphylum",
+    "parent": "Arthropoda",
+    "grouping": "Hexapoda",
+    "commonName": "six-legged arthropods"
+  },
+  {
+    "name": "Entognatha",
+    "rank": "class",
+    "parent": "Hexapoda",
+    "grouping": "Entognatha",
+    "commonName": "entognaths",
+    "diagnosticTraits": [
+      "internal mouthparts enclosed in a gnathal pouch",
+      "tarsi 1-segmented",
+      "many rely on cuticular respiration"
+    ],
+    "practicalFacts": [
+      "Non-insect hexapods"
+    ]
+  },
+  {
+    "name": "Insecta",
+    "rank": "class",
+    "parent": "Hexapoda",
+    "grouping": "Insecta",
+    "commonName": "insects"
+  },
+  {
+    "name": "Apterygote",
+    "rank": "grouping",
+    "parent": "Insecta",
+    "grouping": "Apterygote",
+    "commonName": "wingless insects"
+  },
+  {
+    "name": "Paleoptera",
+    "rank": "grouping",
+    "parent": "Insecta",
+    "grouping": "Paleoptera",
+    "commonName": "ancient-winged insects"
+  },
+  {
+    "name": "Neoptera",
+    "rank": "grouping",
+    "parent": "Insecta",
+    "grouping": "Neoptera",
+    "commonName": "new-winged insects"
+  },
+  {
+    "name": "Polyneoptera",
+    "rank": "grouping",
+    "parent": "Neoptera",
+    "grouping": "Polyneoptera",
+    "commonName": "polyneopterans"
+  },
+  {
+    "name": "Dictyoptera",
+    "rank": "grouping",
+    "parent": "Neoptera",
+    "grouping": "Dictyoptera",
+    "commonName": "roaches and mantises"
+  },
+  {
+    "name": "Paraneoptera",
+    "rank": "grouping",
+    "parent": "Neoptera",
+    "grouping": "Paraneoptera",
+    "commonName": "paraneopterans"
+  },
+  {
+    "name": "Collembola",
+    "rank": "order",
+    "parent": "Entognatha",
+    "grouping": "Entognatha",
+    "commonName": "springtails",
+    "diagnosticTraits": [
+      "internal mouthparts enclosed in a gnathal pouch",
+      "tarsi 1-segmented"
+    ],
+    "practicalFacts": [
+      "The supplied notes list Collembola as an Entognatha order."
+    ],
+    "sourceLimitation": "The supplied notes do not provide an order-specific diagnostic, ecology, or life-history trait for Collembola; no unique no-key question is generated."
+  },
+  {
+    "name": "Diplura",
+    "rank": "order",
+    "parent": "Entognatha",
+    "grouping": "Entognatha",
+    "commonName": "two-pronged bristletails",
+    "diagnosticTraits": [
+      "internal mouthparts enclosed in a gnathal pouch",
+      "tarsi 1-segmented"
+    ],
+    "practicalFacts": [
+      "The supplied notes list Diplura as an Entognatha order."
+    ],
+    "sourceLimitation": "The supplied notes do not provide an order-specific diagnostic, ecology, or life-history trait for Diplura; no unique no-key question is generated."
+  },
+  {
+    "name": "Protura",
+    "rank": "order",
+    "parent": "Entognatha",
+    "grouping": "Entognatha",
+    "commonName": "coneheads",
+    "diagnosticTraits": [
+      "internal mouthparts enclosed in a gnathal pouch",
+      "tarsi 1-segmented"
+    ],
+    "practicalFacts": [
+      "The supplied notes list Protura as an Entognatha order."
+    ],
+    "sourceLimitation": "The supplied notes do not provide an order-specific diagnostic, ecology, or life-history trait for Protura; no unique no-key question is generated."
+  },
+  {
+    "name": "Archaeognatha",
+    "rank": "order",
+    "parent": "Insecta",
+    "grouping": "Apterygote",
+    "commonName": "jumping bristletails",
+    "diagnosticTraits": [
+      "monocondylic mandibles",
+      "wingless",
+      "long caudal filament and two cerci"
+    ],
+    "lifeHistory": [
+      "ametabolous",
+      "indirect fertilization"
+    ]
+  },
+  {
+    "name": "Zygentoma",
+    "rank": "order",
+    "parent": "Insecta",
+    "grouping": "Apterygote",
+    "commonName": "silverfish and firebrats",
+    "diagnosticTraits": [
+      "wingless",
+      "long caudal filament and two cerci"
+    ],
+    "lifeHistory": [
+      "ametabolous",
+      "indirect fertilization"
+    ]
+  },
+  {
+    "name": "Ephemeroptera",
+    "rank": "order",
+    "parent": "Insecta",
+    "grouping": "Paleoptera",
+    "commonName": "mayflies",
+    "diagnosticTraits": [
+      "aquatic juveniles",
+      "subimago stage"
+    ],
+    "ecology": [
+      "aquatic juveniles; terrestrial adults"
+    ],
+    "lifeHistory": [
+      "adults live minutes to days and do not feed"
+    ]
+  },
+  {
+    "name": "Odonata",
+    "rank": "order",
+    "parent": "Insecta",
+    "grouping": "Paleoptera",
+    "commonName": "dragonflies and damselflies",
+    "diagnosticTraits": [
+      "predatory nymphs and adults",
+      "nymphal labium forms a hinged mask with two claws"
+    ],
+    "ecology": [
+      "aquatic nymphs; predatory nymphs and adults"
+    ],
+    "lifeHistory": [
+      "mate in a pinwheel formation"
+    ]
+  },
+  {
+    "name": "Orthoptera",
+    "rank": "order",
+    "parent": "Insecta",
+    "grouping": "Polyneoptera",
+    "commonName": "grasshoppers, crickets, and katydids",
+    "diagnosticTraits": [
+      "saltatorial hind legs",
+      "tegmina in most",
+      "auditory organs on abdomen or front tibiae"
+    ],
+    "legType": "saltatorial",
+    "mouthpartType": "mandibulate"
+  },
+  {
+    "name": "Phasmatodea",
+    "rank": "order",
+    "parent": "Insecta",
+    "grouping": "Polyneoptera",
+    "commonName": "stick and leaf insects",
+    "diagnosticTraits": [
+      "walking sticks; plant mimics"
+    ],
+    "lifeHistory": [
+      "juveniles can regenerate lost limbs",
+      "many are parthenogenic",
+      "thoracic scent glands"
+    ]
+  },
+  {
+    "name": "Dermaptera",
+    "rank": "order",
+    "parent": "Insecta",
+    "grouping": "Polyneoptera",
+    "commonName": "earwigs",
+    "diagnosticTraits": [
+      "greatly enlarged cerci",
+      "short thick tegmina with large hind wings folded beneath"
+    ],
+    "ecology": [
+      "nocturnal, omnivorous"
+    ],
+    "lifeHistory": [
+      "maternal care"
+    ]
+  },
+  {
+    "name": "Plecoptera",
+    "rank": "order",
+    "parent": "Insecta",
+    "grouping": "Polyneoptera",
+    "commonName": "stoneflies",
+    "diagnosticTraits": [
+      "stoneflies",
+      "forewings membranous rather than tegmina"
+    ],
+    "ecology": [
+      "aquatic nymphs"
+    ]
+  },
+  {
+    "name": "Blattodea",
+    "rank": "order",
+    "parent": "Insecta",
+    "grouping": "Dictyoptera",
+    "commonName": "cockroaches and termites",
+    "diagnosticTraits": [
+      "cockroaches and termites"
+    ],
+    "lifeHistory": [
+      "termites evolved from roach-like ancestors",
+      "termites rely on complex gut microbiomes to digest wood"
+    ]
+  },
+  {
+    "name": "Mantodea",
+    "rank": "order",
+    "parent": "Insecta",
+    "grouping": "Dictyoptera",
+    "commonName": "mantises",
+    "diagnosticTraits": [
+      "greatly elongated prothorax",
+      "raptorial forelegs with spikes"
+    ],
+    "ecology": [
+      "predatory; highly visual"
+    ]
+  },
+  {
+    "name": "Hemiptera",
+    "rank": "order",
+    "parent": "Insecta",
+    "grouping": "Paraneoptera",
+    "commonName": "true bugs, cicadas, and aphids",
+    "diagnosticTraits": [
+      "piercing-sucking rostrum/beak",
+      "postclypeus swollen for cibarial pump",
+      "tarsi no more than 3 tarsomeres"
+    ],
+    "mouthpartType": "piercing/sucking"
+  },
+  {
+    "name": "Psocodea",
+    "rank": "order",
+    "parent": "Insecta",
+    "grouping": "Paraneoptera",
+    "commonName": "booklice and barklice",
+    "diagnosticTraits": [
+      "book lice, bark lice, and parasitic lice"
+    ],
+    "lifeHistory": [
+      "parasitic forms evolved from free-living dander feeders"
+    ]
+  },
+  {
+    "name": "Thysanoptera",
+    "rank": "order",
+    "parent": "Insecta",
+    "grouping": "Paraneoptera",
+    "commonName": "thrips",
+    "diagnosticTraits": [
+      "fringed wings",
+      "asymmetric mouthparts",
+      "left mandible thin stylet; right mandible virtually absent"
+    ],
+    "ecology": [
+      "feed on flowers/fungi by piercing cells"
+    ],
+    "notableStructures": [
+      "eversible adhesive pretarsal bladders"
+    ]
+  },
+  {
+    "name": "Anisoptera",
+    "rank": "suborder",
+    "parent": "Odonata",
+    "grouping": "Paleoptera",
+    "commonName": "dragonflies",
+    "diagnosticTraits": [
+      "robust bodies",
+      "powerful fliers",
+      "wings held horizontally at rest"
+    ],
+    "observableFeatures": [
+      "hindwing broader basally than forewing"
+    ]
+  },
+  {
+    "name": "Zygoptera",
+    "rank": "suborder",
+    "parent": "Odonata",
+    "grouping": "Paleoptera",
+    "commonName": "damselflies",
+    "diagnosticTraits": [
+      "delicate bodies",
+      "distinct aquatic nymph gills"
+    ],
+    "observableFeatures": [
+      "forewing and hindwing similar in size and shape",
+      "wings typically held vertically over body at rest"
+    ]
+  },
+  {
+    "name": "Caelifera",
+    "rank": "suborder",
+    "parent": "Orthoptera",
+    "grouping": "Polyneoptera",
+    "commonName": "grasshoppers",
+    "diagnosticTraits": [
+      "short antennae",
+      "small ovipositor",
+      "tympana on first abdominal segment"
+    ],
+    "observableFeatures": [
+      "antennae shorter than body"
+    ]
+  },
+  {
+    "name": "Ensifera",
+    "rank": "suborder",
+    "parent": "Orthoptera",
+    "grouping": "Polyneoptera",
+    "commonName": "crickets and katydids",
+    "diagnosticTraits": [
+      "antennae longer than body",
+      "long conspicuous ovipositor usually",
+      "tympana when present on fore tibiae"
+    ]
+  },
+  {
+    "name": "Sternorrhyncha",
+    "rank": "suborder",
+    "parent": "Hemiptera",
+    "grouping": "Paraneoptera",
+    "commonName": "aphids, whiteflies, and scale insects",
+    "diagnosticTraits": [
+      "mouthparts base behind/under eyes",
+      "roof-like wings at rest",
+      "long filamentous antennae",
+      "forewings absent or indistinct"
+    ]
+  },
+  {
+    "name": "Auchenorrhyncha",
+    "rank": "suborder",
+    "parent": "Hemiptera",
+    "grouping": "Paraneoptera",
+    "commonName": "cicadas, treehoppers, and leafhoppers",
+    "diagnosticTraits": [
+      "mouthparts base behind/under eyes",
+      "roof-like wings at rest",
+      "short bristle-like antennae",
+      "forewings absent or indistinct"
+    ]
+  },
+  {
+    "name": "Heteroptera",
+    "rank": "suborder",
+    "parent": "Hemiptera",
+    "grouping": "Paraneoptera",
+    "commonName": "true bugs",
+    "diagnosticTraits": [
+      "mouthparts in front of eyes",
+      "large distinct scutellum",
+      "hemelytra held flat over abdomen"
+    ],
+    "wingType": "hemelytra"
+  },
+  {
+    "name": "Aeshnidae",
+    "rank": "family",
+    "parent": "Odonata → Anisoptera",
+    "grouping": "Paleoptera",
+    "diagnosticTraits": [
+      "forewing and hindwing triangles similar in shape and pointing the same direction",
+      "hindwing lacks a foot-shaped anal loop"
+    ],
+    "observableFeatures": [
+      "adult Anisoptera with hindwing broader basally than forewing"
+    ],
+    "confusionTaxa": [
+      "Libellulidae"
+    ],
+    "distinctions": [
+      "Aeshnidae have similar wing triangles pointing the same direction and no foot-shaped anal loop; Libellulidae differ."
+    ]
+  },
+  {
+    "name": "Libellulidae",
+    "rank": "family",
+    "parent": "Odonata → Anisoptera",
+    "grouping": "Paleoptera",
+    "diagnosticTraits": [
+      "forewing and hindwing triangles differ in shape and point in different directions",
+      "hindwing has a foot-shaped anal loop"
+    ],
+    "observableFeatures": [
+      "adult Anisoptera with hindwing broader basally than forewing"
+    ],
+    "confusionTaxa": [
+      "Aeshnidae"
+    ],
+    "distinctions": [
+      "Libellulidae have different wing triangles and a foot-shaped anal loop; Aeshnidae have similar triangles and no foot-shaped anal loop."
+    ]
+  },
+  {
+    "name": "Acrididae",
+    "rank": "family",
+    "parent": "Orthoptera → Caelifera",
+    "grouping": "Polyneoptera",
+    "diagnosticTraits": [
+      "short/thick antennae",
+      "small ovipositor",
+      "tympana on first abdominal segment",
+      "3 tarsomeres"
+    ],
+    "lifeHistory": [
+      "includes swarming locusts"
+    ]
+  },
+  {
+    "name": "Gryllidae",
+    "rank": "family",
+    "parent": "Orthoptera → Ensifera",
+    "grouping": "Polyneoptera",
+    "diagnosticTraits": [
+      "dorsoventrally flattened",
+      "long antennae",
+      "long slender ovipositor",
+      "tympana on front tibiae",
+      "3 tarsomeres"
+    ],
+    "lifeHistory": [
+      "chirp rates can estimate temperature"
+    ]
+  },
+  {
+    "name": "Tettigoniidae",
+    "rank": "family",
+    "parent": "Orthoptera → Ensifera",
+    "grouping": "Polyneoptera",
+    "diagnosticTraits": [
+      "laterally compressed",
+      "blade-like ovipositor",
+      "long antennae",
+      "tympana on front tibiae",
+      "4 tarsomeres"
+    ]
+  },
+  {
+    "name": "Rhaphidophoridae",
+    "rank": "family",
+    "parent": "Orthoptera → Ensifera",
+    "grouping": "Polyneoptera",
+    "diagnosticTraits": [
+      "wingless",
+      "long antennae",
+      "lack tympanal organs",
+      "4 tarsomeres"
+    ]
+  },
+  {
+    "name": "Aphididae",
+    "rank": "family",
+    "parent": "Hemiptera → Sternorrhyncha",
+    "grouping": "Paraneoptera",
+    "diagnosticTraits": [
+      "cornicles near posterior abdomen",
+      "wingless or with two pairs of wings",
+      "three pairs of legs"
+    ],
+    "ecology": [
+      "phloem feeders"
+    ],
+    "lifeHistory": [
+      "excrete honeydew; mutualism with ants",
+      "alternation of generations"
+    ]
+  },
+  {
+    "name": "Coccoidae",
+    "rank": "superfamily",
+    "parent": "Hemiptera → Sternorrhyncha",
+    "grouping": "Paraneoptera",
+    "diagnosticTraits": [
+      "cornicles absent",
+      "wingless or with one pair of wings",
+      "females often legless"
+    ],
+    "lifeHistory": [
+      "extreme sexual dimorphism; females sedentary/neotenic, males tiny and short-lived"
+    ],
+    "aliases": [
+      "Coccoidea"
+    ]
+  },
+  {
+    "name": "Cicadidae",
+    "rank": "family",
+    "parent": "Hemiptera → Auchenorrhyncha",
+    "grouping": "Paraneoptera",
+    "diagnosticTraits": [
+      "usually 3 cm or more",
+      "3 prominent ocelli"
+    ],
+    "lifeHistory": [
+      "subterranean nymphs; males call with timbals on first abdominal segment"
+    ]
+  },
+  {
+    "name": "Membracidae",
+    "rank": "family",
+    "parent": "Hemiptera → Auchenorrhyncha",
+    "grouping": "Paraneoptera",
+    "diagnosticTraits": [
+      "pronotum greatly expanded and extending over abdomen"
+    ]
+  },
+  {
+    "name": "Cicadellidae",
+    "rank": "family",
+    "parent": "Hemiptera → Auchenorrhyncha",
+    "grouping": "Paraneoptera",
+    "diagnosticTraits": [
+      "hind tibia with one or more rows of smaller spines"
+    ],
+    "lifeHistory": [
+      "vector plant pathogens"
+    ]
+  },
+  {
+    "name": "Cercopidae",
+    "rank": "family",
+    "parent": "Hemiptera → Auchenorrhyncha",
+    "grouping": "Paraneoptera",
+    "diagnosticTraits": [
+      "hind tibia with 1–2 stout spines and apical ring of spines"
+    ],
+    "lifeHistory": [
+      "nymphs produce protective spittle"
+    ]
+  },
+  {
+    "name": "Fulgoroidea",
+    "rank": "superfamily",
+    "parent": "Hemiptera → Auchenorrhyncha",
+    "grouping": "Paraneoptera",
+    "diagnosticTraits": [
+      "aristate antennae with bulbous pedicel",
+      "antennae below eyes",
+      "Y-shaped anal vein"
+    ]
+  },
+  {
+    "name": "Belostomatidae",
+    "rank": "family",
+    "parent": "Hemiptera → Heteroptera",
+    "grouping": "Paraneoptera",
+    "diagnosticTraits": [
+      "large raptorial forelegs",
+      "relatively long thin beak"
+    ],
+    "ecology": [
+      "predatory"
+    ],
+    "lifeHistory": [
+      "males carry eggs on backs"
+    ]
+  },
+  {
+    "name": "Corixidae",
+    "rank": "family",
+    "parent": "Hemiptera → Heteroptera",
+    "grouping": "Paraneoptera",
+    "diagnosticTraits": [
+      "short broad rounded beak",
+      "reduced forelegs with scoop-shaped tarsi"
+    ],
+    "ecology": [
+      "aquatic; feed on algae/protozoans"
+    ],
+    "notableStructures": [
+      "plastron"
+    ]
+  },
+  {
+    "name": "Gerridae",
+    "rank": "family",
+    "parent": "Hemiptera → Heteroptera",
+    "grouping": "Paraneoptera",
+    "diagnosticTraits": [
+      "aquatic bugs on water surface",
+      "very long slender middle and hind legs"
+    ],
+    "notableStructures": [
+      "hydrophobic setae"
+    ]
+  },
+  {
+    "name": "Cimicidae",
+    "rank": "family",
+    "parent": "Hemiptera → Heteroptera",
+    "grouping": "Paraneoptera",
+    "diagnosticTraits": [
+      "flat oval body",
+      "vestigial non-functional wings"
+    ],
+    "ecology": [
+      "parasitic"
+    ],
+    "lifeHistory": [
+      "traumatic hemocoelic insemination"
+    ]
+  },
+  {
+    "name": "Pentatomidae",
+    "rank": "family",
+    "parent": "Hemiptera → Heteroptera",
+    "grouping": "Paraneoptera",
+    "diagnosticTraits": [
+      "5-segmented antennae",
+      "shield-shaped body",
+      "large scutellum"
+    ]
+  },
+  {
+    "name": "Scutelleridae",
+    "rank": "family",
+    "parent": "Hemiptera → Heteroptera",
+    "grouping": "Paraneoptera",
+    "diagnosticTraits": [
+      "scutellum completely covers abdomen and wings"
+    ]
+  },
+  {
+    "name": "Reduviidae",
+    "rank": "family",
+    "parent": "Hemiptera → Heteroptera",
+    "grouping": "Paraneoptera",
+    "diagnosticTraits": [
+      "3-segmented beak fitting prosternal groove",
+      "simple venation"
+    ],
+    "ecology": [
+      "predatory"
+    ],
+    "legType": "often raptorial"
+  },
+  {
+    "name": "Coreidae",
+    "rank": "family",
+    "parent": "Hemiptera → Heteroptera",
+    "grouping": "Paraneoptera",
+    "diagnosticTraits": [
+      "many veins in wing membrane",
+      "4-segmented beak"
+    ],
+    "lifeHistory": [
+      "emit stinky secretions"
+    ]
+  },
+  {
+    "name": "Lygaeidae",
+    "rank": "family",
+    "parent": "Hemiptera → Heteroptera",
+    "grouping": "Paraneoptera",
+    "diagnosticTraits": [
+      "4–5 distinct wing membrane veins",
+      "4-segmented beak",
+      "simple forelegs"
+    ]
+  },
+  {
+    "name": "Miridae",
+    "rank": "family",
+    "parent": "Hemiptera → Heteroptera",
+    "grouping": "Paraneoptera",
+    "diagnosticTraits": [
+      "cuneus",
+      "1–2 closed cells in membrane",
+      "lack ocelli"
+    ]
+  }
+]

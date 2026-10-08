@@ -1,0 +1,13 @@
+{{#if images}}
+<div class="practical-image-gallery">
+  <h4>Approved specimen images</h4>
+  <div class="practical-image-grid">
+    {{#each images}}
+      <figure>
+        <img src="{{src}}" alt="{{../name}} specimen" loading="lazy">
+        <figcaption>{{> photo-credit}}</figcaption>
+      </figure>
+    {{/each}}
+  </div>
+</div>
+{{/if}}

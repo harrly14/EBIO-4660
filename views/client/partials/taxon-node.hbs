@@ -1,0 +1,27 @@
+<li class="taxon-node taxon-rank-{{rank}}{{#if expanded}} is-expanded{{/if}}{{#if open}} is-open{{/if}}" data-taxon="{{name}}">
+  <div class="taxon-row">
+    {{#if children}}
+      <button class="taxon-toggle" type="button" data-action="taxon-toggle" aria-expanded="{{#if expanded}}true{{else}}false{{/if}}" aria-label="Expand {{name}}"><span class="taxon-chevron">▸</span></button>
+    {{else}}
+      <span class="taxon-toggle taxon-toggle-leaf" aria-hidden="true"><span class="taxon-dot"></span></span>
+    {{/if}}
+    <button class="taxon-label" type="button" data-action="taxon-details" aria-expanded="{{#if open}}true{{else}}false{{/if}}">
+      <span class="tag">{{rankLabel}}</span>
+      <span class="taxon-name">{{name}}</span>
+      {{#if commonName}}<span class="taxon-common">{{commonName}}</span>{{/if}}
+      {{#if children}}<span class="taxon-count">{{childCount}}</span>{{/if}}
+      <span class="taxon-info-hint">{{#if open}}Hide details{{else}}Details{{/if}}</span>
+    </button>
+  </div>
+  <div class="taxon-details"{{#unless open}} hidden{{/unless}}>
+    {{> image-gallery}}
+    {{#each blocks}}
+      <div class="reference-card-block"><h4>{{heading}}</h4><ul>{{#each items}}<li>{{this}}</li>{{/each}}</ul></div>
+    {{/each}}
+    {{#if sourceLimitation}}<div class="reference-card-block reference-note"><h4>Source limitation</h4><p>{{sourceLimitation}}</p></div>{{/if}}
+    {{#unless hasDetails}}<p class="subtle">No additional supporting information is available.</p>{{/unless}}
+  </div>
+  {{#if children}}
+    <ul class="taxon-children"{{#unless expanded}} hidden{{/unless}}>{{#each children}}{{> taxon-node}}{{/each}}</ul>
+  {{/if}}
+</li>

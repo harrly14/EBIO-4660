@@ -1,0 +1,3 @@
+<strong class="{{#if ok}}feedback-correct{{else}}feedback-incorrect{{/if}}">{{message}}</strong> {{explanation}}
+{{#if correction}}<div class="fill-correction">Your answer: {{{correction}}}<br>Correct spelling: <strong>{{answer}}</strong></div>{{/if}}
+{{#if image}}{{> photo-credit image}}{{/if}}

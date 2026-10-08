@@ -1,0 +1,13 @@
+<div class="set-review">
+  <h3>Question review</h3>
+  <div class="review-list">
+    {{#each items}}
+      <div class="review-item">
+        <div class="review-question">{{number}}. {{{prompt}}}</div>
+        <div class="review-answer {{reviewClass}}"><strong>Your answer:</strong> {{given}}<br><strong>Correct answer:</strong> {{correct}}</div>
+      </div>
+    {{else}}
+      <p class="subtle">{{emptyText}}</p>
+    {{/each}}
+  </div>
+</div>

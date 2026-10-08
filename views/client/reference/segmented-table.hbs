@@ -1,0 +1,11 @@
+<div class="reference-segmented">
+  {{#each segments}}<button class="segment-button{{#if active}} active{{/if}}" type="button" data-action="reference-segment" data-index="{{@index}}">{{label}}</button>{{/each}}
+</div>
+<div class="reference-table-wrap">
+  <table class="reference-table">
+    <thead><tr>{{#each columns}}<th>{{this}}</th>{{/each}}</tr></thead>
+    <tbody>
+      {{#each rows}}<tr>{{#each this}}<td>{{this}}</td>{{/each}}</tr>{{else}}<tr><td colspan="{{columns.length}}">No entries yet.</td></tr>{{/each}}
+    </tbody>
+  </table>
+</div>

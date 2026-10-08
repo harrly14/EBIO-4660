@@ -1,0 +1,574 @@
+[
+  {
+    "order": "Archaeognatha",
+    "common": "Jumping bristletails",
+    "aliases": [
+      "bristletail",
+      "jumping bristletail"
+    ],
+    "key": "Humped wingless jumper with 3 tails",
+    "traits": [
+      "Wingless with a humped, cylindrical body",
+      "Three tail filaments; the middle filament is especially long",
+      "Large eyes and an ability to jump"
+    ],
+    "group": "wingless",
+    "tags": [
+      "wingless",
+      "3 tails",
+      "jumping"
+    ]
+  },
+  {
+    "order": "Odonata",
+    "common": "Dragonflies and damselflies",
+    "aliases": [
+      "dragonfly",
+      "damselfly"
+    ],
+    "key": "Huge eyes + long abdomen + 2 pairs of long wings",
+    "traits": [
+      "Two pairs of long membranous wings",
+      "Very large eyes and a long abdomen",
+      "Predatory adults; aquatic nymphs"
+    ],
+    "group": "hemi",
+    "tags": [
+      "aquatic nymph",
+      "predator",
+      "4 wings"
+    ]
+  },
+  {
+    "order": "Grylloblattodea",
+    "common": "Rock crawlers / ice crawlers",
+    "aliases": [
+      "rock crawler",
+      "ice crawler"
+    ],
+    "key": "Wingless cold-adapted crawler",
+    "traits": [
+      "Wingless, elongated, pale insects",
+      "Long antennae and cerci",
+      "Strongly associated with cold environments"
+    ],
+    "group": "wingless",
+    "tags": [
+      "wingless",
+      "cold",
+      "long antennae"
+    ]
+  },
+  {
+    "order": "Mantophasmatodea",
+    "common": "Gladiators / heelwalkers",
+    "aliases": [
+      "gladiator",
+      "heelwalker"
+    ],
+    "key": "Wingless predator that looks mantis/stick-like",
+    "traits": [
+      "Wingless predatory insects",
+      "Long legs and antennae",
+      "Mantis/stick-insect appearance without classic mantis raptorial forelegs"
+    ],
+    "group": "wingless",
+    "tags": [
+      "wingless",
+      "predator",
+      "long legs"
+    ]
+  },
+  {
+    "order": "Dermaptera",
+    "common": "Earwigs",
+    "aliases": [
+      "earwig"
+    ],
+    "key": "Pincers on the rear end",
+    "traits": [
+      "Forceps-like cerci at the end of the abdomen",
+      "Short leathery forewings in many adults",
+      "Elongate, flattened body"
+    ],
+    "group": "hemi",
+    "tags": [
+      "pincers",
+      "cerci",
+      "earwig"
+    ]
+  },
+  {
+    "order": "Mantodea",
+    "common": "Mantises",
+    "aliases": [
+      "mantis",
+      "praying mantis"
+    ],
+    "key": "Praying/grasping forelegs",
+    "traits": [
+      "Raptorial grasping forelegs",
+      "Long prothorax and triangular mobile head",
+      "Predatory"
+    ],
+    "group": "hemi",
+    "tags": [
+      "raptorial legs",
+      "predator",
+      "long prothorax"
+    ]
+  },
+  {
+    "order": "Ephemeroptera",
+    "common": "Mayflies",
+    "aliases": [
+      "mayfly"
+    ],
+    "key": "Upright wings + 2-3 long tails",
+    "traits": [
+      "Two or three long tail filaments",
+      "Large triangular forewings held upright",
+      "Short antennae; aquatic nymphs"
+    ],
+    "group": "hemi",
+    "tags": [
+      "upright wings",
+      "tails",
+      "aquatic nymph"
+    ]
+  },
+  {
+    "order": "Trichoptera",
+    "common": "Caddisflies",
+    "aliases": [
+      "caddisfly"
+    ],
+    "key": "Moth-like, but hairy tented wings",
+    "traits": [
+      "Moth-like adults with hairy rather than scaly wings",
+      "Wings often held tent-like over the body",
+      "Long antennae; aquatic larvae"
+    ],
+    "group": "holo",
+    "tags": [
+      "hairy wings",
+      "aquatic larva",
+      "long antennae"
+    ]
+  },
+  {
+    "order": "Siphonaptera",
+    "common": "Fleas",
+    "aliases": [
+      "flea"
+    ],
+    "key": "Sideways-flat wingless jumper",
+    "traits": [
+      "Wingless and laterally compressed",
+      "Powerful jumping hind legs",
+      "Blood-feeding ectoparasites with piercing-sucking mouthparts"
+    ],
+    "group": "holo",
+    "tags": [
+      "parasite",
+      "jumping",
+      "laterally compressed"
+    ]
+  },
+  {
+    "order": "Blattodea",
+    "common": "Cockroaches and termites",
+    "aliases": [
+      "cockroach",
+      "roach",
+      "termite"
+    ],
+    "key": "Roaches + termites",
+    "traits": [
+      "Cockroaches are flattened, oval, long-antennaed insects",
+      "Termites are soft-bodied social insects",
+      "Termite alates have two pairs of similar-sized wings"
+    ],
+    "group": "hemi",
+    "tags": [
+      "roach",
+      "termite",
+      "social"
+    ]
+  },
+  {
+    "order": "Plecoptera",
+    "common": "Stoneflies",
+    "aliases": [
+      "stonefly"
+    ],
+    "key": "Flat-folded wings + 2 tails",
+    "traits": [
+      "Two tail filaments in many species",
+      "Wings lie flat or folded over the abdomen",
+      "Long antennae; aquatic nymphs usually in streams"
+    ],
+    "group": "hemi",
+    "tags": [
+      "2 tails",
+      "flat wings",
+      "stream"
+    ]
+  },
+  {
+    "order": "Embioptera",
+    "common": "Webspinners",
+    "aliases": [
+      "webspinner"
+    ],
+    "key": "Silk-spinning front feet",
+    "traits": [
+      "Slender insects that live in silken galleries",
+      "Enlarged front tarsi contain silk glands",
+      "Females are usually wingless"
+    ],
+    "group": "hemi",
+    "tags": [
+      "silk feet",
+      "gallery",
+      "slender"
+    ]
+  },
+  {
+    "order": "Orthoptera",
+    "common": "Grasshoppers, crickets, and locusts",
+    "aliases": [
+      "grasshopper",
+      "cricket",
+      "locust",
+      "katydid"
+    ],
+    "key": "Huge jumping hind legs",
+    "traits": [
+      "Enlarged hind legs specialized for jumping",
+      "Chewing mouthparts",
+      "Forewings often leathery; many species stridulate"
+    ],
+    "group": "hemi",
+    "tags": [
+      "jumping legs",
+      "stridulation",
+      "chewing"
+    ]
+  },
+  {
+    "order": "Phasmatodea",
+    "common": "Stick and leaf insects",
+    "aliases": [
+      "stick insect",
+      "walking stick",
+      "leaf insect"
+    ],
+    "key": "Looks like a stick or leaf",
+    "traits": [
+      "Extreme stick or leaf mimicry",
+      "Long body and legs in many species",
+      "Chewing herbivores"
+    ],
+    "group": "hemi",
+    "tags": [
+      "camouflage",
+      "stick-like",
+      "leaf-like"
+    ]
+  },
+  {
+    "order": "Psocodea",
+    "common": "Booklice, barklice, and parasitic lice",
+    "aliases": [
+      "booklouse",
+      "booklice",
+      "barklouse",
+      "barklice",
+      "louse",
+      "lice"
+    ],
+    "key": "Booklice/barklice + parasitic lice",
+    "traits": [
+      "Book/barklice are tiny, soft-bodied and often large-headed",
+      "Parasitic lice are wingless and flattened",
+      "Parasitic forms cling to hosts"
+    ],
+    "group": "hemi",
+    "tags": [
+      "lice",
+      "tiny",
+      "parasite"
+    ]
+  },
+  {
+    "order": "Megaloptera",
+    "common": "Dobsonflies, alderflies, and fishflies",
+    "aliases": [
+      "dobsonfly",
+      "alderfly",
+      "fishfly"
+    ],
+    "key": "Large net-winged insect; dobsonfly may have huge jaws",
+    "traits": [
+      "Large insects with two broad, heavily veined wings",
+      "Dobsonfly males may have enormous mandibles",
+      "Aquatic predatory larvae"
+    ],
+    "group": "holo",
+    "tags": [
+      "large",
+      "net wings",
+      "huge mandibles"
+    ]
+  },
+  {
+    "order": "Raphidioptera",
+    "common": "Snakeflies",
+    "aliases": [
+      "snakefly"
+    ],
+    "key": "Long snake-like neck",
+    "traits": [
+      "Distinctively elongated prothorax creates a long neck",
+      "Two pairs of clear, net-veined wings",
+      "Predatory"
+    ],
+    "group": "holo",
+    "tags": [
+      "long neck",
+      "net wings",
+      "predator"
+    ]
+  },
+  {
+    "order": "Coleoptera",
+    "common": "Beetles",
+    "aliases": [
+      "beetle"
+    ],
+    "key": "Hard shell-like forewings (elytra)",
+    "traits": [
+      "Forewings hardened into elytra",
+      "Elytra usually meet in a straight line down the back",
+      "Chewing mouthparts"
+    ],
+    "group": "holo",
+    "tags": [
+      "elytra",
+      "hard forewings",
+      "largest order"
+    ]
+  },
+  {
+    "order": "Strepsiptera",
+    "common": "Twisted-wing parasites",
+    "aliases": [
+      "twisted-wing parasite",
+      "strepsipteran"
+    ],
+    "key": "Tiny forewings + fan-shaped hindwings; parasite",
+    "traits": [
+      "Highly specialized insect parasites",
+      "Males have tiny forewings and large fan-shaped hindwings",
+      "Females of many species remain largely within the host"
+    ],
+    "group": "holo",
+    "tags": [
+      "parasite",
+      "fan wings",
+      "reduced forewings"
+    ]
+  },
+  {
+    "order": "Mecoptera",
+    "common": "Scorpionflies and hangingflies",
+    "aliases": [
+      "scorpionfly",
+      "hangingfly"
+    ],
+    "key": "Long snout; male may look scorpion-tailed",
+    "traits": [
+      "Elongated beak-like rostrum",
+      "Many scorpionfly males have an upcurved terminal genital bulb",
+      "Two pairs of membranous wings"
+    ],
+    "group": "holo",
+    "tags": [
+      "snout",
+      "scorpion tail",
+      "rostrum"
+    ]
+  },
+  {
+    "order": "Diptera",
+    "common": "True flies and mosquitoes",
+    "aliases": [
+      "fly",
+      "true fly",
+      "mosquito",
+      "gnat",
+      "midge"
+    ],
+    "key": "One pair of wings + halteres",
+    "traits": [
+      "Only one pair of functional wings",
+      "Hindwings are reduced to halteres",
+      "Adults often have large compound eyes"
+    ],
+    "group": "holo",
+    "tags": [
+      "1 pair wings",
+      "halteres",
+      "fly"
+    ]
+  },
+  {
+    "order": "Lepidoptera",
+    "common": "Butterflies and moths",
+    "aliases": [
+      "butterfly",
+      "moth"
+    ],
+    "key": "Scaly wings",
+    "traits": [
+      "Wings covered with scales",
+      "Adults often have a coiled proboscis",
+      "Larvae are caterpillars"
+    ],
+    "group": "holo",
+    "tags": [
+      "scales",
+      "caterpillar",
+      "proboscis"
+    ]
+  },
+  {
+    "order": "Hymenoptera",
+    "common": "Ants, bees, wasps, and sawflies",
+    "aliases": [
+      "ant",
+      "bee",
+      "wasp",
+      "sawfly",
+      "hornet"
+    ],
+    "key": "Ant/bee/wasp/sawfly; often narrow waist",
+    "traits": [
+      "Usually two pairs of membranous wings with smaller hindwings",
+      "Many have a constricted waist",
+      "Includes ants, bees, wasps, and sawflies"
+    ],
+    "group": "holo",
+    "tags": [
+      "narrow waist",
+      "bee",
+      "wasp"
+    ]
+  },
+  {
+    "order": "Zoraptera",
+    "common": "Angel insects / zorapterans",
+    "aliases": [
+      "angel insect",
+      "zorapteran"
+    ],
+    "key": "Tiny soft-bodied termite-like insect",
+    "traits": [
+      "Very small, soft-bodied insects",
+      "Often found under bark or in rotting wood",
+      "Winged and wingless forms occur"
+    ],
+    "group": "hemi",
+    "tags": [
+      "tiny",
+      "soft-bodied",
+      "under bark"
+    ]
+  },
+  {
+    "order": "Thysanoptera",
+    "common": "Thrips",
+    "aliases": [
+      "thrips"
+    ],
+    "key": "Tiny insect with narrow fringed wings",
+    "traits": [
+      "Very small, slender insects",
+      "Narrow wings with conspicuous fringes of hairs",
+      "Asymmetrical rasping-sucking mouthparts"
+    ],
+    "group": "hemi",
+    "tags": [
+      "fringed wings",
+      "tiny",
+      "slender"
+    ]
+  },
+  {
+    "order": "Hemiptera",
+    "common": "True bugs, aphids, cicadas, and hoppers",
+    "aliases": [
+      "true bug",
+      "aphid",
+      "cicada",
+      "leafhopper",
+      "planthopper",
+      "stink bug",
+      "assassin bug"
+    ],
+    "key": "Piercing-sucking beak",
+    "traits": [
+      "Piercing-sucking beak or rostrum",
+      "True bugs often have partly hardened forewings",
+      "Includes aphids, cicadas, and many hoppers"
+    ],
+    "group": "hemi",
+    "tags": [
+      "beak",
+      "piercing-sucking",
+      "true bug"
+    ]
+  },
+  {
+    "order": "Neuroptera",
+    "common": "Lacewings, antlions, and owlflies",
+    "aliases": [
+      "lacewing",
+      "antlion",
+      "owlfly"
+    ],
+    "key": "Delicate net-veined wings",
+    "traits": [
+      "Two pairs of delicate, similarly sized net-veined wings",
+      "Adults often look delicate and fragile",
+      "Many species are predatory"
+    ],
+    "group": "holo",
+    "tags": [
+      "net wings",
+      "delicate",
+      "predator"
+    ]
+  },
+  {
+    "order": "Zygentoma",
+    "common": "Silverfish",
+    "aliases": [
+      "silverfish",
+      "firebrat"
+    ],
+    "key": "Flat wingless runner with 3 tails",
+    "traits": [
+      "Wingless, flattened, carrot-shaped body",
+      "Three long tail filaments of roughly similar prominence",
+      "Body often covered in scales; fast runner"
+    ],
+    "group": "wingless",
+    "tags": [
+      "3 tails",
+      "flat",
+      "scales"
+    ]
+  }
+]

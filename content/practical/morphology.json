@@ -1,0 +1,122 @@
+[
+  {
+    "category": "Leg types",
+    "label": "Legs",
+    "types": [
+      {
+        "term": "raptorial",
+        "description": "grasping prey"
+      },
+      {
+        "term": "cursorial",
+        "description": "running"
+      },
+      {
+        "term": "fossorial",
+        "description": "digging"
+      },
+      {
+        "term": "saltatorial",
+        "description": "jumping"
+      },
+      {
+        "term": "natatorial",
+        "description": "swimming"
+      },
+      {
+        "term": "scansorial",
+        "description": "clinging"
+      }
+    ]
+  },
+  {
+    "category": "Mouthpart types",
+    "label": "Mouthparts",
+    "types": [
+      {
+        "term": "mandibulate",
+        "description": "biting and chewing food"
+      },
+      {
+        "term": "piercing/sucking",
+        "description": "piercing and sucking liquids"
+      },
+      {
+        "term": "siphoning",
+        "description": "using elongated fused maxillae"
+      },
+      {
+        "term": "sponging",
+        "description": "using a modified labellum to sponge fluids"
+      }
+    ]
+  },
+  {
+    "category": "Wing types",
+    "label": "Wings",
+    "types": [
+      {
+        "term": "fringed wings",
+        "description": "fringed with hairs"
+      },
+      {
+        "term": "hemelytra",
+        "description": "basally hardened and apically membranous"
+      },
+      {
+        "term": "elytra",
+        "description": "entirely hardened forewings"
+      },
+      {
+        "term": "scaly wings",
+        "description": "covered with scales"
+      },
+      {
+        "term": "tegmina",
+        "description": "leathery"
+      }
+    ]
+  },
+  {
+    "category": "Antenna types",
+    "label": "Antennae",
+    "types": [
+      {
+        "term": "plumose",
+        "description": "feather-like"
+      },
+      {
+        "term": "setaceous",
+        "description": "hair-like"
+      },
+      {
+        "term": "moniliform",
+        "description": "bead-like"
+      },
+      {
+        "term": "filiform",
+        "description": "thread-like"
+      },
+      {
+        "term": "serrate",
+        "description": "saw-like"
+      },
+      {
+        "term": "geniculate/elbowed",
+        "description": "elbowed"
+      },
+      {
+        "term": "aristate",
+        "description": "with bristles"
+      },
+      {
+        "term": "clavate/clubbed",
+        "description": "clubbed"
+      },
+      {
+        "term": "lamellate",
+        "description": "plate-like"
+      }
+    ]
+  }
+]

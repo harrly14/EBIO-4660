@@ -1,0 +1,6 @@
+<div class="reference-segmented taxon-controls">
+  <button class="segment-button" type="button" data-action="taxa-expand-all">Expand all</button>
+  <button class="segment-button" type="button" data-action="taxa-collapse-all">Collapse all</button>
+  <button class="segment-button" type="button" data-action="taxa-close-details">Close all details</button>
+</div>
+<ul class="taxon-tree">{{#each roots}}{{> taxon-node}}{{/each}}</ul>
