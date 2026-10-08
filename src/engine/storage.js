@@ -24,11 +24,11 @@ export function createStorage(appId, backend = globalThis.localStorage) {
     set(name, value) { writeRaw(keyFor(name), JSON.stringify(value)); },
     remove(name) { removeRaw(keyFor(name)); },
     /* One-time move of a pre-refactor key into this namespace (or just its removal when `name` is null). */
-    migrate(legacyKey, name, transform = value => value) {
+    migrate(legacyKey, name) {
       const raw = readRaw(legacyKey);
       if (raw === null || raw === undefined) return;
       if (name && readRaw(keyFor(name)) === null) {
-        try { this.set(name, transform(JSON.parse(raw))); } catch { /* unreadable legacy value */ }
+        try { this.set(name, JSON.parse(raw)); } catch { /* unreadable legacy value */ }
       }
       removeRaw(legacyKey);
     }

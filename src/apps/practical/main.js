@@ -1,7 +1,7 @@
 // Lab Practical: content + question pools plugged into the shared study engine.
 import content from '../../generated/practical-content.js';
 import { createStudyApp } from '../../engine/app.js';
-import { buildPools, PRACTICE_MODES, SPEED_TYPES } from './questions.js';
+import { buildPools, PRACTICE_MODES } from './questions.js';
 import { RANK_LABELS, referenceSections } from './reference.js';
 
 /* Flashcards: every taxon with traits, plus every anatomy structure. */
@@ -42,10 +42,6 @@ createStudyApp({
       ? { eyebrow: 'Term', text: card.term, hint: 'What should you identify, locate, or explain?' }
       : { eyebrow: 'Description', text: card.clue, hint: 'Name the taxon or structure', clue: true }),
     back: card => ({ eyebrow: card.eyebrow, title: card.term, sections: card.sections, tags: card.tags })
-  },
-  speed: {
-    types: SPEED_TYPES,
-    intro: 'Rapid-fire order, suborder, and anatomy recognition. Answer as many as you can in one minute.'
   },
   reference: {
     intro: 'Review taxa, anatomy, morphology, comparisons, and keys for Practical 1.',

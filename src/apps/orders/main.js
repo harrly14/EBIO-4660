@@ -2,7 +2,7 @@
 import content from '../../generated/orders-content.js';
 import { createStudyApp } from '../../engine/app.js';
 import { render } from '../../engine/dom.js';
-import { buildPools, PRACTICE_MODES, SPEED_TYPES } from './questions.js';
+import { buildPools, PRACTICE_MODES } from './questions.js';
 
 const GROUP_FILTERS = [
   { value: 'all', label: `All ${content.orders.length} orders` },
@@ -33,7 +33,7 @@ const ordersSection = {
 
 createStudyApp({
   id: 'orders',
-  storageMigrations: [['ebioOrdersSeen', 'seen'], ['insectSpeedHighScore', 'speedHighScore', Number]],
+  storageMigrations: [['ebioOrdersSeen', 'seen'], ['insectSpeedHighScore', null]],
   lessons: content.lessons,
   practice: {
     pools: buildPools(content),
@@ -57,10 +57,6 @@ createStudyApp({
       sections: [{ heading: 'Best giveaway', text: item.key }, { heading: 'Characteristics', items: item.traits }],
       tags: item.tags
     })
-  },
-  speed: {
-    types: SPEED_TYPES,
-    intro: 'Rapid-fire common-name and trait recognition. Answer as many as you can in one minute.'
   },
   reference: { sections: [ordersSection] }
 });

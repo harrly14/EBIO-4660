@@ -11,11 +11,10 @@ test('migrates legacy keys into the app namespace once', () => {
   const backend = memoryBackend({ ebioOrdersSeen: '["x"]', insectSpeedHighScore: '7', ebioPracticalProgress: '{}' });
   const storage = createStorage('orders', backend);
   storage.migrate('ebioOrdersSeen', 'seen');
-  storage.migrate('insectSpeedHighScore', 'speedHighScore', Number);
+  storage.migrate('insectSpeedHighScore', null);
   storage.migrate('ebioPracticalProgress', null);
   assert.deepEqual(storage.get('seen'), ['x']);
-  assert.equal(storage.get('speedHighScore'), 7);
-  assert.deepEqual(Object.keys(backend.data).sort(), ['ebio:orders:seen', 'ebio:orders:speedHighScore']);
+  assert.deepEqual(Object.keys(backend.data), ['ebio:orders:seen']);
 });
 
 test('keeps working in memory when storage throws', () => {

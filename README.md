@@ -1,6 +1,6 @@
 # EBIO 4660 study materials
 
-Two study apps, the **Orders Quiz** and the **Lab Practical**. Both run on one shared engine and have the same five tabs: Learn, Practice, Flashcards, Speed Round, and Reference. The site is static: a build step turns `content/` and `views/` into plain HTML, CSS, and JS in `dist/`.
+Two study apps, the **Orders Quiz** and the **Lab Practical**. Both run on one shared engine with the tabs Learn, Practice, Flashcards, and Reference. The site is static: a build step turns `content/` and `views/` into plain HTML, CSS, and JS in `dist/`.
 
 ## Quick start
 
@@ -74,7 +74,7 @@ tools/credits/    the photo credit tool
 test/             node:test suites
 ```
 
-An app is mostly configuration. `src/apps/*/main.js` passes `createStudyApp` its lessons, question pools and practice modes, flashcard deck, speed-round mix, and reference sections. Behavior shared by both apps belongs in `src/engine/`; markup belongs in `views/client/`.
+An app is mostly configuration. `src/apps/*/main.js` passes `createStudyApp` its lessons, question pools and practice modes, flashcard deck, and reference sections. Behavior shared by both apps belongs in `src/engine/`; markup belongs in `views/client/`.
 
 ## Deployment
 
