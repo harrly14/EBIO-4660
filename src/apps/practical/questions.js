@@ -1,8 +1,7 @@
-// Lab Practical question pools, practice modes, and speed-round mix. Pure: content in, candidates out.
+// Lab Practical question pools and practice modes. Pure: content in, candidates out.
 import { escapeHtml, groupBy, makeChoices, pickDistractors, shuffle, strong, unique } from '../../engine/util.js';
 
-export const PRACTICE_MODES = [
-  { value: 'mixed', label: 'Mixed practical', uniform: true },
+const TOPIC_MODES = [
   { value: 'order-suborder', label: 'Order & suborder identification', types: ['order-id', 'suborder-id'] },
   { value: 'family', label: 'Family & superfamily identification', types: ['family-id', 'family-image', 'mystery-specimen'] },
   { value: 'anatomy', label: 'External & internal anatomy', types: ['external-anatomy', 'internal-anatomy', 'reverse-anatomy'] },
@@ -10,7 +9,13 @@ export const PRACTICE_MODES = [
   { value: 'compare', label: 'Compare two groups', types: ['comparison'] },
   { value: 'select-all', label: 'Select all that apply', types: ['select-all'] },
   { value: 'yes-no', label: 'Yes / No feature', types: ['yes-no'] },
-  { value: 'ecology', label: 'Ecology & life history', types: ['ecology'] },
+  { value: 'ecology', label: 'Ecology & life history', types: ['ecology'] }
+];
+
+/* Mixed practice draws evenly from every topic, so the biggest pools cannot crowd out the rest. */
+export const PRACTICE_MODES = [
+  { value: 'mixed', label: 'Mixed practical', buckets: TOPIC_MODES.map(mode => mode.types) },
+  ...TOPIC_MODES,
   {
     value: 'simulation', label: 'Full practical simulation (20 stations)',
     strata: [
@@ -26,8 +31,6 @@ export const PRACTICE_MODES = [
     ]
   }
 ];
-
-export const SPEED_TYPES = ['order-id', 'suborder-id', 'external-anatomy', 'internal-anatomy'];
 
 /* Pool each hand-written question type (content/practical/questions.json) is served from. */
 const HAND_WRITTEN_POOLS = {

@@ -5,8 +5,8 @@ import * as practical from '../src/apps/practical/questions.js';
 import { content } from './helpers.js';
 
 const APPS = {
-  orders: { pools: orders.buildPools(content.apps.orders), modes: orders.PRACTICE_MODES, speed: orders.SPEED_TYPES },
-  practical: { pools: practical.buildPools(content.apps.practical), modes: practical.PRACTICE_MODES, speed: practical.SPEED_TYPES }
+  orders: { pools: orders.buildPools(content.apps.orders), modes: orders.PRACTICE_MODES },
+  practical: { pools: practical.buildPools(content.apps.practical), modes: practical.PRACTICE_MODES }
 };
 
 /* How many questions of each type the content should generate, worked out from the content itself. */
@@ -82,8 +82,8 @@ for (const [name, app] of Object.entries(APPS)) {
     });
   });
 
-  test(`${name}: practice modes and speed only use existing pools`, () => {
-    const types = [...app.speed, ...app.modes.flatMap(mode => [...(mode.types || []), ...(mode.strata || []).flatMap(stratum => stratum.types)])];
+  test(`${name}: practice modes only use existing pools`, () => {
+    const types = app.modes.flatMap(mode => [...(mode.types || []), ...(mode.buckets || []).flat(), ...(mode.strata || []).flatMap(stratum => stratum.types)]);
     types.forEach(type => assert.ok(app.pools[type]?.length, `pool "${type}" is empty or missing`));
   });
 }

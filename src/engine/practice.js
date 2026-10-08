@@ -2,7 +2,7 @@
 // Question shape: { id, type, label, prompt (HTML), input: 'choice'|'fill'|'select-all',
 //                   answer (string or string[] for select-all), accepted?, choices?, explanation, image? }
 import { delegate, digitIndex, isTyping, render, revealOptions, role, roles } from './dom.js';
-import { allIds, answerText, drawQuestions, drawStrata, isCorrect, poolSize } from './question-pool.js';
+import { allIds, answerText, drawBalanced, drawQuestions, drawStrata, isCorrect, poolSize } from './question-pool.js';
 import { escapeHtml, numbered } from './util.js';
 
 const MIN_COUNT = 5;
@@ -20,7 +20,7 @@ export function createPracticeTab(pane, app) {
   const { pools, modes } = app.config.practice;
   const ids = allIds(pools);
   const modeFor = value => modes.find(mode => mode.value === value) || modes[0];
-  const typesOf = mode => mode.types || Object.keys(pools);
+  const typesOf = mode => mode.types || mode.buckets?.flat() || Object.keys(pools);
   const sizeOf = mode => (mode.strata ? mode.strata.reduce((total, stratum) => total + stratum.count, 0) : Math.min(MAX_COUNT, poolSize(pools, typesOf(mode))));
 
   const state = { view: 'setup', mode: modes[0].value, count: DEFAULT_COUNT, questions: [], index: 0, answered: false, results: [] };
@@ -49,9 +49,10 @@ export function createPracticeTab(pane, app) {
     const seen = app.seen.load();
     state.mode = mode.value;
     state.count = count;
-    state.questions = mode.strata
-      ? drawStrata({ pools, strata: mode.strata, seen })
-      : drawQuestions({ pools, types: typesOf(mode), count: Math.min(count, sizeOf(mode)), seen, uniform: mode.uniform });
+    const size = Math.min(count, sizeOf(mode));
+    state.questions = mode.strata ? drawStrata({ pools, strata: mode.strata, seen })
+      : mode.buckets ? drawBalanced({ pools, buckets: mode.buckets, count: size, seen })
+        : drawQuestions({ pools, types: typesOf(mode), count: size, seen });
     app.seen.save(seen);
     Object.assign(state, { view: 'quiz', index: 0, results: [] });
     showQuestion();
@@ -187,7 +188,7 @@ export function createPracticeTab(pane, app) {
   };
 }
 
-/* Review rows shared by the practice end screen and the speed round. */
+/* Review rows for the practice end screen. */
 export function reviewItems(results) {
   return results.map((result, index) => ({
     number: index + 1,

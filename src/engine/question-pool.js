@@ -1,7 +1,7 @@
-// Seen-aware question drawing shared by Practice and Speed Round in both apps.
+// Seen-aware question drawing for the Practice tab in both apps.
 // A pool is { [type]: [{ id, build() }] }. Unseen candidates are served first; a type's
 // seen history is only cleared once every candidate in scope has been seen.
-import { sample, unique } from './util.js';
+import { sample, shuffle, unique } from './util.js';
 
 export function poolSize(pools, types) {
   return unique(types).reduce((total, type) => total + (pools[type] || []).length, 0);
@@ -32,6 +32,26 @@ export function drawQuestions({ pools, types, count, seen, used = new Set(), uni
     questions.push({ ...candidate.build(), id: candidate.id });
   }
   return questions;
+}
+
+/**
+ * Draws `count` questions spread evenly over `buckets` (each a list of types), however large each
+ * bucket's pool is: buckets take turns in a shuffled order, so their counts differ by at most one.
+ * A bucket whose questions have all been seen starts its own new round instead of dropping out.
+ */
+export function drawBalanced({ pools, buckets, count, seen, random = Math.random }) {
+  const used = new Set();
+  const questions = [];
+  let open = buckets.filter(types => poolSize(pools, types));
+  while (questions.length < count && open.length) {
+    for (const types of shuffle(open, random)) {
+      if (questions.length >= count) break;
+      const [question] = drawQuestions({ pools, types, count: 1, seen, used, uniform: true, random });
+      if (question) questions.push(question);
+      else open = open.filter(bucket => bucket !== types);
+    }
+  }
+  return shuffle(questions, random);
 }
 
 /* Draws a fixed mix: [{ types, count }, ...], never repeating a question across strata. */

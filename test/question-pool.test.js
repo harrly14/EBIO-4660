@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { drawQuestions, drawStrata, isCorrect, poolSize } from '../src/engine/question-pool.js';
+import { drawBalanced, drawQuestions, drawStrata, isCorrect, poolSize } from '../src/engine/question-pool.js';
 import { seededRandom } from './helpers.js';
 
 const pool = (prefix, size) => Array.from({ length: size }, (_, i) => ({ id: `${prefix}${i}`, build: () => ({ prompt: `${prefix}${i}` }) }));
@@ -30,6 +30,24 @@ test('strata draw a fixed mix without repeats', () => {
   const questions = drawStrata({ pools, strata: [{ types: ['a'], count: 3 }, { types: ['a', 'b'], count: 3 }], seen: new Set(), random: seededRandom() });
   assert.equal(questions.length, 6);
   assert.equal(new Set(questions.map(q => q.id)).size, 6);
+});
+
+test('balanced draws split evenly across buckets regardless of pool size', () => {
+  const lopsided = { big: pool('big', 100), small: pool('small', 3), tiny: pool('tiny', 1) };
+  const questions = drawBalanced({ pools: lopsided, buckets: [['big'], ['small'], ['tiny']], count: 9, seen: new Set(), random: seededRandom() });
+  const counts = type => questions.filter(q => q.id.startsWith(type)).length;
+  assert.equal(questions.length, 9);
+  assert.equal(new Set(questions.map(q => q.id)).size, 9, 'no repeats within a set');
+  assert.equal(counts('tiny'), 1, 'an exhausted bucket stops contributing');
+  assert.equal(counts('small'), 3);
+  assert.equal(counts('big'), 5);
+});
+
+test('balanced draws keep an all-seen bucket in the mix by starting its new round', () => {
+  const seen = new Set(['b0', 'b1', 'a0']);
+  const questions = drawBalanced({ pools, buckets: [['a'], ['b']], count: 4, seen, random: seededRandom() });
+  assert.equal(questions.filter(q => q.id.startsWith('b')).length, 2);
+  assert.ok(seen.has('a0'), 'buckets with unseen questions keep their history');
 });
 
 test('answer checking handles accepted aliases, typed answers, and select-all', () => {

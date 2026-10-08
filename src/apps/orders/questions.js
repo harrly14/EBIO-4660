@@ -1,10 +1,7 @@
-// Orders Quiz question pools, practice modes, and speed-round mix. Pure: content in, candidates out.
+// Orders Quiz question pools and practice modes. Pure: content in, candidates out.
 import { escapeHtml, makeChoices, shuffle, strong } from '../../engine/util.js';
 
-const MIXED_TYPES = ['common', 'traits', 'feature', 'fill', 'visual', 'confusion', 'scenario', 'scenario'];
-
-export const PRACTICE_MODES = [
-  { value: 'mixed', label: 'Mixed practice', types: MIXED_TYPES },
+const TOPIC_MODES = [
   { value: 'common', label: 'Common name → order', types: ['common'] },
   { value: 'traits', label: 'Description → order', types: ['traits'] },
   { value: 'feature', label: 'Order → key feature', types: ['feature'] },
@@ -14,8 +11,11 @@ export const PRACTICE_MODES = [
   { value: 'confusion', label: 'Confusing orders', types: ['confusion'] }
 ];
 
-/* About 60% common-name questions, 40% description questions. */
-export const SPEED_TYPES = ['common', 'common', 'common', 'traits', 'traits'];
+/* Mixed practice draws evenly from every topic, so the biggest pools cannot crowd out the rest. */
+export const PRACTICE_MODES = [
+  { value: 'mixed', label: 'Mixed practice', buckets: TOPIC_MODES.map(mode => mode.types) },
+  ...TOPIC_MODES
+];
 
 export function buildPools({ orders, confusionGroups, challengeQuestions, photos }) {
   const orderNames = orders.map(item => item.order);
