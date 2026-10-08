@@ -18,7 +18,7 @@
       "cornicles near the posterior abdomen",
       "females are often legless"
     ],
-    "explanation": "The supplied notes support aquatic juveniles, a subimago stage, and short-lived non-feeding adults."
+    "explanation": "Ephemeroptera (mayflies) have aquatic juveniles called nymphs. They uniquely pass through a winged, sexually immature subimago stage before molting into reproductive adults. Adults generally live only minutes to days and do not feed."
   },
   {
     "id": "q-16075f5",
@@ -38,7 +38,7 @@
       "adults live minutes to days and do not feed",
       "forewings are entirely hardened"
     ],
-    "explanation": "These three statements are directly supported by the Odonata notes."
+    "explanation": "Odonata (dragonflies and damselflies) are predators as both aquatic nymphs and flying adults. A nymph catches prey with its hinged labium (lower lip), which extends forward like a mask and ends in grasping hooks. During mating, the pair forms a characteristic wheel or pinwheel position."
   },
   {
     "id": "q-x5jd2u",
@@ -58,7 +58,7 @@
       "forewings always entirely hardened",
       "mandibulate mouthparts"
     ],
-    "explanation": "These are the Hemiptera synapomorphies listed in the supplied notes."
+    "explanation": "Hemiptera (true bugs and their relatives) feed using a piercing-sucking rostrum (beak). Their enlarged postclypeus (part of the front of the head) accommodates muscles of the cibarial pump, which draws liquid food into the mouth. Their tarsi (last sections of the legs) have at most three tarsomeres, or subdivisions."
   },
   {
     "id": "q-lbhiq",
@@ -72,7 +72,7 @@
       "maxilla",
       "labium"
     ],
-    "explanation": "The notes define mandibles as hardened structures to cut and grind food."
+    "explanation": "Mandibles are a pair of hard, jaw-like mouthparts used to bite, cut, or grind food. They move from side to side rather than up and down like human jaws."
   },
   {
     "id": "q-wclw6f",
@@ -86,7 +86,7 @@
       "tracheoles",
       "ganglia"
     ],
-    "explanation": "The aorta is anterior to the heart and lacks ostia."
+    "explanation": "The insect aorta is the forward section of the dorsal vessel (the tube running along the back that circulates hemolymph, or insect blood). Unlike the heart region, the aorta lacks ostia, the small openings through which hemolymph enters the vessel."
   },
   {
     "id": "q-1kyaxbe",
@@ -100,7 +100,7 @@
       "aorta",
       "spiracles"
     ],
-    "explanation": "The notes identify tracheoles as the smallest tubes where actual gas exchange occurs."
+    "explanation": "Tracheoles are the finest branches of the insect tracheal system (the network of air-filled breathing tubes). Oxygen and carbon dioxide move between these tiny tubes and the surrounding tissues by diffusion."
   },
   {
     "id": "q-5ecwx7",
@@ -115,7 +115,7 @@
       "Gryllidae",
       "Cercopidae"
     ],
-    "explanation": "Those are the supplied key characters for Aeshnidae."
+    "explanation": "Aeshnidae (darners) are dragonflies whose forewing and hindwing triangles (distinctive groups of wing veins) point in the same direction. Their hindwings also lack the foot-shaped anal loop, a pattern of veins found in Libellulidae (skimmers)."
   },
   {
     "id": "q-17palgf",
@@ -130,7 +130,7 @@
       "Gerridae",
       "Miridae"
     ],
-    "explanation": "Those are the supplied key characters for Corixidae."
+    "explanation": "Corixidae (water boatmen) have short forelegs with scoop-shaped tarsi (the terminal leg segments) that help handle food. Their short, broad, rounded beak is another useful feature for distinguishing them from other aquatic true bugs."
   },
   {
     "id": "q-18dk3hb",
@@ -145,7 +145,7 @@
       "Aphididae",
       "Gryllidae"
     ],
-    "explanation": "The supplied notes state that Belostomatidae males carry eggs on their backs."
+    "explanation": "In many Belostomatidae (giant water bugs), females attach eggs to the male’s back. The male carries the developing eggs until they hatch, a form of paternal care that helps protect and tend the eggs."
   },
   {
     "id": "q-vwtlae",
@@ -160,7 +160,7 @@
       "Belostomatidae",
       "Acrididae"
     ],
-    "explanation": "The supplied notes identify traumatic hemocoelic insemination in Cimicidae."
+    "explanation": "Cimicidae (bed bugs) reproduce by traumatic insemination: the male pierces the female’s body wall and deposits sperm into her hemocoel, the fluid-filled body cavity containing hemolymph (insect blood), rather than directly into the reproductive tract."
   },
   {
     "id": "q-12cqkix",
@@ -174,7 +174,7 @@
       "fossorial",
       "natatorial"
     ],
-    "explanation": "Saltatorial legs have enlarged hind femora and are used for jumping."
+    "explanation": "Saltatorial legs are specialized for jumping. Their enlarged hind femora (the thick leg segments nearest the body after the short trochanters) contain powerful muscles that propel insects such as grasshoppers into the air."
   },
   {
     "id": "q-ip9l7i",
@@ -188,7 +188,7 @@
       "scansorial",
       "raptorial"
     ],
-    "explanation": "The notes define natatorial legs as oar-like and hairy for swimming."
+    "explanation": "Natatorial legs are adapted for swimming. They are often flattened like oars and fringed with hairs that increase the surface area pushing against water, as in many aquatic beetles and true bugs."
   },
   {
     "id": "q-tyhjwc",
@@ -202,7 +202,7 @@
       "saltatorial",
       "cursorial"
     ],
-    "explanation": "The notes define raptorial forelegs as grasping prey."
+    "explanation": "Raptorial forelegs are modified for seizing and holding prey. In insects such as praying mantises, the forelegs fold inward and often bear spines that keep captured prey from escaping."
   },
   {
     "id": "q-izxb50",
@@ -215,7 +215,7 @@
       "Yes",
       "No"
     ],
-    "explanation": "The Hemiptera key uses cornicles to separate Aphididae from Coccoidae."
+    "explanation": "Aphididae (aphids) typically have paired cornicles, small tube-like projections near the rear of the abdomen. These release defensive secretions and help distinguish aphids from Coccoidea (scale insects), which lack cornicles."
   },
   {
     "id": "q-9lhp0m",
@@ -228,7 +228,7 @@
       "Yes",
       "No"
     ],
-    "explanation": "The supplied Orthoptera notes state that Rhaphidophoridae lack tympanal organs entirely."
+    "explanation": "Rhaphidophoridae (camel crickets or cave crickets) lack tympanal organs, which are specialized hearing structures that detect airborne sound. Unlike many other crickets and katydids, they do not have these eardrum-like structures."
   },
   {
     "id": "yn-coccoidae-cornicles",
@@ -241,7 +241,7 @@
       "Yes",
       "No"
     ],
-    "explanation": "Coccoidae lack cornicles; cornicles separate Aphididae from Coccoidae in the Hemiptera key."
+    "explanation": "Coccoidea (scale insects) lack cornicles, the paired tube-like projections on the rear of the abdomen that are characteristic of Aphididae (aphids). Cornicles can release defensive secretions in aphids."
   },
   {
     "id": "yn-gryllidae-tarsomeres",
@@ -254,7 +254,7 @@
       "Yes",
       "No"
     ],
-    "explanation": "Gryllidae have 3 tarsomeres; Tettigoniidae have 4."
+    "explanation": "Gryllidae (true crickets) have three tarsomeres, the individual segments making up the tarsus (the end portion of a leg). Tettigoniidae (katydids) instead have four, making tarsomere count useful for distinguishing these families."
   },
   {
     "id": "yn-libellulidae-loop",
@@ -267,7 +267,7 @@
       "Yes",
       "No"
     ],
-    "explanation": "Libellulidae have a foot-shaped anal loop; Aeshnidae lack it."
+    "explanation": "Libellulidae (skimmers) have a foot-shaped anal loop, a distinctive arrangement of veins near the base of the hindwing. Aeshnidae (darners) lack this foot-shaped pattern."
   },
   {
     "id": "yn-lygaeidae-cuneus",
@@ -280,7 +280,7 @@
       "Yes",
       "No"
     ],
-    "explanation": "Lygaeidae lack a cuneus; Miridae have one."
+    "explanation": "Lygaeidae (seed bugs) lack a cuneus, the small, wedge-shaped section near the tip of the leathery portion of the forewing. Miridae (plant bugs) have this feature, which helps separate the two families."
   },
   {
     "id": "yn-tettigoniidae-tarsomeres",
@@ -293,7 +293,7 @@
       "Yes",
       "No"
     ],
-    "explanation": "Tettigoniidae have 4 tarsomeres; Gryllidae have 3."
+    "explanation": "Tettigoniidae (katydids) have four tarsomeres, or segments of the tarsus (the terminal part of the leg). Gryllidae (true crickets) have only three."
   },
   {
     "id": "yn-miridae-cuneus",
@@ -306,6 +306,6 @@
       "Yes",
       "No"
     ],
-    "explanation": "Miridae have a cuneus and 1–2 closed cells in the membrane."
+    "explanation": "Miridae (plant bugs) have a cuneus, a small wedge-shaped section of the forewing near the end of its leathery portion. They also commonly have one or two closed cells (areas enclosed by veins) in the membranous wing tip."
   }
 ]
