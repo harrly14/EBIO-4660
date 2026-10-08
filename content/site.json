@@ -3,8 +3,8 @@
   "contactEmail": "sully.harrer@colorado.edu",
   "navigation": [
     { "label": "Home", "href": "index.html" },
-    { "label": "Orders Quiz", "href": "orders-quiz.html", "cta": "Open the Orders Quiz", "ctaStyle": "primary" },
-    { "label": "Lab Practical", "href": "practical.html", "cta": "Open Lab Practical", "ctaStyle": "secondary" }
+    { "label": "Orders Quiz", "href": "orders-quiz.html", "cta": "Open the Orders Quiz", "ctaStyle": "secondary" },
+    { "label": "Lab Practical", "href": "practical.html", "cta": "Open Lab Practical", "ctaStyle": "primary" }
   ],
   "studyTabs": [
     { "id": "learn", "label": "Learn" },
