@@ -1,0 +1,12 @@
+{{#each keys}}
+  <article class="reference-card">
+    <h3>{{order}}</h3>
+    <p class="subtle">{{title}}</p>
+    <div class="reference-table-wrap">
+      <table class="reference-table">
+        <thead><tr><th>Couplet</th><th>Character</th><th>Go to / identification</th></tr></thead>
+        <tbody>{{#each couplets}}<tr><td><strong>{{number}}</strong></td><td>{{text}}</td><td><strong>{{result}}</strong></td></tr>{{/each}}</tbody>
+      </table>
+    </div>
+  </article>
+{{/each}}

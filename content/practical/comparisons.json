@@ -1,0 +1,474 @@
+[
+  {
+    "a": "Archaeognatha",
+    "b": "Zygentoma",
+    "summary": "Both are wingless, ametabolous, indirectly fertilized, and have a long caudal filament plus two cerci. The supplied notes give monocondylic mandibles for Archaeognatha but no contrasting Zygentoma character.",
+    "features": [
+      {
+        "feature": "monocondylic mandibles",
+        "holder": "a"
+      },
+      {
+        "feature": "wingless",
+        "holder": "both"
+      },
+      {
+        "feature": "ametabolous development",
+        "holder": "both"
+      },
+      {
+        "feature": "a long caudal filament plus two cerci",
+        "holder": "both"
+      },
+      {
+        "feature": "a subimago stage",
+        "holder": "neither",
+        "owner": "Ephemeroptera"
+      }
+    ]
+  },
+  {
+    "a": "Ephemeroptera",
+    "b": "Plecoptera",
+    "summary": "Ephemeroptera have aquatic juveniles, a subimago, and adults that live minutes to days without feeding; Plecoptera have aquatic nymphs and membranous forewings rather than tegmina.",
+    "features": [
+      {
+        "feature": "a subimago stage",
+        "holder": "a"
+      },
+      {
+        "feature": "adults that live minutes to days without feeding",
+        "holder": "a"
+      },
+      {
+        "feature": "aquatic juveniles",
+        "holder": "both"
+      },
+      {
+        "feature": "cornicles near the posterior abdomen",
+        "holder": "neither",
+        "owner": "Aphididae"
+      }
+    ]
+  },
+  {
+    "a": "Anisoptera",
+    "b": "Zygoptera",
+    "summary": "Anisoptera have robust bodies, powerful flight, and wings held horizontally; Zygoptera have delicate bodies, similar forewings and hindwings, and typically hold wings vertically.",
+    "features": [
+      {
+        "feature": "robust bodies and powerful flight",
+        "holder": "a"
+      },
+      {
+        "feature": "wings held horizontally at rest",
+        "holder": "a"
+      },
+      {
+        "feature": "delicate bodies",
+        "holder": "b"
+      },
+      {
+        "feature": "forewings and hindwings similar in size and shape",
+        "holder": "b"
+      },
+      {
+        "feature": "wings typically held vertically over the body at rest",
+        "holder": "b"
+      },
+      {
+        "feature": "tympana on the first abdominal segment",
+        "holder": "neither",
+        "owner": "Caelifera"
+      }
+    ]
+  },
+  {
+    "a": "Aeshnidae",
+    "b": "Libellulidae",
+    "summary": "Aeshnidae have similar wing triangles pointing the same direction and no foot-shaped anal loop; Libellulidae have different triangles and a foot-shaped anal loop.",
+    "features": [
+      {
+        "feature": "wing triangles that are similar and point the same direction",
+        "holder": "a"
+      },
+      {
+        "feature": "no foot-shaped anal loop on the hindwing",
+        "holder": "a"
+      },
+      {
+        "feature": "a foot-shaped anal loop on the hindwing",
+        "holder": "b"
+      },
+      {
+        "feature": "wing triangles that differ in shape and point in different directions",
+        "holder": "b"
+      },
+      {
+        "feature": "hindwings broader basally than the forewings",
+        "holder": "both"
+      },
+      {
+        "feature": "tympana on the fore tibiae",
+        "holder": "neither",
+        "owner": "Gryllidae and Tettigoniidae"
+      }
+    ]
+  },
+  {
+    "a": "Caelifera",
+    "b": "Ensifera",
+    "summary": "Caelifera have shorter antennae, a small ovipositor, and tympana on the first abdominal segment; Ensifera have longer antennae, usually long ovipositors, and tympana when present on the fore tibiae.",
+    "features": [
+      {
+        "feature": "shorter antennae",
+        "holder": "a"
+      },
+      {
+        "feature": "a small ovipositor",
+        "holder": "a"
+      },
+      {
+        "feature": "tympana on the first abdominal segment",
+        "holder": "a"
+      },
+      {
+        "feature": "longer antennae",
+        "holder": "b"
+      },
+      {
+        "feature": "a long, conspicuous ovipositor (usually)",
+        "holder": "b"
+      },
+      {
+        "feature": "tympana, when present, on the fore tibiae",
+        "holder": "b"
+      },
+      {
+        "feature": "enlarged saltatorial (jumping) hind legs",
+        "holder": "both"
+      },
+      {
+        "feature": "cornicles near the posterior abdomen",
+        "holder": "neither",
+        "owner": "Aphididae"
+      }
+    ]
+  },
+  {
+    "a": "Gryllidae",
+    "b": "Tettigoniidae",
+    "summary": "Both have long antennae and fore-tibial tympana, but Gryllidae have 3 tarsomeres and Tettigoniidae have 4; Tettigoniidae also have a blade-like ovipositor.",
+    "features": [
+      {
+        "feature": "3 tarsomeres",
+        "holder": "a"
+      },
+      {
+        "feature": "a dorsoventrally flattened body",
+        "holder": "a"
+      },
+      {
+        "feature": "4 tarsomeres",
+        "holder": "b"
+      },
+      {
+        "feature": "a laterally compressed body",
+        "holder": "b"
+      },
+      {
+        "feature": "a blade-like ovipositor",
+        "holder": "b"
+      },
+      {
+        "feature": "long antennae",
+        "holder": "both"
+      },
+      {
+        "feature": "tympana on the fore tibiae",
+        "holder": "both"
+      },
+      {
+        "feature": "cornicles near the posterior abdomen",
+        "holder": "neither",
+        "owner": "Aphididae"
+      }
+    ]
+  },
+  {
+    "a": "Tettigoniidae",
+    "b": "Rhaphidophoridae",
+    "summary": "Both have long antennae and 4 tarsomeres; Tettigoniidae have fore-tibial tympana, while Rhaphidophoridae lack tympanal organs entirely and are wingless.",
+    "features": [
+      {
+        "feature": "tympana on the fore tibiae",
+        "holder": "a"
+      },
+      {
+        "feature": "no tympanal organs",
+        "holder": "b"
+      },
+      {
+        "feature": "wingless",
+        "holder": "b"
+      },
+      {
+        "feature": "long antennae",
+        "holder": "both"
+      },
+      {
+        "feature": "4 tarsomeres",
+        "holder": "both"
+      },
+      {
+        "feature": "3 tarsomeres",
+        "holder": "neither",
+        "owner": "Acrididae and Gryllidae"
+      }
+    ]
+  },
+  {
+    "a": "Aphididae",
+    "b": "Coccoidae",
+    "summary": "Aphididae have cornicles and always three pairs of legs; Coccoidae lack cornicles and females are often legless.",
+    "features": [
+      {
+        "feature": "cornicles near the posterior abdomen",
+        "holder": "a"
+      },
+      {
+        "feature": "always three pairs of legs",
+        "holder": "a"
+      },
+      {
+        "feature": "no cornicles",
+        "holder": "b"
+      },
+      {
+        "feature": "females that are often legless",
+        "holder": "b"
+      },
+      {
+        "feature": "mouthparts arising behind or under the eyes",
+        "holder": "both"
+      },
+      {
+        "feature": "hemelytra held flat over the abdomen",
+        "holder": "neither",
+        "owner": "Heteroptera"
+      }
+    ]
+  },
+  {
+    "a": "Cicadellidae",
+    "b": "Cercopidae",
+    "summary": "Cicadellidae have rows of smaller hind-tibial spines; Cercopidae have 1–2 stout spines and an apical ring of spines.",
+    "features": [
+      {
+        "feature": "hind tibiae with rows of smaller spines",
+        "holder": "a"
+      },
+      {
+        "feature": "1–2 stout hind-tibial spines and an apical ring of spines",
+        "holder": "b"
+      },
+      {
+        "feature": "short, bristle-like antennae",
+        "holder": "both"
+      },
+      {
+        "feature": "a pronotum greatly expanded over the abdomen",
+        "holder": "neither",
+        "owner": "Membracidae"
+      }
+    ]
+  },
+  {
+    "a": "Membracidae",
+    "b": "other Auchenorrhyncha",
+    "summary": "Membracidae have a pronotum greatly expanded and extending over the abdomen.",
+    "features": [
+      {
+        "feature": "a pronotum greatly expanded and extending over the abdomen",
+        "holder": "a"
+      },
+      {
+        "feature": "mouthparts arising behind or under the eyes",
+        "holder": "both"
+      },
+      {
+        "feature": "hemelytra held flat over the abdomen",
+        "holder": "neither",
+        "owner": "Heteroptera"
+      }
+    ]
+  },
+  {
+    "a": "Fulgoroidea",
+    "b": "other Auchenorrhyncha",
+    "summary": "Fulgoroidea have aristate antennae with a bulbous pedicel below the eyes and a Y-shaped anal vein.",
+    "features": [
+      {
+        "feature": "aristate antennae with a bulbous pedicel, positioned below the eyes",
+        "holder": "a"
+      },
+      {
+        "feature": "a Y-shaped anal vein",
+        "holder": "a"
+      },
+      {
+        "feature": "mouthparts arising behind or under the eyes",
+        "holder": "both"
+      },
+      {
+        "feature": "cornicles near the posterior abdomen",
+        "holder": "neither",
+        "owner": "Aphididae"
+      }
+    ]
+  },
+  {
+    "a": "Belostomatidae",
+    "b": "Corixidae",
+    "summary": "Belostomatidae have large raptorial forelegs and a relatively long thin beak; Corixidae have reduced forelegs with scoop-shaped tarsi and a short broad rounded beak.",
+    "features": [
+      {
+        "feature": "large raptorial forelegs",
+        "holder": "a"
+      },
+      {
+        "feature": "a relatively long, thin beak",
+        "holder": "a"
+      },
+      {
+        "feature": "reduced forelegs with scoop-shaped tarsi",
+        "holder": "b"
+      },
+      {
+        "feature": "a short, broad, rounded beak",
+        "holder": "b"
+      },
+      {
+        "feature": "hemelytra held flat over the abdomen",
+        "holder": "both"
+      },
+      {
+        "feature": "a pronotum greatly expanded over the abdomen",
+        "holder": "neither",
+        "owner": "Membracidae"
+      }
+    ]
+  },
+  {
+    "a": "Belostomatidae",
+    "b": "Gerridae",
+    "summary": "Belostomatidae are predatory with large raptorial forelegs; Gerridae live on the water surface and have very long slender middle and hind legs.",
+    "features": [
+      {
+        "feature": "large raptorial forelegs",
+        "holder": "a"
+      },
+      {
+        "feature": "life on the water surface",
+        "holder": "b"
+      },
+      {
+        "feature": "very long, slender middle and hind legs",
+        "holder": "b"
+      },
+      {
+        "feature": "mouthparts arising in front of the eyes",
+        "holder": "both"
+      },
+      {
+        "feature": "tympana on the first abdominal segment",
+        "holder": "neither",
+        "owner": "Caelifera"
+      }
+    ]
+  },
+  {
+    "a": "Pentatomidae",
+    "b": "Scutelleridae",
+    "summary": "Pentatomidae have a shield-shaped body, 5-segmented antennae, and a large scutellum; Scutelleridae have a scutellum that completely covers the abdomen and wings.",
+    "features": [
+      {
+        "feature": "a scutellum that completely covers the abdomen and wings",
+        "holder": "b"
+      },
+      {
+        "feature": "a large, distinct scutellum",
+        "holder": "both"
+      },
+      {
+        "feature": "cornicles near the posterior abdomen",
+        "holder": "neither",
+        "owner": "Aphididae"
+      }
+    ]
+  },
+  {
+    "a": "Coreidae",
+    "b": "Lygaeidae",
+    "summary": "Both have 4-segmented beaks, but Coreidae have many veins in the wing membrane, while Lygaeidae have 4–5 distinct membrane veins and simple forelegs.",
+    "features": [
+      {
+        "feature": "many veins in the wing membrane",
+        "holder": "a"
+      },
+      {
+        "feature": "4–5 distinct veins in the wing membrane",
+        "holder": "b"
+      },
+      {
+        "feature": "simple forelegs",
+        "holder": "b"
+      },
+      {
+        "feature": "a 4-segmented beak",
+        "holder": "both"
+      },
+      {
+        "feature": "a cuneus with 1–2 closed cells in the membrane",
+        "holder": "neither",
+        "owner": "Miridae"
+      }
+    ]
+  },
+  {
+    "a": "Miridae",
+    "b": "Lygaeidae",
+    "summary": "Miridae have a cuneus and 1–2 closed cells in the membrane and lack ocelli; Lygaeidae lack a cuneus and have 4–5 membrane veins.",
+    "features": [
+      {
+        "feature": "a cuneus",
+        "holder": "a"
+      },
+      {
+        "feature": "1–2 closed cells in the membrane",
+        "holder": "a"
+      },
+      {
+        "feature": "no ocelli",
+        "holder": "a"
+      },
+      {
+        "feature": "no cuneus",
+        "holder": "b"
+      },
+      {
+        "feature": "4–5 distinct veins in the wing membrane",
+        "holder": "b"
+      },
+      {
+        "feature": "hemelytra held flat over the abdomen",
+        "holder": "both"
+      },
+      {
+        "feature": "a subimago stage",
+        "holder": "neither",
+        "owner": "Ephemeroptera"
+      }
+    ]
+  }
+]

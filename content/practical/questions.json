@@ -1,0 +1,311 @@
+[
+  {
+    "id": "q-1sg5hwd",
+    "type": "select-all",
+    "category": "Select all",
+    "taxon": "Ephemeroptera",
+    "prompt": "Which statements are true of Ephemeroptera?",
+    "answer": [
+      "aquatic juveniles",
+      "a subimago stage",
+      "adults live minutes to days and do not feed"
+    ],
+    "choices": [
+      "aquatic juveniles",
+      "a subimago stage",
+      "adults live minutes to days and do not feed",
+      "hindwing has a foot-shaped anal loop",
+      "cornicles near the posterior abdomen",
+      "females are often legless"
+    ],
+    "explanation": "The supplied notes support aquatic juveniles, a subimago stage, and short-lived non-feeding adults."
+  },
+  {
+    "id": "q-16075f5",
+    "type": "select-all",
+    "category": "Select all",
+    "taxon": "Odonata",
+    "prompt": "Which statements are true of Odonata?",
+    "answer": [
+      "predatory nymphs and adults",
+      "nymphal labium forms a hinged mask with two claws",
+      "mate in a pinwheel formation"
+    ],
+    "choices": [
+      "predatory nymphs and adults",
+      "nymphal labium forms a hinged mask with two claws",
+      "mate in a pinwheel formation",
+      "adults live minutes to days and do not feed",
+      "forewings are entirely hardened"
+    ],
+    "explanation": "These three statements are directly supported by the Odonata notes."
+  },
+  {
+    "id": "q-x5jd2u",
+    "type": "select-all",
+    "category": "Select all",
+    "taxon": "Hemiptera",
+    "prompt": "Which statements are true of Hemiptera?",
+    "answer": [
+      "piercing-sucking rostrum/beak",
+      "postclypeus swollen for cibarial pump",
+      "tarsi no more than 3 tarsomeres"
+    ],
+    "choices": [
+      "piercing-sucking rostrum/beak",
+      "postclypeus swollen for cibarial pump",
+      "tarsi no more than 3 tarsomeres",
+      "forewings always entirely hardened",
+      "mandibulate mouthparts"
+    ],
+    "explanation": "These are the Hemiptera synapomorphies listed in the supplied notes."
+  },
+  {
+    "id": "q-lbhiq",
+    "type": "reverse-anatomy",
+    "category": "Reverse anatomy",
+    "prompt": "Which structure cuts and grinds food?",
+    "answer": "mandibles",
+    "choices": [
+      "mandibles",
+      "labrum",
+      "maxilla",
+      "labium"
+    ],
+    "explanation": "The notes define mandibles as hardened structures to cut and grind food."
+  },
+  {
+    "id": "q-wclw6f",
+    "type": "reverse-anatomy",
+    "category": "Reverse anatomy",
+    "prompt": "Which structure is the portion of the dorsal vessel lacking ostia?",
+    "answer": "aorta",
+    "choices": [
+      "aorta",
+      "heart",
+      "tracheoles",
+      "ganglia"
+    ],
+    "explanation": "The aorta is anterior to the heart and lacks ostia."
+  },
+  {
+    "id": "q-1kyaxbe",
+    "type": "reverse-anatomy",
+    "category": "Reverse anatomy",
+    "prompt": "Which respiratory structure is the smallest tube where gas exchange occurs?",
+    "answer": "tracheoles",
+    "choices": [
+      "tracheoles",
+      "trunk",
+      "aorta",
+      "spiracles"
+    ],
+    "explanation": "The notes identify tracheoles as the smallest tubes where actual gas exchange occurs."
+  },
+  {
+    "id": "q-5ecwx7",
+    "type": "mystery-specimen",
+    "category": "Mystery specimen",
+    "taxon": "Aeshnidae",
+    "prompt": "A specimen has similar forewing and hindwing triangles pointing the same direction, and no foot-shaped anal loop. Which family is it?",
+    "answer": "Aeshnidae",
+    "choices": [
+      "Aeshnidae",
+      "Libellulidae",
+      "Gryllidae",
+      "Cercopidae"
+    ],
+    "explanation": "Those are the supplied key characters for Aeshnidae."
+  },
+  {
+    "id": "q-17palgf",
+    "type": "mystery-specimen",
+    "category": "Mystery specimen",
+    "taxon": "Corixidae",
+    "prompt": "A specimen has reduced forelegs with scoop-shaped tarsi and a short, broad, rounded beak. Which family is it?",
+    "answer": "Corixidae",
+    "choices": [
+      "Corixidae",
+      "Belostomatidae",
+      "Gerridae",
+      "Miridae"
+    ],
+    "explanation": "Those are the supplied key characters for Corixidae."
+  },
+  {
+    "id": "q-18dk3hb",
+    "type": "ecology-life-history",
+    "category": "Ecology/life history",
+    "taxon": "Belostomatidae",
+    "prompt": "Which family has males that carry eggs on their backs?",
+    "answer": "Belostomatidae",
+    "choices": [
+      "Belostomatidae",
+      "Cimicidae",
+      "Aphididae",
+      "Gryllidae"
+    ],
+    "explanation": "The supplied notes state that Belostomatidae males carry eggs on their backs."
+  },
+  {
+    "id": "q-vwtlae",
+    "type": "ecology-life-history",
+    "category": "Ecology/life history",
+    "taxon": "Cimicidae",
+    "prompt": "Which family practices traumatic (hemocoelic) insemination?",
+    "answer": "Cimicidae",
+    "choices": [
+      "Cimicidae",
+      "Coccoidae",
+      "Belostomatidae",
+      "Acrididae"
+    ],
+    "explanation": "The supplied notes identify traumatic hemocoelic insemination in Cimicidae."
+  },
+  {
+    "id": "q-12cqkix",
+    "type": "functional-morphology",
+    "category": "Functional morphology",
+    "prompt": "Which leg type has an enlarged hind femur for jumping?",
+    "answer": "saltatorial",
+    "choices": [
+      "saltatorial",
+      "raptorial",
+      "fossorial",
+      "natatorial"
+    ],
+    "explanation": "Saltatorial legs have enlarged hind femora and are used for jumping."
+  },
+  {
+    "id": "q-ip9l7i",
+    "type": "functional-morphology",
+    "category": "Functional morphology",
+    "prompt": "Which leg type has oar-like, hairy legs for swimming?",
+    "answer": "natatorial",
+    "choices": [
+      "natatorial",
+      "cursorial",
+      "scansorial",
+      "raptorial"
+    ],
+    "explanation": "The notes define natatorial legs as oar-like and hairy for swimming."
+  },
+  {
+    "id": "q-tyhjwc",
+    "type": "functional-morphology",
+    "category": "Functional morphology",
+    "prompt": "Which leg type has forelegs for grasping prey?",
+    "answer": "raptorial",
+    "choices": [
+      "raptorial",
+      "fossorial",
+      "saltatorial",
+      "cursorial"
+    ],
+    "explanation": "The notes define raptorial forelegs as grasping prey."
+  },
+  {
+    "id": "q-izxb50",
+    "type": "yes-no-feature",
+    "category": "Yes/no feature",
+    "taxon": "Aphididae",
+    "prompt": "Do Aphididae have cornicles near the posterior end of the abdomen?",
+    "answer": "Yes",
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "explanation": "The Hemiptera key uses cornicles to separate Aphididae from Coccoidae."
+  },
+  {
+    "id": "q-9lhp0m",
+    "type": "yes-no-feature",
+    "category": "Yes/no feature",
+    "taxon": "Rhaphidophoridae",
+    "prompt": "Do Rhaphidophoridae lack tympanal organs entirely?",
+    "answer": "Yes",
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "explanation": "The supplied Orthoptera notes state that Rhaphidophoridae lack tympanal organs entirely."
+  },
+  {
+    "id": "yn-coccoidae-cornicles",
+    "type": "yes-no-feature",
+    "category": "Yes/no feature",
+    "taxon": "Coccoidae",
+    "prompt": "Do Coccoidae have cornicles near the posterior end of the abdomen?",
+    "answer": "No",
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "explanation": "Coccoidae lack cornicles; cornicles separate Aphididae from Coccoidae in the Hemiptera key."
+  },
+  {
+    "id": "yn-gryllidae-tarsomeres",
+    "type": "yes-no-feature",
+    "category": "Yes/no feature",
+    "taxon": "Gryllidae",
+    "prompt": "Do Gryllidae have 4 tarsomeres?",
+    "answer": "No",
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "explanation": "Gryllidae have 3 tarsomeres; Tettigoniidae have 4."
+  },
+  {
+    "id": "yn-libellulidae-loop",
+    "type": "yes-no-feature",
+    "category": "Yes/no feature",
+    "taxon": "Libellulidae",
+    "prompt": "Do Libellulidae lack a foot-shaped anal loop on the hindwing?",
+    "answer": "No",
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "explanation": "Libellulidae have a foot-shaped anal loop; Aeshnidae lack it."
+  },
+  {
+    "id": "yn-lygaeidae-cuneus",
+    "type": "yes-no-feature",
+    "category": "Yes/no feature",
+    "taxon": "Lygaeidae",
+    "prompt": "Do Lygaeidae have a cuneus?",
+    "answer": "No",
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "explanation": "Lygaeidae lack a cuneus; Miridae have one."
+  },
+  {
+    "id": "yn-tettigoniidae-tarsomeres",
+    "type": "yes-no-feature",
+    "category": "Yes/no feature",
+    "taxon": "Tettigoniidae",
+    "prompt": "Do Tettigoniidae have 4 tarsomeres?",
+    "answer": "Yes",
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "explanation": "Tettigoniidae have 4 tarsomeres; Gryllidae have 3."
+  },
+  {
+    "id": "yn-miridae-cuneus",
+    "type": "yes-no-feature",
+    "category": "Yes/no feature",
+    "taxon": "Miridae",
+    "prompt": "Do Miridae have a cuneus?",
+    "answer": "Yes",
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "explanation": "Miridae have a cuneus and 1–2 closed cells in the membrane."
+  }
+]

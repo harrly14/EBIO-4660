@@ -1,0 +1,46 @@
+<div class="learn-nav">
+  {{#each nav}}<button type="button" class="learn-step{{#if active}} active{{/if}}" data-action="lesson-go" data-index="{{index}}">{{number}}. {{label}}</button>{{/each}}
+</div>
+<article class="lesson">
+  <div class="eyebrow">{{lesson.kicker}}</div>
+  <h2>{{lesson.title}}</h2>
+  <p>{{lesson.intro}}</p>
+  {{#if lesson.cards}}
+    <div class="learn-grid">
+      {{#each lesson.cards}}
+        <div class="memory-card"><div class="order-name">{{heading}}</div><strong>{{title}}</strong><div>{{detail}}</div>{{#if note}}<div class="mnemonic">{{note}}</div>{{/if}}</div>
+      {{/each}}
+    </div>
+  {{/if}}
+  {{#if lesson.comparisons}}
+    <table class="compare-table">
+      <thead><tr><th>Comparison</th><th>Order A</th><th>Order B</th></tr></thead>
+      <tbody>
+        {{#each lesson.comparisons}}
+          <tr><td><strong>{{comparison}}</strong></td><td><span class="chunk-pill">{{orderA}}</span><br>{{detailA}}</td><td><span class="chunk-pill">{{orderB}}</span><br>{{detailB}}</td></tr>
+        {{/each}}
+      </tbody>
+    </table>
+  {{/if}}
+  {{#if lesson.steps}}
+    <div class="learn-grid">
+      {{#each lesson.steps}}<div class="memory-card"><div class="order-name">Step {{step}}: {{title}}</div><div>{{detail}}</div></div>{{/each}}
+    </div>
+  {{/if}}
+  {{#if lesson.rule}}<div class="rule-box"><strong>Rule of thumb:</strong> {{lesson.rule}}</div>{{/if}}
+  {{#if check}}
+    <div class="learn-check">
+      <div class="eyebrow">30-second self-check</div>
+      <div class="question question-small">{{check.question}}</div>
+      {{> options choices=check.choices action="lesson-check"}}
+      <div class="learn-feedback" data-role="lesson-feedback">Try it before moving on.</div>
+    </div>
+  {{/if}}
+  <div class="lesson-actions">
+    <button class="secondary" type="button" data-action="lesson-prev"{{#if first}} disabled{{/if}}>← Previous lesson</button>
+    <div class="button-row">
+      {{#if lesson.practiceMode}}<button class="secondary" type="button" data-action="lesson-practice">Practice these ideas</button>{{/if}}
+      <button class="primary" type="button" data-action="lesson-next">{{nextLabel}}</button>
+    </div>
+  </div>
+</article>

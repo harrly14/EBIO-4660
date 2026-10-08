@@ -1,0 +1,17 @@
+<div class="practice-setup">
+  <div><div class="eyebrow">Practice setup</div><h2>Choose your session</h2></div>
+  <p>Select a question style and set the length before you begin.</p>
+  <div class="practice-control">
+    <label for="practiceMode">Question type</label>
+    <select id="practiceMode" data-role="mode">{{#each modes}}<option value="{{value}}"{{#if selected}} selected{{/if}}>{{label}}</option>{{/each}}</select>
+  </div>
+  <div class="practice-control">
+    <label for="practiceCount">Number of questions</label>
+    <div class="range-row">
+      <input id="practiceCount" data-role="count" type="range" min="{{min}}" max="{{max}}" value="{{count}}" step="1"{{#if fixedCount}} disabled{{/if}}>
+      <output class="range-value" data-role="count-value" for="practiceCount">{{count}}</output>
+    </div>
+  </div>
+  <button class="primary" type="button" data-action="start">Start new set</button>
+  <p class="subtle">{{seenCount}} of {{total}} questions seen. Unseen questions are served first. <button type="button" class="secondary" data-action="reset-seen">Reset</button></p>
+</div>

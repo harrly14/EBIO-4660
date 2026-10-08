@@ -1,0 +1,299 @@
+[
+  {
+    "category": "External anatomy",
+    "region": "Head",
+    "summary": "Head structures used for vision and sensory input; the pedicel and scape are antenna segments.",
+    "structures": [
+      {
+        "term": "compound eyes",
+        "location": "head",
+        "function": "used for vision"
+      },
+      {
+        "term": "ocellus",
+        "location": "head",
+        "function": "used for vision"
+      },
+      {
+        "term": "antenna",
+        "location": "head",
+        "function": "sensory input"
+      },
+      {
+        "term": "pedicel",
+        "location": "antenna",
+        "function": "an antenna segment"
+      },
+      {
+        "term": "scape",
+        "location": "antenna",
+        "function": "an antenna segment"
+      }
+    ]
+  },
+  {
+    "category": "External anatomy",
+    "region": "Mouth",
+    "summary": "Mouth structures to identify on the insect head.",
+    "structures": [
+      {
+        "term": "clypeus",
+        "location": "mouth",
+        "function": "attached to the labrum"
+      },
+      {
+        "term": "labrum",
+        "location": "mouth",
+        "function": "a movable flap covering the mouth; it contains sensory hairs"
+      },
+      {
+        "term": "mandibles",
+        "location": "mouth",
+        "function": "cut and grind food"
+      },
+      {
+        "term": "maxilla",
+        "location": "mouth",
+        "function": "manipulate food"
+      },
+      {
+        "term": "maxillary palp",
+        "location": "maxilla",
+        "function": "has sensory hairs with mechano- and chemoreceptors"
+      },
+      {
+        "term": "labium",
+        "location": "mouth",
+        "function": "supports food in the mouth cavity"
+      },
+      {
+        "term": "labial palp",
+        "location": "labium",
+        "function": "has sensory hairs and helps manipulate food"
+      }
+    ]
+  },
+  {
+    "category": "External anatomy",
+    "region": "Thorax",
+    "summary": "The thorax is divided into pro-, meso-, and metathorax; nota, pleura, and sterna are regional surfaces.",
+    "structures": [
+      {
+        "term": "prothorax",
+        "location": "thorax",
+        "function": "the anterior thoracic segment"
+      },
+      {
+        "term": "mesothorax",
+        "location": "thorax",
+        "function": "the middle thoracic segment"
+      },
+      {
+        "term": "metathorax",
+        "location": "thorax",
+        "function": "the posterior thoracic segment"
+      },
+      {
+        "term": "nota",
+        "location": "thorax",
+        "function": "the dorsal thoracic region"
+      },
+      {
+        "term": "pleura",
+        "location": "thorax",
+        "function": "the lateral thoracic regions"
+      },
+      {
+        "term": "sterna",
+        "location": "thorax",
+        "function": "the ventral thoracic region"
+      }
+    ]
+  },
+  {
+    "category": "External anatomy",
+    "region": "Leg",
+    "summary": "Leg segments run from the body outward: coxa → trochanter → femur → tibia → tarsus; the tarsus contains tarsomeres and ends in a tarsal claw.",
+    "structures": [
+      {
+        "term": "coxa",
+        "location": "leg",
+        "function": "articulates the leg with the thorax"
+      },
+      {
+        "term": "trochanter",
+        "location": "leg",
+        "function": "a leg segment between the coxa and femur"
+      },
+      {
+        "term": "femur",
+        "location": "leg",
+        "function": "often the stoutest leg segment"
+      },
+      {
+        "term": "tibia",
+        "location": "leg",
+        "function": "the segment following the femur"
+      },
+      {
+        "term": "tarsus",
+        "location": "leg",
+        "function": "contains multiple tarsomeres"
+      },
+      {
+        "term": "tarsomere",
+        "location": "tarsus",
+        "function": "one of the segments that make up the tarsus"
+      },
+      {
+        "term": "tarsal claw",
+        "location": "pretarsus",
+        "function": "a claw at the end of the leg"
+      }
+    ]
+  },
+  {
+    "category": "External anatomy",
+    "region": "Abdomen",
+    "summary": "Identify spiracles and distinguish abdominal sterna (ventral) from terga (dorsal); cerci occur at the posterior end.",
+    "structures": [
+      {
+        "term": "spiracles",
+        "location": "abdomen",
+        "function": "openings associated with respiration"
+      },
+      {
+        "term": "cerci",
+        "location": "posterior abdomen",
+        "function": "small appendages at the end of the abdomen"
+      },
+      {
+        "term": "sterna",
+        "location": "thorax",
+        "function": "the ventral thoracic region"
+      },
+      {
+        "term": "terga",
+        "location": "dorsal body surface",
+        "function": "the dorsal sclerites"
+      }
+    ]
+  },
+  {
+    "category": "Internal anatomy",
+    "region": "Circulatory system",
+    "summary": "Moves nutrients, metabolic waste, and hormones.",
+    "structures": [
+      {
+        "term": "heart",
+        "location": "abdomen",
+        "function": "the portion of the dorsal vessel perforated with ostia"
+      },
+      {
+        "term": "aorta",
+        "location": "anterior to the heart",
+        "function": "the portion of the dorsal vessel lacking ostia"
+      },
+      {
+        "term": "dorsal vessel",
+        "location": "posterior abdomen into the head region",
+        "function": "the dorsal vessel, also called the dorsal longitudinal vessel, carries hemolymph",
+        "aliases": [
+          "dorsal longitudinal vessel"
+        ]
+      }
+    ]
+  },
+  {
+    "category": "Internal anatomy",
+    "region": "Respiratory system",
+    "summary": "Delivers oxygen to cells and removes carbon dioxide.",
+    "structures": [
+      {
+        "term": "trunk",
+        "location": "throughout the body",
+        "function": "a distinct tracheal branch"
+      },
+      {
+        "term": "tracheoles",
+        "location": "throughout the body",
+        "function": "the smallest tubes where gas exchange occurs"
+      },
+      {
+        "term": "taenidea",
+        "location": "inside the tracheal cuticle",
+        "function": "circumferential transverse thickenings that reinforce tracheae and tracheoles and help prevent collapse",
+        "aliases": [
+          "taenidia"
+        ]
+      }
+    ]
+  },
+  {
+    "category": "Internal anatomy",
+    "region": "Digestive system",
+    "summary": "Processes and absorbs nutrients from food.",
+    "structures": [
+      {
+        "term": "crop",
+        "location": "foregut",
+        "function": "storage and initial food processing"
+      },
+      {
+        "term": "proventriculus",
+        "location": "foregut",
+        "function": "mechanical breakdown and initial food processing"
+      },
+      {
+        "term": "gastric caecum",
+        "location": "midgut",
+        "function": "a caecum associated with the midgut; the midgut is responsible for digestion and absorption"
+      },
+      {
+        "term": "ventriculus",
+        "location": "midgut",
+        "function": "digestion and absorption"
+      },
+      {
+        "term": "peritrophic membrane",
+        "location": "midgut",
+        "function": "the peritrophic matrix associated with the midgut; it is made of chitin and glycoproteins and is essential for digestion",
+        "aliases": [
+          "peritrophic matrix"
+        ]
+      },
+      {
+        "term": "Malpighian tubule",
+        "location": "hindgut",
+        "function": "excretion and water regulation"
+      },
+      {
+        "term": "ileum",
+        "location": "hindgut",
+        "function": "excretion and water regulation"
+      },
+      {
+        "term": "colon",
+        "location": "hindgut",
+        "function": "excretion and water regulation"
+      },
+      {
+        "term": "rectum",
+        "location": "hindgut",
+        "function": "excretion and water regulation"
+      }
+    ]
+  },
+  {
+    "category": "Internal anatomy",
+    "region": "Nervous system",
+    "summary": "Receives and responds to sensory input from internal and external sources.",
+    "structures": [
+      {
+        "term": "ganglia",
+        "location": "nervous system",
+        "function": "receive and respond to sensory input"
+      }
+    ]
+  }
+]

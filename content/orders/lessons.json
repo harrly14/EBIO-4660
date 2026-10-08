@@ -1,0 +1,439 @@
+[
+  {
+    "kicker": "Chunk 1 • easiest points",
+    "title": "Start here: 12 giveaway orders",
+    "navTitle": "12 giveaway orders",
+    "intro": "Memorize these as one-to-one visual hooks. You should eventually be able to answer these without thinking.",
+    "cards": [
+      {
+        "heading": "Dermaptera",
+        "title": "Earwig",
+        "detail": "Rear pincers / forceps",
+        "note": "DERMaptera → imagine an earwig pinching your dermis."
+      },
+      {
+        "heading": "Orthoptera",
+        "title": "Grasshopper / cricket",
+        "detail": "Huge jumping hind legs",
+        "note": "ORtho → enormous rear legs are the obvious clue."
+      },
+      {
+        "heading": "Mantodea",
+        "title": "Mantis",
+        "detail": "Praying / grasping forelegs",
+        "note": "Manto = mantis; the name already almost gives it away."
+      },
+      {
+        "heading": "Phasmatodea",
+        "title": "Stick / leaf insect",
+        "detail": "Looks like a stick or leaf",
+        "note": "PHASM = apparition/disguise → extreme camouflage."
+      },
+      {
+        "heading": "Coleoptera",
+        "title": "Beetle",
+        "detail": "Hard forewings called elytra",
+        "note": "Think beetle shell: the front wings form hard covers."
+      },
+      {
+        "heading": "Diptera",
+        "title": "True flies / mosquitoes",
+        "detail": "One pair of functional wings",
+        "note": "DI = two wings total; the hind pair became halteres."
+      },
+      {
+        "heading": "Lepidoptera",
+        "title": "Butterflies / moths",
+        "detail": "Scaly wings",
+        "note": "Lepid- refers to scales."
+      },
+      {
+        "heading": "Siphonaptera",
+        "title": "Fleas",
+        "detail": "Wingless, sideways-flat jumper",
+        "note": "Flea = flattened parasite that jumps."
+      },
+      {
+        "heading": "Hymenoptera",
+        "title": "Ant / bee / wasp / sawfly",
+        "detail": "Often a narrow waist; 2 wing pairs",
+        "note": "Learn the common-name group first."
+      },
+      {
+        "heading": "Hemiptera",
+        "title": "True bugs / aphids / cicadas / hoppers",
+        "detail": "Piercing-sucking beak",
+        "note": "HEMIptera true bugs often have half-hardened forewings, but the beak is the safer broad clue."
+      },
+      {
+        "heading": "Thysanoptera",
+        "title": "Thrips",
+        "detail": "Tiny, narrow fringed wings",
+        "note": "THYSANO = fringe/tassel → fringed wings."
+      },
+      {
+        "heading": "Odonata",
+        "title": "Dragonflies / damselflies",
+        "detail": "Huge eyes, long abdomen, 4 long wings",
+        "note": "The dragonfly silhouette is usually enough."
+      }
+    ],
+    "rule": "Do not memorize a paragraph for each order yet. Memorize ORDER NAME ↔ COMMON NAME ↔ ONE GIVEAWAY.",
+    "check": {
+      "question": "An insect has forceps-like pincers at the end of its abdomen. Which order?",
+      "choices": [
+        "Dermaptera",
+        "Orthoptera",
+        "Plecoptera",
+        "Mecoptera"
+      ],
+      "answer": "Dermaptera",
+      "explanation": "Dermaptera is the earwig order; rear forceps are the giveaway."
+    },
+    "practiceMode": "common"
+  },
+  {
+    "kicker": "Chunk 2 • wing shortcuts",
+    "title": "Read the wings first",
+    "intro": "For a winged adult, wing number, texture, and resting position often get you to the answer immediately.",
+    "cards": [
+      {
+        "heading": "Diptera",
+        "title": "1 functional pair",
+        "detail": "Hindwings reduced to halteres",
+        "note": "Count functional wings first."
+      },
+      {
+        "heading": "Coleoptera",
+        "title": "Hard forewings",
+        "detail": "Elytra make a shell over the back",
+        "note": "Hard covers = beetle."
+      },
+      {
+        "heading": "Lepidoptera",
+        "title": "Scaly wings",
+        "detail": "Butterflies and moths",
+        "note": "Scales can look powdery."
+      },
+      {
+        "heading": "Trichoptera",
+        "title": "Hairy wings",
+        "detail": "Caddisflies; wings often tented",
+        "note": "Moth-like, but hair rather than scales."
+      },
+      {
+        "heading": "Thysanoptera",
+        "title": "Fringed narrow wings",
+        "detail": "Thrips",
+        "note": "Tiny straps with a hairy fringe."
+      },
+      {
+        "heading": "Ephemeroptera",
+        "title": "Wings held upright",
+        "detail": "Mayflies",
+        "note": "Usually paired with 2-3 long tails."
+      },
+      {
+        "heading": "Plecoptera",
+        "title": "Wings folded flat",
+        "detail": "Stoneflies",
+        "note": "Usually paired with 2 tails."
+      },
+      {
+        "heading": "Strepsiptera",
+        "title": "Tiny forewings + fanlike hindwings",
+        "detail": "Twisted-wing parasites",
+        "note": "Very unusual/reduced wing arrangement."
+      }
+    ],
+    "rule": "ONE PAIR → Diptera. HARD COVERS → Coleoptera. SCALES → Lepidoptera. HAIR → Trichoptera. FRINGE → Thysanoptera. UPRIGHT + tails → Ephemeroptera. FLAT + tails → Plecoptera.",
+    "check": {
+      "question": "A moth-like insect has long antennae and hairy wings held tent-like over its body. Which order?",
+      "choices": [
+        "Trichoptera",
+        "Lepidoptera",
+        "Neuroptera",
+        "Thysanoptera"
+      ],
+      "answer": "Trichoptera",
+      "explanation": "Caddisflies are moth-like, but their wings are hairy rather than covered in scales."
+    },
+    "practiceMode": "visual"
+  },
+  {
+    "kicker": "Chunk 3 • silhouette clues",
+    "title": "Tails, legs, and body shape",
+    "intro": "When wing clues are absent or weak, look at the rear end, specialized legs, and overall body profile.",
+    "cards": [
+      {
+        "heading": "Archaeognatha",
+        "title": "3 tails + humped body",
+        "detail": "Jumping bristletail",
+        "note": "Humped jumper."
+      },
+      {
+        "heading": "Zygentoma",
+        "title": "3 tails + flat carrot shape",
+        "detail": "Silverfish",
+        "note": "Flat runner."
+      },
+      {
+        "heading": "Ephemeroptera",
+        "title": "2-3 tails + upright wings",
+        "detail": "Mayfly",
+        "note": "Up wings."
+      },
+      {
+        "heading": "Plecoptera",
+        "title": "2 tails + flat-folded wings",
+        "detail": "Stonefly",
+        "note": "Down/flat wings."
+      },
+      {
+        "heading": "Dermaptera",
+        "title": "Forceps at rear",
+        "detail": "Earwig",
+        "note": "Pincers."
+      },
+      {
+        "heading": "Orthoptera",
+        "title": "Huge hind legs",
+        "detail": "Grasshoppers / crickets",
+        "note": "Jumping legs."
+      },
+      {
+        "heading": "Mantodea",
+        "title": "Raptorial front legs",
+        "detail": "Mantises",
+        "note": "Grabbing legs."
+      },
+      {
+        "heading": "Embioptera",
+        "title": "Silk-producing front feet",
+        "detail": "Webspinners",
+        "note": "Silk comes from enlarged front tarsi."
+      },
+      {
+        "heading": "Siphonaptera",
+        "title": "Laterally compressed body",
+        "detail": "Fleas",
+        "note": "Sideways-flat parasite."
+      },
+      {
+        "heading": "Phasmatodea",
+        "title": "Stick/leaf silhouette",
+        "detail": "Walking sticks / leaf insects",
+        "note": "Camouflage dominates the whole body plan."
+      }
+    ],
+    "rule": "For anything with “tails,” count them and then check posture: 3 tails + wingless humped = Archaeognatha; 3 tails + wingless flat = Zygentoma; tails + upright wings = Ephemeroptera; 2 tails + flat wings = Plecoptera.",
+    "check": {
+      "question": "Wingless, flattened, carrot-shaped, fast-running insect with three similar tail filaments:",
+      "choices": [
+        "Zygentoma",
+        "Archaeognatha",
+        "Ephemeroptera",
+        "Dermaptera"
+      ],
+      "answer": "Zygentoma",
+      "explanation": "Silverfish (Zygentoma) are flat runners; jumping bristletails (Archaeognatha) are more humped and can jump."
+    },
+    "practiceMode": "mixed"
+  },
+  {
+    "kicker": "Chunk 4 • comparison rules",
+    "title": "Master the confusing look-alikes",
+    "intro": "These are the pairs and trios most worth comparing directly. Learn the difference, not two separate definitions.",
+    "comparisons": [
+      {
+        "comparison": "Mayfly vs stonefly",
+        "orderA": "Ephemeroptera",
+        "detailA": "upright wings; 2-3 long tails; short antennae",
+        "orderB": "Plecoptera",
+        "detailB": "wings flat over back; usually 2 tails; long antennae"
+      },
+      {
+        "comparison": "Bristletail vs silverfish",
+        "orderA": "Archaeognatha",
+        "detailA": "humped; jumps; middle tail especially long",
+        "orderB": "Zygentoma",
+        "detailB": "flat; carrot-shaped; fast runner; 3 similar tails"
+      },
+      {
+        "comparison": "Caddisfly vs moth",
+        "orderA": "Trichoptera",
+        "detailA": "hairy, tented wings; long antennae",
+        "orderB": "Lepidoptera",
+        "detailB": "scaly wings; butterfly/moth body plan"
+      },
+      {
+        "comparison": "Net-winged trio",
+        "orderA": "Neuroptera",
+        "detailA": "delicate lacewing-type net wings",
+        "orderB": "Megaloptera",
+        "detailB": "large/robust; dobsonfly may have huge jaws"
+      },
+      {
+        "comparison": "Snakefly separator",
+        "orderA": "Raphidioptera",
+        "detailA": "long snake-like neck",
+        "orderB": "Neuroptera / Megaloptera",
+        "detailB": "no extremely elongated neck"
+      },
+      {
+        "comparison": "True bug vs beetle",
+        "orderA": "Hemiptera",
+        "detailA": "piercing-sucking beak",
+        "orderB": "Coleoptera",
+        "detailB": "hard elytra; chewing mouthparts"
+      }
+    ],
+    "rule": "When two orders look similar, ask for the single contrast feature: UP vs FLAT wings, HUMPED vs FLAT body, HAIR vs SCALES, DELICATE vs HUGE, LONG NECK vs normal neck, BEAK vs ELYTRA.",
+    "check": {
+      "question": "You see a delicate insect with many net-like wing veins and no elongated neck. It is not large or heavy-bodied. Best order?",
+      "choices": [
+        "Neuroptera",
+        "Megaloptera",
+        "Raphidioptera",
+        "Trichoptera"
+      ],
+      "answer": "Neuroptera",
+      "explanation": "Neuroptera are the delicate net-winged insects; Megaloptera are generally more robust, and Raphidioptera have the conspicuous long neck."
+    },
+    "practiceMode": "confusion"
+  },
+  {
+    "kicker": "Chunk 5 • low-frequency orders",
+    "title": "The rare-name cleanup",
+    "intro": "These are harder mostly because the names are unfamiliar. Attach each name to one memorable fact or common name.",
+    "cards": [
+      {
+        "heading": "Grylloblattodea",
+        "title": "Rock / ice crawlers",
+        "detail": "Wingless + cold habitats",
+        "note": "Think glacier/ice."
+      },
+      {
+        "heading": "Mantophasmatodea",
+        "title": "Heelwalkers / gladiators",
+        "detail": "Wingless predator; mantis/stick-like",
+        "note": "The hybrid-sounding name matches the hybrid-looking body."
+      },
+      {
+        "heading": "Zoraptera",
+        "title": "Angel insects",
+        "detail": "Tiny, soft-bodied, termite-like",
+        "note": "Tiny under bark/rotting wood."
+      },
+      {
+        "heading": "Psocodea",
+        "title": "Booklice, barklice, parasitic lice",
+        "detail": "Lice grouping",
+        "note": "Memorize the common names as a package."
+      },
+      {
+        "heading": "Megaloptera",
+        "title": "Dobsonflies / alderflies / fishflies",
+        "detail": "Large net-winged; huge jaws possible",
+        "note": "MEGA = big."
+      },
+      {
+        "heading": "Raphidioptera",
+        "title": "Snakeflies",
+        "detail": "Long neck",
+        "note": "Snake-like neck."
+      },
+      {
+        "heading": "Mecoptera",
+        "title": "Scorpionflies / hangingflies",
+        "detail": "Long snout; male may curve tail upward",
+        "note": "Scorpionfly name is the hook."
+      },
+      {
+        "heading": "Strepsiptera",
+        "title": "Twisted-wing parasites",
+        "detail": "Parasites; strange fan-shaped hindwings",
+        "note": "The weird order gets the weird wing plan."
+      },
+      {
+        "heading": "Embioptera",
+        "title": "Webspinners",
+        "detail": "Silk from front feet",
+        "note": "Web = silk."
+      }
+    ],
+    "rule": "For rare orders, common-name recall may be more useful than morphology at first. Say them as pairs: “Grylloblattodea—ice crawler,” “Raphidioptera—snakefly,” “Mecoptera—scorpionfly.”",
+    "check": {
+      "question": "Which order contains snakeflies and is recognized by a long, snake-like neck?",
+      "choices": [
+        "Raphidioptera",
+        "Megaloptera",
+        "Mecoptera",
+        "Mantophasmatodea"
+      ],
+      "answer": "Raphidioptera",
+      "explanation": "Raphidioptera = snakeflies = elongated prothorax/neck."
+    },
+    "practiceMode": "mixed"
+  },
+  {
+    "kicker": "Chunk 6 • identification algorithm",
+    "title": "Put it all together",
+    "intro": "Use the same scan every time. This prevents you from staring at a picture and trying to recall all 28 names at once.",
+    "steps": [
+      {
+        "step": "1",
+        "title": "Wingless?",
+        "detail": "Check 3 tails, jumping body, flea shape, lice, ice crawler, heelwalker, etc."
+      },
+      {
+        "step": "2",
+        "title": "Number of wings?",
+        "detail": "One functional pair strongly suggests Diptera."
+      },
+      {
+        "step": "3",
+        "title": "Wing texture?",
+        "detail": "Hard = Coleoptera; scales = Lepidoptera; hairs = Trichoptera; fringe = Thysanoptera."
+      },
+      {
+        "step": "4",
+        "title": "Wing posture / veins?",
+        "detail": "Upright = mayfly; flat + tails = stonefly; net-veined = Neuroptera/Megaloptera/Raphidioptera."
+      },
+      {
+        "step": "5",
+        "title": "Rear end?",
+        "detail": "Pincers, 2 tails, 3 tails, or scorpion-like curve can be decisive."
+      },
+      {
+        "step": "6",
+        "title": "Legs?",
+        "detail": "Jumping hind legs, mantis forelegs, or webspinner front feet."
+      },
+      {
+        "step": "7",
+        "title": "Head/thorax?",
+        "detail": "Piercing beak, long snout, huge jaws, or long snake-like neck."
+      },
+      {
+        "step": "8",
+        "title": "Only then use habitat",
+        "detail": "Cold habitat, aquatic nymph/larva, under bark, or parasitic lifestyle can confirm an ID."
+      }
+    ],
+    "rule": "Your goal is not “remember 28 definitions.” Your goal is “notice a clue → shrink the possibilities → distinguish the last 2-3 orders.”",
+    "check": {
+      "question": "A specimen has two long tails and its wings lie flat over its abdomen. What should you answer?",
+      "choices": [
+        "Plecoptera",
+        "Ephemeroptera",
+        "Zygentoma",
+        "Neuroptera"
+      ],
+      "answer": "Plecoptera",
+      "explanation": "Stoneflies (Plecoptera) pair two tails with flat-folded wings."
+    },
+    "practiceMode": "mixed"
+  }
+]

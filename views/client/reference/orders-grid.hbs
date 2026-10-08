@@ -1,0 +1,11 @@
+{{#each orders}}
+  <div class="ref-card">
+    <h3>{{order}}</h3>
+    <div class="common">{{common}}</div>
+    <div class="ref-key"><strong>{{key}}</strong></div>
+    <ul>{{#each traits}}<li>{{this}}</li>{{/each}}</ul>
+    {{#each tags}}<span class="tag">{{this}}</span>{{/each}}
+  </div>
+{{else}}
+  <p class="subtle">No orders match that search.</p>
+{{/each}}

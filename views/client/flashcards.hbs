@@ -1,0 +1,31 @@
+<div class="controls">
+  <label>Front side
+    <select data-role="flash-mode">{{#each modes}}<option value="{{value}}"{{#if selected}} selected{{/if}}>{{label}}</option>{{/each}}</select>
+  </label>
+  <button class="secondary" type="button" data-action="flash-shuffle">Shuffle</button>
+</div>
+<div class="flash-wrap">
+  <div class="flash" data-role="flash-card" data-action="flash-flip">
+    <div class="face front">
+      <div class="eyebrow">{{front.eyebrow}}</div>
+      <h2{{#if front.clue}} class="flash-clue"{{/if}}>{{front.text}}</h2>
+      <p class="subtle">{{front.hint}}</p>
+    </div>
+    <div class="face back">
+      <div class="eyebrow">{{back.eyebrow}}</div>
+      <h2>{{back.title}}</h2>
+      {{#each back.sections}}
+        <strong>{{heading}}</strong>
+        {{#if text}}<p>{{text}}</p>{{/if}}
+        {{#if items}}<ul class="trait-list">{{#each items}}<li>{{this}}</li>{{/each}}</ul>{{/if}}
+      {{/each}}
+      <div>{{#each back.tags}}<span class="tag">{{this}}</span>{{/each}}</div>
+    </div>
+  </div>
+</div>
+<div class="flash-actions">
+  <button class="secondary" type="button" data-action="flash-prev">← Previous</button>
+  <button class="primary" type="button" data-action="flash-flip">Flip card</button>
+  <button class="secondary" type="button" data-action="flash-next">Next →</button>
+</div>
+<p class="mini centered">Card {{position}} of {{total}} • Keyboard: <span class="kbd">Space</span> flip • <span class="kbd">←</span>/<span class="kbd">→</span> move</p>

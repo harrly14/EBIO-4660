@@ -1,0 +1,226 @@
+[
+  {
+    "id": "specimen-01",
+    "taxon": "Acrididae",
+    "src": "images/practical/specimen-01.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File%3AAnnualreportofag1119021903univ_0052AA2_Figure_1.jpg",
+    "title": "File:Annualreportofag1119021903univ 0052AA2 Figure 1.jpg",
+    "creator": "Julius Bien",
+    "license": "Public domain",
+    "quiz": true,
+    "visibleTraits": [
+      "Short/thick antennae",
+      "Small ovipositor",
+      "Tympana on first abdominal segment",
+      "3 tarsomeres"
+    ]
+  },
+  {
+    "id": "specimen-02",
+    "taxon": "Acrididae",
+    "src": "images/practical/specimen-02.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File%3AAre_these_crickets.jpg",
+    "title": "File:Are these crickets.jpg",
+    "creator": "The original uploader was DirkvdM at English Wikipedia.",
+    "license": "CC BY 1.0",
+    "quiz": true,
+    "visibleTraits": [
+      "Short/thick antennae",
+      "Small ovipositor",
+      "Tympana on first abdominal segment",
+      "3 tarsomeres"
+    ]
+  },
+  {
+    "id": "specimen-03",
+    "taxon": "Gryllidae",
+    "src": "images/practical/specimen-03.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File%3AField_cricket_at_Mechode_Padur.jpg",
+    "title": "File:Field cricket at Mechode Padur.jpg",
+    "creator": "വരി വര",
+    "license": "CC BY-SA 4.0",
+    "quiz": true,
+    "visibleTraits": [
+      "Dorsoventrally flattened",
+      "Long antennae",
+      "Long slender ovipositor",
+      "Tympana on front tibiae",
+      "3 tarsomeres"
+    ]
+  },
+  {
+    "id": "specimen-04",
+    "taxon": "Tettigoniidae",
+    "src": "images/practical/specimen-04.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File%3APlayful_Fork_Tailed_Bush_Katydid_(Scudderia_furcata).jpg",
+    "title": "File:Playful Fork Tailed Bush Katydid (Scudderia furcata).jpg",
+    "creator": "Ron Sterling",
+    "license": "CC BY-SA 4.0",
+    "quiz": true,
+    "visibleTraits": [
+      "Laterally compressed",
+      "Blade-like ovipositor",
+      "Long antennae",
+      "Tympana on front tibiae",
+      "4 tarsomeres"
+    ]
+  },
+  {
+    "id": "specimen-05",
+    "taxon": "Aphididae",
+    "src": "images/practical/specimen-05.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File%3AAcyrthosiphon_lactucae_5083077.jpg",
+    "title": "File:Acyrthosiphon lactucae 5083077.jpg",
+    "creator": "Whitney Cranshaw, Colorado State University",
+    "license": "CC BY 3.0 us",
+    "quiz": true,
+    "visibleTraits": [
+      "Cornicles near posterior abdomen",
+      "Wingless or with two pairs of wings",
+      "Three pairs of legs"
+    ]
+  },
+  {
+    "id": "specimen-06",
+    "taxon": "Aphididae",
+    "src": "images/practical/specimen-06.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File%3ARhopalosiphoninus_ribesinus_aptera.jpg",
+    "title": "File:Rhopalosiphoninus ribesinus aptera.jpg",
+    "creator": "Bob Dransfield & Bob Brightwell",
+    "license": "CC BY 3.0",
+    "quiz": true,
+    "visibleTraits": [
+      "Cornicles near posterior abdomen",
+      "Wingless or with two pairs of wings",
+      "Three pairs of legs"
+    ]
+  },
+  {
+    "id": "specimen-07",
+    "taxon": "Cicadidae",
+    "src": "images/practical/specimen-07.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File%3AArunta_perulata_emerging_01.jpg",
+    "title": "File:Arunta perulata emerging 01.jpg",
+    "creator": "Toby Hudson",
+    "license": "CC BY-SA 3.0 au",
+    "quiz": true,
+    "visibleTraits": [
+      "Usually 3 cm or more",
+      "3 prominent ocelli",
+      "Males produce calls with timbals on first abdominal segment"
+    ]
+  },
+  {
+    "id": "specimen-08",
+    "taxon": "Cicadidae",
+    "src": "images/practical/specimen-08.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File%3ACicada._Cicadidae._Homoptera._-_Flickr_-_gailhampshire.jpg",
+    "title": "File:Cicada. Cicadidae. Homoptera. - Flickr - gailhampshire.jpg",
+    "creator": "gailhampshire from Cradley, Malvern, U.K",
+    "license": "CC BY 2.0",
+    "quiz": true,
+    "visibleTraits": [
+      "Usually 3 cm or more",
+      "3 prominent ocelli",
+      "Males produce calls with timbals on first abdominal segment"
+    ]
+  },
+  {
+    "id": "specimen-09",
+    "taxon": "Membracidae",
+    "src": "images/practical/specimen-09.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File%3AMembracidae_campinas.JPG",
+    "title": "File:Membracidae campinas.JPG",
+    "creator": "Leonardo Ré-Jorge",
+    "license": "CC BY-SA 4.0",
+    "quiz": true,
+    "visibleTraits": [
+      "Pronotum greatly expanded and extending over abdomen"
+    ]
+  },
+  {
+    "id": "specimen-10",
+    "taxon": "Membracidae",
+    "src": "images/practical/specimen-10.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File%3ATreehopper_(14604950478).jpg",
+    "title": "File:Treehopper (14604950478).jpg",
+    "creator": "Pavel Kirillov from St.Petersburg, Russia",
+    "license": "CC BY-SA 2.0",
+    "quiz": true,
+    "visibleTraits": [
+      "Pronotum greatly expanded and extending over abdomen"
+    ]
+  },
+  {
+    "id": "specimen-11",
+    "taxon": "Membracidae",
+    "src": "images/practical/specimen-11.png",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File%3AHEMI_Membracidae_Acanthuchus_trispinifer.png",
+    "title": "File:HEMI Membracidae Acanthuchus trispinifer.png",
+    "creator": "Desmond W. Helmore",
+    "license": "CC BY 4.0",
+    "quiz": true,
+    "visibleTraits": [
+      "Pronotum greatly expanded and extending over abdomen"
+    ]
+  },
+  {
+    "id": "specimen-12",
+    "taxon": "Belostomatidae",
+    "src": "images/practical/specimen-12.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File%3AGiant_Water_Bug_(Belostomatidae)_-_London%2C_Ontario_05.jpg",
+    "title": "File:Giant Water Bug (Belostomatidae) - London, Ontario 05.jpg",
+    "creator": "Ryan Hodnett",
+    "license": "CC BY-SA 4.0",
+    "quiz": true,
+    "visibleTraits": [
+      "Large raptorial forelegs",
+      "Relatively long, thin beak"
+    ]
+  },
+  {
+    "id": "specimen-13",
+    "taxon": "Gerridae",
+    "src": "images/practical/specimen-13.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File%3AWater_strider_G_remigis.jpg",
+    "title": "File:Water strider G remigis.jpg",
+    "creator": "Bruce J. Marlin",
+    "license": "CC BY-SA 2.5",
+    "quiz": true,
+    "visibleTraits": [
+      "Aquatic bugs living on water surface",
+      "Very long, slender middle and hind legs",
+      "Hydrophobic setae"
+    ]
+  },
+  {
+    "id": "specimen-14",
+    "taxon": "Pentatomidae",
+    "src": "images/practical/specimen-14.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File%3ABrown_marmorated_stink_bug_adult.jpg",
+    "title": "File:Brown marmorated stink bug adult.jpg",
+    "creator": "David R. Lance, USDA APHIS PPQ",
+    "license": "CC BY 3.0 us",
+    "quiz": true,
+    "visibleTraits": [
+      "5-segmented antennae",
+      "Shield-shaped body",
+      "Large scutellum"
+    ]
+  },
+  {
+    "id": "specimen-15",
+    "taxon": "Reduviidae",
+    "src": "images/practical/specimen-15.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File%3AAssassin_bug_aug08_02.jpg",
+    "title": "File:Assassin bug aug08 02.jpg",
+    "creator": "fir0002 flagstaffotos [at] gmail.com Canon 20D + Sigma 150mm f/2.8",
+    "license": "GFDL 1.2",
+    "quiz": true,
+    "visibleTraits": [
+      "3-segmented beak fitting into a prosternal groove",
+      "Simple wing venation",
+      "Often raptorial forelegs"
+    ]
+  }
+]

@@ -1,11 +1,8 @@
-{{> header}}
   <main class="card main-card">
     <div class="eyebrow">Study resources</div>
     <h2>Welcome</h2>
     <p>Choose a resource to get started.</p>
     <div class="landing-links">
-      <a class="primary" href="{{basePath}}orders-quiz.html">Open the Orders Quiz</a>
-      <a class="secondary" href="{{basePath}}practical.html">Open Lab Practical</a>
+      {{#each site.navigation}}{{#if cta}}<a class="{{ctaStyle}}" href="{{href}}">{{cta}}</a>{{/if}}{{/each}}
     </div>
   </main>
-{{> footer}}

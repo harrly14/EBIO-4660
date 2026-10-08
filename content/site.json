@@ -1,0 +1,38 @@
+{
+  "siteTitle": "Sully's Bug Bio Study Resources",
+  "contactEmail": "sully.harrer@colorado.edu",
+  "navigation": [
+    { "label": "Home", "href": "index.html" },
+    { "label": "Orders Quiz", "href": "orders-quiz.html", "cta": "Open the Orders Quiz", "ctaStyle": "primary" },
+    { "label": "Lab Practical", "href": "practical.html", "cta": "Open Lab Practical", "ctaStyle": "secondary" }
+  ],
+  "studyTabs": [
+    { "id": "learn", "label": "Learn" },
+    { "id": "practice", "label": "Practice" },
+    { "id": "flashcards", "label": "Flashcards" },
+    { "id": "speed", "label": "Speed Round" },
+    { "id": "reference", "label": "Reference" }
+  ],
+  "pages": [
+    {
+      "output": "index.html",
+      "template": "home",
+      "title": "Sully's Study Materials",
+      "headerDescription": "Study resources for insect orders, identification, and practical preparation."
+    },
+    {
+      "output": "orders-quiz.html",
+      "template": "study-app",
+      "title": "Insect Orders Study Lab",
+      "heading": "Insect Orders Quiz",
+      "app": "orders"
+    },
+    {
+      "output": "practical.html",
+      "template": "study-app",
+      "title": "Lab Practical",
+      "heading": "Lab Practical 1",
+      "app": "practical"
+    }
+  ]
+}

@@ -1,0 +1,232 @@
+[
+  {
+    "kicker": "Lesson 1",
+    "title": "What the practical expects",
+    "intro": "You need to recognize taxa quickly, explain the feature that supports each ID, and link the feature to anatomy or ecology.",
+    "cards": [
+      {
+        "heading": "Observe",
+        "title": "Find the feature",
+        "detail": "Look for a visible character before naming the group."
+      },
+      {
+        "heading": "Group",
+        "title": "Choose the smallest defensible unit",
+        "detail": "Order or suborder first; family only when the key is supplied."
+      },
+      {
+        "heading": "Explain",
+        "title": "State the evidence",
+        "detail": "Name the diagnostic trait and what it means."
+      }
+    ],
+    "practiceMode": "mixed"
+  },
+  {
+    "kicker": "Lesson 2",
+    "title": "External anatomy",
+    "intro": "Focus on the head, thorax, legs, and abdomen. Learn where structures sit and what they do before working through taxonomic identifications.",
+    "cards": [
+      {
+        "heading": "Head",
+        "title": "compound eyes, ocellus, antennae",
+        "detail": "Sensory input and sight."
+      },
+      {
+        "heading": "Mouthparts",
+        "title": "labrum, mandibles, maxilla, labium",
+        "detail": "Feeding structures and function."
+      },
+      {
+        "heading": "Thorax",
+        "title": "prothorax, mesothorax, metathorax",
+        "detail": "Leg and wing attachment points."
+      },
+      {
+        "heading": "Abdomen",
+        "title": "spiracles, cerci, terga, sterna",
+        "detail": "Breathing and posterior structures."
+      }
+    ],
+    "practiceMode": "anatomy"
+  },
+  {
+    "kicker": "Lesson 3",
+    "title": "Internal anatomy",
+    "intro": "Internal anatomy is usually less about huge memorization and more about the relationship between structure and function: respiration, circulation, digestion, and neural coordination.",
+    "cards": [
+      {
+        "heading": "Circulation",
+        "title": "heart + aorta + dorsal vessel",
+        "detail": "Moves hemolymph through the body."
+      },
+      {
+        "heading": "Respiration",
+        "title": "tracheae, tracheoles, taenidia",
+        "detail": "Delivers oxygen to tissues."
+      },
+      {
+        "heading": "Digestion",
+        "title": "crop, ventriculus, Malpighian tubules",
+        "detail": "Processes and moves nutrients and waste."
+      }
+    ],
+    "practiceMode": "anatomy"
+  },
+  {
+    "kicker": "Lesson 4",
+    "title": "Legs, wings, mouthparts & antennae",
+    "intro": "Learn the basic type, its function, and what feature distinguishes it from a similar structure.",
+    "cards": [
+      {
+        "heading": "Legs",
+        "title": "saltatorial, fossorial, raptorial, natatorial",
+        "detail": "Jumping, digging, grasping, swimming."
+      },
+      {
+        "heading": "Wings",
+        "title": "tegmina, elytra, hemelytra, fringed wings",
+        "detail": "Leathery, membranous, or fringe-winged forms."
+      },
+      {
+        "heading": "Antennae",
+        "title": "serrate, plumose, filiform, geniculate",
+        "detail": "Saw-like, feather-like, thread-like, elbowed."
+      }
+    ],
+    "practiceMode": "morphology"
+  },
+  {
+    "kicker": "Lesson 5",
+    "title": "Taxonomic hierarchy and major groups",
+    "intro": "Keep the hierarchy clear: order, suborder, family, and grouping. The practical likely expects you to identify a group by a combination of characters rather than a single detail.",
+    "cards": [
+      {
+        "heading": "Major groups",
+        "title": "Apterygote, Paleoptera, Neoptera",
+        "detail": "Primitive and derived lineages."
+      },
+      {
+        "heading": "Orders",
+        "title": "Ephemeroptera, Odonata, Orthoptera, Hemiptera",
+        "detail": "Use orders as the core recognition target."
+      },
+      {
+        "heading": "Suborders",
+        "title": "Zygoptera, Anisoptera, Ensifera, Heteroptera",
+        "detail": "Look for the correct subordinate grouping."
+      }
+    ],
+    "practiceMode": "order-suborder"
+  },
+  {
+    "kicker": "Lesson 6",
+    "title": "Orders & suborders: how to recognize them",
+    "intro": "A strong answer usually names the specific trait that distinguishes one order or suborder from the others. Practice from a clue to the taxon, then reverse it and say why the answer matches.",
+    "cards": [
+      {
+        "heading": "Odonata",
+        "title": "strong flyers, aquatic nymphs, hinged mask",
+        "detail": "Often obvious by wing plan and predatory nymphs."
+      },
+      {
+        "heading": "Orthoptera",
+        "title": "saltatorial hind legs, tegmina, tympana",
+        "detail": "Classic jumping grasshopper and cricket clues."
+      },
+      {
+        "heading": "Hemiptera",
+        "title": "piercing-sucking beak, often hemelytra or wings",
+        "detail": "A beak and stylized mouthparts are the key giveaway."
+      }
+    ],
+    "practiceMode": "order-suborder"
+  },
+  {
+    "kicker": "Lesson 7",
+    "title": "Polyneoptera & Dictyoptera",
+    "intro": "These groups are best recognized by the combination of morphology and life history. Focus on wing form, mouthparts, and the presence of a distinctive body plan or feeding habit.",
+    "cards": [
+      {
+        "heading": "Polyneoptera",
+        "title": "Orthoptera, Phasmatodea, Dermaptera, Plecoptera",
+        "detail": "Diverse assemblage with major morphological variation."
+      },
+      {
+        "heading": "Dictyoptera",
+        "title": "Blattodea, Mantodea",
+        "detail": "Commonly recognized by body plan and forewing features."
+      }
+    ],
+    "practiceMode": "order-suborder"
+  },
+  {
+    "kicker": "Lesson 8",
+    "title": "Hemiptera and its suborders",
+    "intro": "Learn the three suborders and the common family-level key characters that the supplied keys rely on in practice.",
+    "cards": [
+      {
+        "heading": "Sternorrhyncha",
+        "title": "aphids, scale insects",
+        "detail": "Often soft-bodied and plant-feeding."
+      },
+      {
+        "heading": "Auchenorrhyncha",
+        "title": "cicadas, leafhoppers",
+        "detail": "Membranous wings and hind leg/wing patterns often matter."
+      },
+      {
+        "heading": "Heteroptera",
+        "title": "true bugs",
+        "detail": "Beak-based predators and plant feeders, often with hemelytra."
+      }
+    ],
+    "practiceMode": "order-suborder"
+  },
+  {
+    "kicker": "Lesson 9",
+    "title": "Families: what features the provided keys use",
+    "intro": "The study guide says that they will provide a key for the families, so you don't have to memorize them. The course keys depend on a small set of structures: wing veins, beak segments, abdomen shape, and foreleg specialization.",
+    "cards": [
+      {
+        "heading": "Odonata key",
+        "title": "triangle shape, anal loop, wing position",
+        "detail": "The family key begins with wing characters."
+      },
+      {
+        "heading": "Orthoptera key",
+        "title": "antenna length, ovipositor, ear position",
+        "detail": "Suborder-level cues feed into family-level distinctions."
+      },
+      {
+        "heading": "Hemiptera key",
+        "title": "beak, wing structure, tarsi, cornicles",
+        "detail": "These are the most common decision points in the family key."
+      }
+    ],
+    "practiceMode": "family"
+  },
+  {
+    "kicker": "Lesson 10",
+    "title": "Final practical strategy",
+    "intro": "Start with the biggest visible clue, then narrow down by order, suborder, and any supplied key characters. Do not chase every tiny detail: choose the strongest, most identifying trait and explain it.",
+    "cards": [
+      {
+        "heading": "Step 1",
+        "title": "Find the main feature",
+        "detail": "Wing plan, mouthparts, leg type, or body form."
+      },
+      {
+        "heading": "Step 2",
+        "title": "Match the group",
+        "detail": "Use the smallest group that fits the evidence."
+      },
+      {
+        "heading": "Step 3",
+        "title": "State the reason",
+        "detail": "Explain which characteristic makes that answer strongest."
+      }
+    ],
+    "practiceMode": "simulation"
+  }
+]

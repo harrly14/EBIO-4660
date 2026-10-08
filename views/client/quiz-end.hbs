@@ -1,0 +1,12 @@
+<div class="speed-end">
+  <div class="eyebrow">Set complete</div>
+  <h2>{{heading}}</h2>
+  <p class="subtle">Review your results, then return to setup when you are ready for another round.</p>
+  <div class="set-stats">
+    <div class="set-stat"><div class="big">{{correct}}/{{answered}}</div><div class="lbl">correct</div></div>
+    <div class="set-stat"><div class="big">{{accuracy}}%</div><div class="lbl">accuracy</div></div>
+    <div class="set-stat"><div class="big">{{skipped}}</div><div class="lbl">skipped</div></div>
+  </div>
+  <button class="primary" type="button" data-action="continue">Continue practicing</button>
+  {{> review-list items=review emptyText="No questions were answered before the set ended."}}
+</div>

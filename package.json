@@ -2,9 +2,15 @@
   "name": "ebio-4660-study-materials",
   "private": true,
   "description": "Static study materials for EBIO 4660",
+  "type": "module",
   "scripts": {
-    "build": "node build.js",
-    "dev": "node build.js --serve"
+    "build": "node build/index.js",
+    "dev": "node build/index.js --serve --watch",
+    "test": "node --test",
+    "credits": "node tools/credits/server.js"
+  },
+  "engines": {
+    "node": ">=22"
   },
   "dependencies": {
     "handlebars": "^4.7.8"
