@@ -105,6 +105,10 @@ export function validateContent({ site, apps }, publicDir) {
   site.pages.forEach((page, index) => {
     fields(page, ['output', 'template', 'title'], `site.pages[${index}]`);
     if (page.template === 'study-app') check(apps[page.app], `site.pages[${index}]: unknown app "${page.app}"`);
+    (page.resources || []).forEach((resource, i) => {
+      fields(resource, ['app', 'href', 'title', 'description'], `site.pages[${index}].resources[${i}]`);
+      check(site.pages.some(other => other.app === resource.app), `site.pages[${index}].resources[${i}]: no page for app "${resource.app}"`);
+    });
   });
 
   /* Orders */

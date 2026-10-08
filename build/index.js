@@ -35,7 +35,7 @@ export function build() {
   fs.cpSync(path.join(root, 'node_modules/handlebars/dist/handlebars.runtime.min.js'), path.join(dirs.dist, 'assets/js/vendor/handlebars.runtime.min.js'));
   writeFile(path.join(dirs.dist, 'assets/js/generated/templates.js'), precompileClientTemplates(path.join(dirs.views, 'client')));
   Object.entries(apps).forEach(([app, data]) => writeFile(path.join(dirs.dist, `assets/js/generated/${app}-content.js`), contentModule(data)));
-  renderPages(dirs.views, site).forEach(({ output, html }) => writeFile(path.join(dirs.dist, output), html));
+  renderPages(dirs.views, site, apps).forEach(({ output, html }) => writeFile(path.join(dirs.dist, output), html));
   writeFile(path.join(dirs.dist, 'images/ATTRIBUTION.md'), attributionMarkdown([
     { label: 'Orders Quiz photos', images: apps.orders.photos },
     { label: 'Lab Practical specimen images', images: apps.practical.images }

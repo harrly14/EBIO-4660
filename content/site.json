@@ -10,7 +10,6 @@
     { "id": "learn", "label": "Learn" },
     { "id": "practice", "label": "Practice" },
     { "id": "flashcards", "label": "Flashcards" },
-    { "id": "speed", "label": "Speed Round" },
     { "id": "reference", "label": "Reference" }
   ],
   "pages": [
@@ -18,7 +17,24 @@
       "output": "index.html",
       "template": "home",
       "title": "Sully's Study Materials",
-      "headerDescription": "Study resources for insect orders, identification, and practical preparation."
+      "headerDescription": "Study resources for insect orders, identification, and practical preparation.",
+      "module": "assets/js/home.js",
+      "resources": [
+        {
+          "app": "orders",
+          "href": "orders-quiz.html",
+          "eyebrow": "Insect orders",
+          "title": "Orders Quiz",
+          "description": "Learn all 28 insect orders by common name, key giveaway, and photo, then drill the ones that look alike."
+        },
+        {
+          "app": "practical",
+          "href": "practical.html",
+          "eyebrow": "Lab Practical 1",
+          "title": "Lab Practical",
+          "description": "Anatomy, morphology, families, and keys, ending in a 20-station practical simulation."
+        }
+      ]
     },
     {
       "output": "orders-quiz.html",

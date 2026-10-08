@@ -1,8 +1,42 @@
-  <main class="card main-card">
-    <div class="eyebrow">Study resources</div>
-    <h2>Welcome</h2>
-    <p>Choose a resource to get started.</p>
-    <div class="landing-links">
-      {{#each site.navigation}}{{#if cta}}<a class="{{ctaStyle}}" href="{{href}}">{{cta}}</a>{{/if}}{{/each}}
-    </div>
+  <main class="home">
+    <section class="card home-hero">
+      <div class="home-intro">
+        <div class="eyebrow">EBIO 4660 · Insect biology</div>
+        <h2>Know your bugs before the practical.</h2>
+        <p>Lessons, mixed practice, flashcards, and a searchable reference for every order and family on the course list. Progress is saved in this browser, so you pick up where you left off.</p>
+        <div class="landing-links">
+          {{#each site.navigation}}{{#if cta}}<a class="{{ctaStyle}}" href="{{href}}">{{cta}}</a>{{/if}}{{/each}}
+        </div>
+      </div>
+      <div class="mystery hidden" data-role="mystery" aria-live="polite">
+        <div class="mystery-head">
+          <div class="eyebrow">Mystery specimen</div>
+          <div class="mini" data-role="streak"></div>
+        </div>
+        <div class="mystery-photo"><img data-role="mystery-photo" alt="Mystery insect specimen" /></div>
+        <p class="mystery-question">Which order is this?</p>
+        <div class="mystery-options" data-role="mystery-options"></div>
+        <div class="mystery-feedback" data-role="mystery-feedback"></div>
+        <button class="secondary mystery-next hidden" type="button" data-action="mystery-next">Another specimen</button>
+      </div>
+    </section>
+
+    <section class="resource-grid">
+      {{#each resources}}
+      <a class="card resource-card" href="{{href}}">
+        <div class="eyebrow">{{eyebrow}}</div>
+        <h3>{{title}}</h3>
+        <p>{{description}}</p>
+        <dl class="resource-stats">
+          {{#each stats}}<div><dt>{{label}}</dt><dd>{{value}}</dd></div>{{/each}}
+        </dl>
+        <div class="resource-tabs">{{#each ../site.studyTabs}}<span class="chunk-pill">{{label}}</span>{{/each}}</div>
+        <div class="resource-progress hidden" data-progress="{{app}}" data-total="{{questionTotal}}">
+          <div class="progress-bar"><span></span></div>
+          <div class="mini" data-role="progress-text"></div>
+        </div>
+        <span class="resource-open">Open {{title}} →</span>
+      </a>
+      {{/each}}
+    </section>
   </main>
