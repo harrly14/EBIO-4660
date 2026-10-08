@@ -9,6 +9,9 @@
     "test": "node --test",
     "credits": "node tools/credits/server.js"
   },
+  "engines": {
+    "node": ">=22"
+  },
   "dependencies": {
     "handlebars": "^4.7.8"
   }

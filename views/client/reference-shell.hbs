@@ -1,5 +1,5 @@
 <div class="reference-shell">
-  {{#if intro}}<header class="reference-header"><h2>Reference</h2><p>{{intro}}</p></header>{{/if}}
+  {{#if intro}}<header class="reference-header"><div><h2>Reference</h2><p>{{intro}}</p></div></header>{{/if}}
   {{#if multiple}}
     <nav class="reference-tabs" aria-label="Reference sections">
       {{#each sections}}<button class="tab{{#if active}} active{{/if}}" type="button" data-action="reference-section" data-section="{{id}}">{{label}}</button>{{/each}}
