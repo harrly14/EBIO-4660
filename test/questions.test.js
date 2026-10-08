@@ -9,23 +9,60 @@ const APPS = {
   practical: { pools: practical.buildPools(content.apps.practical), modes: practical.PRACTICE_MODES, speed: practical.SPEED_TYPES }
 };
 
-/* Question counts before the refactor (legacy candidatesFor() / practicalAudit().byType). */
-const LEGACY_COUNTS = {
-  orders: { common: 96, traits: 84, feature: 28, fill: 28, visual: 193, confusion: 22, scenario: 108 },
-  practical: {
-    'anatomy-name': 44, 'anatomy-location': 44, 'order-identification': 27, 'suborder-identification': 22,
-    'family-identification': 58, 'family-image-identification': 15, 'functional-morphology': 27, 'ecology-life-history': 18,
-    'select-all': 3, 'reverse-anatomy': 3, 'mystery-specimen': 2, comparison: 86, 'yes-no-feature': 8
-  }
+/* How many questions of each type the content should generate, worked out from the content itself. */
+const sum = (items, count) => items.reduce((total, item) => total + count(item), 0);
+const pairs = n => (n * (n - 1)) / 2;
+const handWritten = (questions, type) => questions.filter(question => question.type === type).length;
+
+function expectedOrdersCounts({ orders, confusionGroups, challengeQuestions, photos }) {
+  return {
+    common: sum(orders, item => 1 + item.aliases.length),
+    traits: sum(orders, item => pairs(item.traits.length)),
+    feature: orders.length,
+    fill: orders.length,
+    visual: photos.length,
+    confusion: sum(confusionGroups, group => group.length),
+    scenario: challengeQuestions.length
+  };
+}
+
+function expectedPracticalCounts({ taxa, anatomy, morphology, comparisons, questions, images }) {
+  const usable = taxa.filter(taxon => !taxon.sourceLimitation);
+  const families = taxa.filter(practical.isFamilyRank);
+  const usableFamilies = usable.filter(practical.isFamilyRank);
+  const familyNames = new Set(usableFamilies.map(taxon => taxon.name));
+  const anatomyTerms = new Set(anatomy.flatMap(region => region.structures.map(structure => structure.term))).size;
+  const traitsOf = rank => sum(usable.filter(taxon => taxon.rank === rank), taxon => taxon.diagnosticTraits.length);
+  return {
+    'anatomy-name': anatomyTerms,
+    'anatomy-location': anatomyTerms,
+    'order-identification': traitsOf('order'),
+    'suborder-identification': traitsOf('suborder'),
+    'family-identification': sum(usableFamilies, taxon => taxon.diagnosticTraits.length),
+    'family-image-identification': images.filter(image => image.quiz && familyNames.has(image.taxon)).length,
+    'functional-morphology': sum(morphology, group => group.types.length) + handWritten(questions, 'functional-morphology'),
+    'ecology-life-history': sum(families, taxon => taxon.ecology.length + taxon.lifeHistory.length) + handWritten(questions, 'ecology-life-history'),
+    'select-all': handWritten(questions, 'select-all'),
+    'reverse-anatomy': handWritten(questions, 'reverse-anatomy'),
+    'mystery-specimen': handWritten(questions, 'mystery-specimen'),
+    comparison: sum(comparisons, comparison => comparison.features.length),
+    'yes-no-feature': handWritten(questions, 'yes-no-feature')
+  };
+}
+
+const EXPECTED = {
+  orders: expectedOrdersCounts(content.apps.orders),
+  practical: expectedPracticalCounts(content.apps.practical)
 };
+const withoutZeros = counts => Object.fromEntries(Object.entries(counts).filter(([, count]) => count > 0));
 
 for (const [name, app] of Object.entries(APPS)) {
   const candidates = Object.values(app.pools).flat();
 
-  test(`${name}: question counts match the pre-refactor bank`, () => {
+  test(`${name}: every content entry generates its questions`, () => {
     const byType = {};
     candidates.forEach(candidate => { const { type } = candidate.build(); byType[type] = (byType[type] || 0) + 1; });
-    assert.deepEqual(byType, LEGACY_COUNTS[name]);
+    assert.deepEqual(byType, withoutZeros(EXPECTED[name]));
   });
 
   test(`${name}: ids are unique`, () => {
