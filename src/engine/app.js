@@ -4,6 +4,7 @@ import { createLearnTab } from './learn.js';
 import { createPracticeTab } from './practice.js';
 import { createFlashcardsTab } from './flashcards.js';
 import { createReferenceTab } from './reference.js';
+import { installLightbox } from './lightbox.js';
 
 const TAB_FACTORIES = {
   learn: createLearnTab,
@@ -38,6 +39,7 @@ export function createStudyApp(config) {
     if (event.ctrlKey || event.metaKey || event.altKey) return;
     app.tabs[app.activeTab]?.onKey?.(event);
   });
+  installLightbox();
   setTab('learn');
   return app;
 }
