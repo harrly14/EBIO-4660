@@ -1,6 +1,7 @@
 // Practice tab: setup → question loop (skip reveals the answer) → stats + review.
-// Question shape: { id, type, label, prompt (HTML), input: 'choice'|'fill'|'select-all',
+// Question shape: { id, type, label, prompt (HTML), input: 'choice'|'fill'|'select-all'|'narrowing',
 //                   answer (string or string[] for select-all), accepted?, choices?, explanation, image? }
+// A 'narrowing' question also has steps: [{ level, prompt, answer, choices }], broadest first; answer/choices are the final step.
 import { delegate, digitIndex, isTyping, render, revealOptions, role, roles } from './dom.js';
 import { allIds, answerText, drawBalanced, drawQuestions, drawStrata, isCorrect, poolSize } from './question-pool.js';
 import { escapeHtml, numbered } from './util.js';
@@ -23,7 +24,7 @@ export function createPracticeTab(pane, app) {
   const typesOf = mode => mode.types || mode.buckets?.flat() || Object.keys(pools);
   const sizeOf = mode => (mode.strata ? mode.strata.reduce((total, stratum) => total + stratum.count, 0) : Math.min(MAX_COUNT, poolSize(pools, typesOf(mode))));
 
-  const state = { view: 'setup', mode: modes[0].value, count: DEFAULT_COUNT, questions: [], index: 0, answered: false, results: [] };
+  const state = { view: 'setup', mode: modes[0].value, count: DEFAULT_COUNT, questions: [], index: 0, answered: false, results: [], stepAnswers: [] };
   const current = () => state.questions[state.index];
 
   /* ---------- setup ---------- */
@@ -66,12 +67,16 @@ export function createPracticeTab(pane, app) {
       return;
     }
     state.answered = false;
+    state.stepAnswers = [];
     app.seen.mark(question.id);
     pane.innerHTML = render('question', {
       ...question,
       position: state.index + 1,
       total: state.questions.length,
       choices: numbered(question.choices || []),
+      isNarrowing: question.input === 'narrowing',
+      steps: (question.steps || []).map((step, index) => ({ label: `${index + 1}. ${step.prompt}`, choices: numbered(step.choices), hidden: index > 0 })),
+      finalLabel: `${(question.steps || []).length + 1}. Which family or superfamily?`,
       isFill: question.input === 'fill',
       isSelectAll: question.input === 'select-all',
       placeholder: question.placeholder || 'Type your answer'
@@ -87,18 +92,30 @@ export function createPracticeTab(pane, app) {
     state.answered = true;
     const question = current();
     const skipped = given === null;
-    const ok = !skipped && isCorrect(question, given);
+    const steps = question.steps || [];
+    const stepsOk = steps.every((step, index) => state.stepAnswers[index] === step.answer);
+    const ok = !skipped && stepsOk && isCorrect(question, given);
     const chosen = [].concat(given ?? []);
     const correct = question.input === 'select-all' ? question.answer : (question.accepted || [question.answer]);
-    revealOptions(pane, { correct, chosen, markOthersWrong: skipped });
+    const blocks = roles(pane, 'step');
+    if (blocks.length) {
+      /* A skip shows every level that has not been answered yet. */
+      blocks.slice(state.stepAnswers.length, steps.length).forEach((block, offset) => revealOptions(block, { correct: [steps[state.stepAnswers.length + offset].answer], markOthersWrong: true }));
+      blocks.forEach(block => block.classList.remove('hidden'));
+    }
+    revealOptions(blocks.length ? blocks[steps.length] : pane, { correct, chosen, markOthersWrong: skipped });
     pane.querySelectorAll('[data-role="fill"], [data-action="submit-fill"], [data-action="submit-select"], [data-action="skip"]').forEach(control => { control.disabled = true; });
 
-    state.results.push({ question, given: skipped ? 'Skipped' : chosen.join('; '), ok, skipped });
+    const path = steps.length ? answerText(question) : '';
+    const missed = steps.findIndex((step, index) => state.stepAnswers[index] !== step.answer);
+    const message = skipped ? 'Skipped.' : ok ? 'Correct.' : missed !== -1 ? `Not quite: the ${steps[missed].level} was wrong.` : 'Not quite.';
+    state.results.push({ question, given: skipped ? 'Skipped' : [...state.stepAnswers, ...chosen].join(steps.length ? ' > ' : '; '), ok, skipped });
     const explain = role(pane, 'explain');
     explain.classList.add('show');
     explain.innerHTML = render('feedback', {
       ok,
-      message: skipped ? 'Skipped.' : ok ? 'Correct.' : 'Not quite.',
+      message,
+      path,
       explanation: question.explanation,
       image: question.image,
       answer: answerText(question),
@@ -107,6 +124,23 @@ export function createPracticeTab(pane, app) {
     const next = pane.querySelector('[data-action="next"]');
     next.disabled = false;
     next.focus();
+  }
+
+  /* Answers one broader level, then reveals the next (finer) level below it. */
+  function chooseStep(button) {
+    const blocks = roles(pane, 'step');
+    const index = blocks.indexOf(button.closest('[data-role="step"]'));
+    if (state.answered || index !== state.stepAnswers.length) return;
+    state.stepAnswers.push(button.dataset.value);
+    revealOptions(blocks[index], { correct: [current().steps[index].answer], chosen: [button.dataset.value] });
+    blocks[index + 1].classList.remove('hidden');
+    blocks[index + 1].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+
+  /* Option buttons that the number keys should currently pick from. */
+  function activeOptions() {
+    const blocks = roles(pane, 'step');
+    return (blocks.length ? blocks[state.stepAnswers.length] : pane).querySelectorAll('.option');
   }
 
   const submitFill = () => {
@@ -140,6 +174,7 @@ export function createPracticeTab(pane, app) {
       showSetup();
     },
     choose: button => reveal(button.dataset.value),
+    'choose-step': chooseStep,
     'submit-fill': submitFill,
     'submit-select': submitSelection,
     skip: () => reveal(null),
@@ -169,7 +204,7 @@ export function createPracticeTab(pane, app) {
     if (isTyping(event) && !inFill) return;
     const digit = digitIndex(event);
     if (digit !== null && !inFill && !state.answered) {
-      pane.querySelectorAll('.option')[digit]?.click();
+      activeOptions()[digit]?.click();
     } else if (event.key === 'Enter') {
       event.preventDefault();
       if (state.answered) next();

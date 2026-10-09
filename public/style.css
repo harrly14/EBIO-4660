@@ -201,6 +201,10 @@ button:disabled { opacity:.45; cursor:not-allowed; }
 .image-error { padding: 30px; text-align: center; }
 .flash-clue { font-size: 1.5rem; }
 .options label.option { display: flex; align-items: center; gap: 8px; }
+/* Stepwise narrowing questions */
+.step { margin-top:14px; }
+.step-heading { font-weight:800; margin-bottom:8px; }
+.step-path { margin-top:6px; }
 /* Home page */
 .home { display:grid; gap:18px; }
 .home-hero { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.05fr); gap:28px; padding:28px; align-items:center; }
@@ -223,6 +227,11 @@ button:disabled { opacity:.45; cursor:not-allowed; }
 .mystery-feedback { margin-top:10px; line-height:1.5; }
 .mystery-feedback:empty { display:none; }
 .mystery-next { margin-top:10px; }
+.home-family { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.05fr); gap:28px; padding:28px; align-items:start; }
+.home-family .mystery-photo { height:360px; margin:0; position:sticky; top:16px; }
+.home-family h3 { margin:.4rem 0 .3rem; font-size:1.45rem; }
+.home-family p { margin:0 0 4px; }
+.family-steps .option { min-height:0; padding:10px 12px; background:var(--panel2); }
 .resource-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
 .resource-card { display:flex; flex-direction:column; gap:12px; padding:22px; color:var(--text); text-decoration:none; transition:border-color .14s, transform .14s; }
 .resource-card:hover, .resource-card:focus-visible { border-color:var(--accent); transform:translateY(-2px); }
@@ -237,8 +246,9 @@ button:disabled { opacity:.45; cursor:not-allowed; }
 .progress-bar span { display:block; height:100%; width:0; background:var(--accent); }
 .resource-open { margin-top:auto; color:var(--accent); font-weight:800; }
 @media(max-width:860px) {
-  .home-hero, .resource-grid { grid-template-columns:1fr; }
-  .home-hero { padding:20px; }
+  .home-hero, .home-family, .resource-grid { grid-template-columns:1fr; }
+  .home-hero, .home-family { padding:20px; }
+  .home-family .mystery-photo { height:280px; }
 }
 @media(max-width:420px) {
   .mystery-options { grid-template-columns:1fr; }

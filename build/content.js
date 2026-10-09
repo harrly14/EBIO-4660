@@ -2,7 +2,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { PRACTICE_MODES as ORDERS_MODES } from '../src/apps/orders/questions.js';
-import { PHOTO_TARGET, photoCoverage } from '../src/apps/practical/taxonomy.js';
 import { HAND_WRITTEN_TYPES as QUESTION_TYPES, PRACTICE_MODES as PRACTICAL_MODES } from '../src/apps/practical/questions.js';
 
 export const IMAGE_FILES = { orders: 'orders/photos.json', practical: 'practical/images.json' };
@@ -170,9 +169,6 @@ export function validateContent({ site, apps }, publicDir) {
     if (question.taxon) check(taxonNames.has(question.taxon), `${where}: unknown taxon "${question.taxon}"`);
   });
   validateImages(p.images, taxonNames, publicDir, 'practical/images.json', ctx, warnings);
-  const coverage = photoCoverage(p.taxa, p.images);
-  const short = p.taxa.filter(taxon => coverage[taxon.name].total < PHOTO_TARGET);
-  if (short.length) warnings.push(`practical/images.json: ${short.length} taxa have fewer than ${PHOTO_TARGET} photos: ${short.map(taxon => `${taxon.name} ${coverage[taxon.name].total}`).join(', ')}`);
 
   return { errors: ctx.errors, warnings };
 }

@@ -94,3 +94,29 @@ for (const [name, app] of Object.entries(APPS)) {
     types.forEach(type => assert.ok(app.pools[type]?.length, `pool "${type}" is empty or missing`));
   });
 }
+
+test('practical: family photo questions narrow from the broadest group down to the family', () => {
+  const { taxa } = content.apps.practical;
+  const byName = new Map(taxa.map(taxon => [taxon.name, taxon]));
+  const familyTypes = new Set(['family-image-identification']);
+  let checked = 0;
+  Object.values(APPS.practical.pools).flat().forEach(candidate => {
+    const question = candidate.build();
+    if (!familyTypes.has(question.type)) {
+      assert.notEqual(question.input, 'narrowing', `${candidate.id}: only photo questions narrow`);
+      return;
+    }
+    checked += 1;
+    assert.equal(question.input, 'narrowing', `${candidate.id}: not a narrowing question`);
+    const family = byName.get(question.answer);
+    const path = ancestorsOf(family, taxa).map(node => node.name).filter(name => !['Insecta', 'Hexapoda', 'Arthropoda'].includes(name)).reverse();
+    assert.deepEqual(question.steps.map(step => step.answer), path, `${candidate.id}: steps do not follow the classification`);
+    assert.ok(question.steps.length >= 3, `${candidate.id}: expected a group, an order and a suborder at least`);
+    question.steps.forEach(step => {
+      assert.ok(step.choices.includes(step.answer), `${candidate.id}: ${step.level} answer not among choices`);
+      assert.equal(new Set(step.choices).size, step.choices.length, `${candidate.id}: duplicate ${step.level} choices`);
+      assert.ok(step.choices.length >= 2, `${candidate.id}: too few ${step.level} choices`);
+    });
+  });
+  assert.ok(checked > 0);
+});

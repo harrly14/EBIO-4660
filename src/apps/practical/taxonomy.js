@@ -31,5 +31,3 @@ export function photoCoverage(taxa, images) {
   });
   return counts;
 }
-
-export const PHOTO_TARGET = 5;

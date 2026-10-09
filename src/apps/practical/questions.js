@@ -1,6 +1,9 @@
 // Lab Practical question pools and practice modes. Pure: content in, candidates out.
 import { escapeHtml, groupBy, makeChoices, pickDistractors, shuffle, strong, unique } from '../../engine/util.js';
+import { isFamilyRank, narrowingSteps, orderOf, taxonChoices } from './narrowing.js';
 import { ancestorsOf } from './taxonomy.js';
+
+export { isFamilyRank };
 
 const TOPIC_MODES = [
   { value: 'order-suborder', label: 'Order & suborder identification', types: ['order-id', 'suborder-id', 'order-image', 'suborder-image'] },
@@ -51,9 +54,6 @@ const LABELS = {
   comparison: 'Comparison', 'select-all': 'Select all', 'yes-no': 'Yes / no feature'
 };
 
-export const isFamilyRank = taxon => taxon.rank === 'family' || taxon.rank === 'superfamily';
-const orderOf = taxon => String(taxon.parent || '').split('→')[0].trim();
-
 export function buildPools({ taxa, anatomy, morphology, comparisons, questions, images }) {
   const pools = Object.fromEntries(Object.keys(LABELS).map(type => [type, []]));
   const add = (pool, id, build) => pools[pool].push({ id, build: () => ({ input: 'choice', label: LABELS[pool], ...build() }) });
@@ -64,15 +64,7 @@ export function buildPools({ taxa, anatomy, morphology, comparisons, questions, 
     .forEach(text => { (clueOwners[text] = clueOwners[text] || new Set()).add(taxon.name); }));
   const sharesClue = (name, clue) => Boolean(clueOwners[clue]?.has(name));
 
-  /* The taxon plus three same-rank wrong answers (same parent/order first) that do not share the clue. */
-  const choicesForTaxon = (taxon, clue) => {
-    const keyed = isFamilyRank(taxon);
-    const candidates = taxa.filter(item => item.name !== taxon.name && !item.sourceLimitation && !sharesClue(item.name, clue) && (keyed ? isFamilyRank(item) : item.rank === taxon.rank));
-    const preferred = keyed ? item => orderOf(item) === orderOf(taxon)
-      : taxon.rank === 'order' ? item => item.grouping === taxon.grouping
-        : item => item.parent === taxon.parent;
-    return shuffle([taxon.name, ...pickDistractors(candidates, preferred).map(item => item.name)]);
-  };
+  const choicesForTaxon = (taxon, clue) => taxonChoices(taxa, taxon, name => sharesClue(name, clue));
   const accepted = taxon => [taxon.name, ...taxon.aliases];
 
   /* Anatomy: name-from-function and region-of-structure, split by external/internal. */
@@ -123,6 +115,7 @@ export function buildPools({ taxa, anatomy, morphology, comparisons, questions, 
     (imagesByTaxon[taxon.name] || []).forEach(image => add('family-image', `family-image-${image.id}`, () => ({
       type: 'family-image-identification',
       prompt: 'What family or superfamily is this specimen?',
+      input: 'narrowing', steps: narrowingSteps(taxon, taxa),
       answer: taxon.name, accepted: accepted(taxon), choices: choicesForTaxon(taxon, null), image,
       explanation: `${taxon.name}: useful family characters include ${taxon.diagnosticTraits.join('; ') || 'the supplied family-key characters'}.${image.visibleTraits?.length ? ` Image-associated study traits include ${image.visibleTraits.join('; ')}. These traits are diagnostic for the taxon, not a claim that every feature is visible in this photograph.` : ''}`
     })));

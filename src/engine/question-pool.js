@@ -70,4 +70,5 @@ export function isCorrect(question, response) {
   return (question.accepted || [question.answer]).some(answer => normalize(answer) === normalize(response));
 }
 
-export const answerText = question => [].concat(question.answer).join('; ');
+/* Narrowing questions answer with the whole path, broadest group first. */
+export const answerText = question => (question.steps ? [...question.steps.map(step => step.answer), question.answer].join(' > ') : [].concat(question.answer).join('; '));

@@ -21,6 +21,21 @@
       </div>
     </section>
 
+    <section class="card home-family hidden" data-role="family-mystery" aria-live="polite">
+      <div class="mystery-photo"><img data-role="family-photo" alt="Mystery insect specimen" /></div>
+      <div class="home-family-quiz">
+        <div class="mystery-head">
+          <div class="eyebrow">Narrow it down</div>
+          <div class="mini" data-role="streak"></div>
+        </div>
+        <h3>Which family is this?</h3>
+        <p class="subtle">Start with the broadest group, then get more specific until you reach the family.</p>
+        <div class="family-steps" data-role="family-steps"></div>
+        <div class="mystery-feedback" data-role="family-feedback"></div>
+        <button class="secondary mystery-next hidden" type="button" data-action="family-next">Another specimen</button>
+      </div>
+    </section>
+
     <section class="resource-grid">
       {{#each resources}}
       <a class="card resource-card" href="{{href}}">
