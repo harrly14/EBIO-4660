@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import * as orders from '../src/apps/orders/questions.js';
 import * as practical from '../src/apps/practical/questions.js';
+import { ancestorsOf } from '../src/apps/practical/taxonomy.js';
 import { content } from './helpers.js';
 
 const APPS = {
@@ -33,7 +34,13 @@ function expectedPracticalCounts({ taxa, anatomy, morphology, comparisons, quest
   const familyNames = new Set(usableFamilies.map(taxon => taxon.name));
   const anatomyTerms = new Set(anatomy.flatMap(region => region.structures.map(structure => structure.term))).size;
   const traitsOf = rank => sum(usable.filter(taxon => taxon.rank === rank), taxon => taxon.diagnosticTraits.length);
+  const imageQuestions = rank => sum(images.filter(image => image.quiz && taxa.some(taxon => taxon.name === image.taxon)), image => {
+    const taxon = taxa.find(item => item.name === image.taxon);
+    return [taxon, ...ancestorsOf(taxon, taxa)].filter(node => node.rank === rank).length;
+  });
   return {
+    'order-image-identification': imageQuestions('order'),
+    'suborder-image-identification': imageQuestions('suborder'),
     'anatomy-name': anatomyTerms,
     'anatomy-location': anatomyTerms,
     'order-identification': traitsOf('order'),

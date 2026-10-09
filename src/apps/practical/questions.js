@@ -1,8 +1,9 @@
 // Lab Practical question pools and practice modes. Pure: content in, candidates out.
 import { escapeHtml, groupBy, makeChoices, pickDistractors, shuffle, strong, unique } from '../../engine/util.js';
+import { ancestorsOf } from './taxonomy.js';
 
 const TOPIC_MODES = [
-  { value: 'order-suborder', label: 'Order & suborder identification', types: ['order-id', 'suborder-id'] },
+  { value: 'order-suborder', label: 'Order & suborder identification', types: ['order-id', 'suborder-id', 'order-image', 'suborder-image'] },
   { value: 'family', label: 'Family & superfamily identification', types: ['family-id', 'family-image', 'mystery-specimen'] },
   { value: 'anatomy', label: 'External & internal anatomy', types: ['external-anatomy', 'internal-anatomy', 'reverse-anatomy'] },
   { value: 'morphology', label: 'Morphology types', types: ['morphology'] },
@@ -19,7 +20,7 @@ export const PRACTICE_MODES = [
   {
     value: 'simulation', label: 'Full practical simulation (20 stations)',
     strata: [
-      { types: ['order-id', 'suborder-id'], count: 5 },
+      { types: ['order-id', 'suborder-id', 'order-image', 'suborder-image'], count: 5 },
       { types: ['external-anatomy'], count: 3 },
       { types: ['morphology'], count: 2 },
       { types: ['internal-anatomy'], count: 3 },
@@ -45,7 +46,7 @@ export const HAND_WRITTEN_TYPES = Object.keys(HAND_WRITTEN_POOLS);
 
 const LABELS = {
   'external-anatomy': 'External anatomy', 'internal-anatomy': 'Internal anatomy', 'reverse-anatomy': 'Reverse anatomy',
-  'order-id': 'Order ID', 'suborder-id': 'Suborder ID', 'family-id': 'Family ID', 'family-image': 'Specimen photo ID',
+  'order-id': 'Order ID', 'suborder-id': 'Suborder ID', 'order-image': 'Specimen photo ID', 'suborder-image': 'Specimen photo ID', 'family-id': 'Family ID', 'family-image': 'Specimen photo ID',
   'mystery-specimen': 'Mystery specimen', morphology: 'Functional morphology', ecology: 'Ecology & life history',
   comparison: 'Comparison', 'select-all': 'Select all', 'yes-no': 'Yes / no feature'
 };
@@ -123,8 +124,21 @@ export function buildPools({ taxa, anatomy, morphology, comparisons, questions, 
       type: 'family-image-identification',
       prompt: 'What family or superfamily is this specimen?',
       answer: taxon.name, accepted: accepted(taxon), choices: choicesForTaxon(taxon, null), image,
-      explanation: `${taxon.name}: useful family characters include ${taxon.diagnosticTraits.join('; ') || 'the supplied family-key characters'}. Image-associated study traits include ${(image.visibleTraits || []).join('; ')}. These traits are diagnostic for the taxon, not a claim that every feature is visible in this photograph.`
+      explanation: `${taxon.name}: useful family characters include ${taxon.diagnosticTraits.join('; ') || 'the supplied family-key characters'}.${image.visibleTraits?.length ? ` Image-associated study traits include ${image.visibleTraits.join('; ')}. These traits are diagnostic for the taxon, not a claim that every feature is visible in this photograph.` : ''}`
     })));
+  });
+  /* A photo of any taxon also tests its suborder and order. */
+  const taxonByName = new Map(taxa.map(taxon => [taxon.name, taxon]));
+  images.filter(image => image.quiz && taxonByName.has(image.taxon)).forEach(image => {
+    const taxon = taxonByName.get(image.taxon);
+    [taxon, ...ancestorsOf(taxon, taxa)].filter(node => node.rank === 'order' || node.rank === 'suborder').forEach(node => {
+      add(`${node.rank}-image`, `${node.rank}-image-${image.id}-${node.name}`, () => ({
+        type: `${node.rank}-image-identification`,
+        prompt: `What ${node.rank} is this specimen?`,
+        answer: node.name, choices: choicesForTaxon(node, null), image,
+        explanation: `${node.name}${node.commonName ? ` (${node.commonName})` : ''}${node.diagnosticTraits.length ? `: useful ${node.rank} characters include ${node.diagnosticTraits.join('; ')}` : ''}. This photo shows ${image.taxon}, which belongs to ${node.name}.`
+      }));
+    });
   });
   taxa.filter(isFamilyRank).forEach(taxon => {
     const ecologyQuestion = (clue, kind) => () => ({

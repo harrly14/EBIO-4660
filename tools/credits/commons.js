@@ -12,12 +12,12 @@ async function query(params) {
   return response.json();
 }
 
-const IMAGE_INFO = {
+const imageInfo = (width = THUMB_WIDTH) => ({
   prop: 'imageinfo',
   iiprop: 'url|size|extmetadata',
-  iiurlwidth: String(THUMB_WIDTH),
+  iiurlwidth: String(width),
   iiextmetadatafilter: 'Artist|LicenseShortName'
-};
+});
 
 export function stripHtml(html = '') {
   return html.replace(/<[^>]*>/g, ' ')
@@ -36,6 +36,7 @@ export function toCandidate(page) {
     creator: stripHtml(meta.Artist?.value) || 'Unknown',
     license: stripHtml(meta.LicenseShortName?.value) || 'See source page',
     thumbUrl: info.thumburl,
+    fullUrl: info.url,
     width: info.width,
     height: info.height
   };
@@ -53,14 +54,14 @@ export async function findBySha1(sha1) {
   return titles.length ? findByTitles(titles) : [];
 }
 
-export async function findByTitles(titles) {
-  return pagesToCandidates(await query({ titles: titles.join('|'), ...IMAGE_INFO }));
+export async function findByTitles(titles, thumbWidth) {
+  return pagesToCandidates(await query({ titles: titles.join('|'), ...imageInfo(thumbWidth) }));
 }
 
-export async function search(text, offset = 0) {
+export async function search(text, offset = 0, thumbWidth) {
   const data = await query({
     generator: 'search', gsrnamespace: '6', gsrsearch: `${text} filetype:bitmap`,
-    gsrlimit: String(PAGE_SIZE), gsroffset: String(offset), ...IMAGE_INFO
+    gsrlimit: String(PAGE_SIZE), gsroffset: String(offset), ...imageInfo(thumbWidth)
   });
   return { candidates: pagesToCandidates(data), nextOffset: data.continue?.gsroffset ?? null };
 }
