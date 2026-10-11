@@ -1,0 +1,101 @@
+[
+  {
+    "id": "fill-trochanter",
+    "topic": "anatomy",
+    "prompt": "What is the name of the leg segment that lies between the coxa and the femur?",
+    "blanks": [{ "label": "Leg segment", "answers": ["trochanter"] }],
+    "explanation": "The trochanter is a leg segment between the coxa and femur."
+  },
+  {
+    "id": "fill-tibia",
+    "topic": "anatomy",
+    "prompt": "What is the name of the leg segment that follows the femur?",
+    "blanks": [{ "label": "Leg segment", "answers": ["tibia"] }],
+    "explanation": "The tibia is the segment following the femur."
+  },
+  {
+    "id": "fill-tarsomere",
+    "topic": "anatomy",
+    "prompt": "What is the term for one of the individual segments that make up the tarsus?",
+    "blanks": [{ "label": "Term", "answers": ["tarsomere"] }],
+    "explanation": "A tarsomere is one of the segments that make up the tarsus."
+  },
+  {
+    "id": "fill-thoracic-segments",
+    "topic": "anatomy",
+    "prompt": "Name the three thoracic segments.",
+    "blanks": [
+      { "label": "Anterior thoracic segment", "answers": ["prothorax"] },
+      { "label": "Middle thoracic segment", "answers": ["mesothorax"] },
+      { "label": "Posterior thoracic segment", "answers": ["metathorax"] }
+    ],
+    "explanation": "The prothorax is the anterior thoracic segment, the mesothorax the middle one, and the metathorax the posterior one."
+  },
+  {
+    "id": "fill-mandibles",
+    "topic": "anatomy",
+    "prompt": "What is the name of the mouthpart that cuts and grinds food?",
+    "blanks": [{ "label": "Mouthpart", "answers": ["mandibles", "mandible"] }],
+    "explanation": "The mandibles cut and grind food."
+  },
+  {
+    "id": "fill-labrum",
+    "topic": "anatomy",
+    "prompt": "What is the name of the movable flap that covers the mouth and contains sensory hairs?",
+    "blanks": [{ "label": "Mouth structure", "answers": ["labrum"] }],
+    "explanation": "The labrum is a movable flap covering the mouth; it contains sensory hairs."
+  },
+  {
+    "id": "fill-heart",
+    "topic": "anatomy",
+    "prompt": "What is the name of the portion of the dorsal vessel that is perforated with ostia?",
+    "blanks": [{ "label": "Portion of the dorsal vessel", "answers": ["heart"] }],
+    "explanation": "The heart is the portion of the dorsal vessel perforated with ostia."
+  },
+  {
+    "id": "fill-aorta",
+    "topic": "anatomy",
+    "prompt": "What is the name of the portion of the dorsal vessel that lacks ostia?",
+    "blanks": [{ "label": "Portion of the dorsal vessel", "answers": ["aorta"] }],
+    "explanation": "The aorta is the portion of the dorsal vessel lacking ostia."
+  },
+  {
+    "id": "fill-tracheoles",
+    "topic": "anatomy",
+    "prompt": "What are the smallest tubes of the respiratory system, where gas exchange occurs?",
+    "blanks": [{ "label": "Structure", "answers": ["tracheoles", "tracheole"] }],
+    "explanation": "Tracheoles are the smallest tubes, where gas exchange occurs."
+  },
+  {
+    "id": "fill-gut-regions",
+    "topic": "anatomy",
+    "prompt": "In which section of the digestive tract (foregut, midgut, or hindgut) is each structure found?",
+    "blanks": [
+      { "label": "Crop", "answers": ["foregut"] },
+      { "label": "Ventriculus", "answers": ["midgut"] },
+      { "label": "Rectum", "answers": ["hindgut"] }
+    ],
+    "explanation": "The crop is in the foregut, the ventriculus in the midgut, and the rectum in the hindgut."
+  },
+  {
+    "id": "fill-taenidea",
+    "topic": "vocab",
+    "prompt": "What is the term for the circumferential transverse thickenings that reinforce tracheae and tracheoles and help prevent collapse?",
+    "blanks": [{ "label": "Term", "answers": ["taenidea", "taenidia"] }],
+    "explanation": "Taenidea (also spelled taenidia) are circumferential transverse thickenings that reinforce tracheae and tracheoles and help prevent collapse."
+  },
+  {
+    "id": "fill-peritrophic-membrane",
+    "topic": "vocab",
+    "prompt": "What is the name of the midgut-associated structure made of chitin and glycoproteins that is essential for digestion?",
+    "blanks": [{ "label": "Structure", "answers": ["peritrophic membrane", "peritrophic matrix"] }],
+    "explanation": "The peritrophic membrane (peritrophic matrix) is associated with the midgut; it is made of chitin and glycoproteins and is essential for digestion."
+  },
+  {
+    "id": "fill-dorsal-vessel",
+    "topic": "vocab",
+    "prompt": "Which structure runs from the posterior abdomen into the head region and carries hemolymph?",
+    "blanks": [{ "label": "Structure", "answers": ["dorsal vessel", "dorsal longitudinal vessel"] }],
+    "explanation": "The dorsal vessel (also called the dorsal longitudinal vessel) carries hemolymph."
+  }
+]

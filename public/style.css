@@ -35,6 +35,16 @@ button:disabled { opacity:.45; cursor:not-allowed; }
 .fill-answer input:focus { outline:2px solid var(--accent); outline-offset:1px; }
 .fill-issue { color:var(--bad); text-decoration:line-through; text-decoration-thickness:2px; }
 .fill-correction { margin-top:8px; }
+.blanks-answer { display:grid; gap:12px; margin:8px 0 14px; }
+.blank-field { display:grid; gap:4px; }
+.blank-field label { font-weight:600; }
+.blank-field input { width:100%; box-sizing:border-box; min-height:46px; background:var(--panel2); color:var(--text); border:1px solid var(--line); border-radius:12px; padding:10px 12px; }
+.blank-field input:focus { outline:2px solid var(--accent); outline-offset:1px; }
+.blanks-answer .primary { justify-self:start; }
+.blank-results { margin:8px 0 0; padding-left:20px; overflow-wrap:anywhere; }
+.blank-correct .blank-status { color:var(--good); font-weight:700; }
+.blank-almost .blank-status { color:var(--warn); font-weight:700; }
+.blank-wrong .blank-status { color:var(--bad); font-weight:700; }
 .explain { display:none; margin-top:15px; border-top:1px solid var(--line); padding-top:14px; }
 .explain.show { display:block; }
 .explain strong { color:var(--text); }

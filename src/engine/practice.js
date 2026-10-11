@@ -1,8 +1,11 @@
 // Practice tab: setup → question loop (skip reveals the answer) → stats + review.
-// Question shape: { id, type, label, prompt (HTML), input: 'choice'|'fill'|'select-all'|'narrowing',
+// Question shape: { id, type, label, prompt (HTML), input: 'choice'|'fill'|'blanks'|'select-all'|'narrowing',
 //                   answer (string or string[] for select-all), accepted?, choices?, explanation, image? }
+// A 'blanks' question has blanks: [{ label, answers }] (one typed input each); answer lists each blank's first answer.
+// Each blank grades correct / almost / wrong (see grading.js); the question is correct only if every blank is.
 // A 'narrowing' question also has steps: [{ level, prompt, answer, choices }], broadest first; answer/choices are the final step.
 import { delegate, digitIndex, isTyping, render, revealOptions, role, roles } from './dom.js';
+import { gradeBlanks } from './grading.js';
 import { allIds, answerText, drawBalanced, drawQuestions, drawStrata, isCorrect, poolSize } from './question-pool.js';
 import { escapeHtml, numbered } from './util.js';
 
@@ -78,12 +81,14 @@ export function createPracticeTab(pane, app) {
       steps: (question.steps || []).map((step, index) => ({ label: `${index + 1}. ${step.prompt}`, choices: numbered(step.choices), hidden: index > 0 })),
       finalLabel: `${(question.steps || []).length + 1}. Which family or superfamily?`,
       isFill: question.input === 'fill',
+      isBlanks: question.input === 'blanks',
+      blanks: (question.blanks || []).map((blank, index) => ({ label: blank.label, index })),
       isSelectAll: question.input === 'select-all',
       placeholder: question.placeholder || 'Type your answer'
     });
     const upcoming = state.questions[state.index + 1];
     if (upcoming?.image) new Image().src = upcoming.image.src;
-    role(pane, 'fill')?.focus();
+    (role(pane, 'fill') || role(pane, 'blank'))?.focus();
   }
 
   /* Records the outcome, marks the options, and shows the explanation. `given` is null for a skip. */
@@ -95,7 +100,8 @@ export function createPracticeTab(pane, app) {
     const steps = question.steps || [];
     const stepsOk = steps.every((step, index) => state.stepAnswers[index] === step.answer);
     const ok = !skipped && stepsOk && isCorrect(question, given);
-    const chosen = [].concat(given ?? []);
+    const chosen = question.input === 'blanks' ? [] : [].concat(given ?? []);
+    const blankResults = question.input === 'blanks' ? blankFeedback(question, given) : [];
     const correct = question.input === 'select-all' ? question.answer : (question.accepted || [question.answer]);
     const blocks = roles(pane, 'step');
     if (blocks.length) {
@@ -104,18 +110,20 @@ export function createPracticeTab(pane, app) {
       blocks.forEach(block => block.classList.remove('hidden'));
     }
     revealOptions(blocks.length ? blocks[steps.length] : pane, { correct, chosen, markOthersWrong: skipped });
-    pane.querySelectorAll('[data-role="fill"], [data-action="submit-fill"], [data-action="submit-select"], [data-action="skip"]').forEach(control => { control.disabled = true; });
+    pane.querySelectorAll('[data-role="fill"], [data-role="blank"], [data-action="submit-fill"], [data-action="submit-blanks"], [data-action="submit-select"], [data-action="skip"]').forEach(control => { control.disabled = true; });
 
     const path = steps.length ? answerText(question) : '';
     const missed = steps.findIndex((step, index) => state.stepAnswers[index] !== step.answer);
-    const message = skipped ? 'Skipped.' : ok ? 'Correct.' : missed !== -1 ? `Not quite: the ${steps[missed].level} was wrong.` : 'Not quite.';
-    state.results.push({ question, given: skipped ? 'Skipped' : [...state.stepAnswers, ...chosen].join(steps.length ? ' > ' : '; '), ok, skipped });
+    const almostOnly = !skipped && blankResults.length > 0 && blankResults.every(result => result.grade !== 'wrong');
+    const message = skipped ? 'Skipped.' : ok ? 'Correct.' : almostOnly ? 'Almost.' : missed !== -1 ? `Not quite: the ${steps[missed].level} was wrong.` : 'Not quite.';
+    state.results.push({ question, given: skipped ? 'Skipped' : question.input === 'blanks' ? given.join('; ') : [...state.stepAnswers, ...chosen].join(steps.length ? ' > ' : '; '), ok, skipped });
     const explain = role(pane, 'explain');
     explain.classList.add('show');
     explain.innerHTML = render('feedback', {
       ok,
       message,
       path,
+      blankResults,
       explanation: question.explanation,
       image: question.image,
       answer: answerText(question),
@@ -147,6 +155,13 @@ export function createPracticeTab(pane, app) {
     const typed = role(pane, 'fill').value.trim().replace(/\s+/g, ' ');
     if (typed) reveal(typed);
   };
+  /* Every blank needs an answer; focus the first empty one instead of submitting. */
+  const submitBlanks = () => {
+    const inputs = roles(pane, 'blank');
+    const empty = inputs.find(input => !input.value.trim());
+    if (empty) empty.focus();
+    else reveal(inputs.map(input => input.value.trim().replace(/\s+/g, ' ')));
+  };
   const submitSelection = () => reveal(roles(pane, 'select').filter(input => input.checked).map(input => input.value));
   const next = () => {
     state.index += 1;
@@ -176,6 +191,7 @@ export function createPracticeTab(pane, app) {
     choose: button => reveal(button.dataset.value),
     'choose-step': chooseStep,
     'submit-fill': submitFill,
+    'submit-blanks': submitBlanks,
     'submit-select': submitSelection,
     skip: () => reveal(null),
     finish: showEnd,
@@ -200,7 +216,7 @@ export function createPracticeTab(pane, app) {
 
   function onKey(event) {
     if (state.view !== 'quiz') return;
-    const inFill = event.target.matches?.('[data-role="fill"]');
+    const inFill = event.target.matches?.('[data-role="fill"], [data-role="blank"]');
     if (isTyping(event) && !inFill) return;
     const digit = digitIndex(event);
     if (digit !== null && !inFill && !state.answered) {
@@ -209,6 +225,7 @@ export function createPracticeTab(pane, app) {
       event.preventDefault();
       if (state.answered) next();
       else if (current().input === 'fill') submitFill();
+      else if (current().input === 'blanks') submitBlanks();
       else if (current().input === 'select-all') submitSelection();
     }
   }
@@ -221,6 +238,18 @@ export function createPracticeTab(pane, app) {
       start(modeValue, LESSON_COUNT);
     }
   };
+}
+
+/* Per-blank lines for the feedback panel: what was typed, how it graded, and the answer unless it was correct. */
+function blankFeedback(question, given) {
+  const grades = gradeBlanks(question, given);
+  return question.blanks.map((blank, index) => ({
+    label: blank.label,
+    given: given?.[index] || '',
+    grade: given ? grades[index] : 'skipped',
+    status: given ? { correct: 'Correct.', almost: 'Almost.', wrong: 'Not quite.' }[grades[index]] : 'Skipped.',
+    answer: given && grades[index] === 'correct' ? '' : blank.answers[0]
+  }));
 }
 
 /* Review rows for the practice end screen. */

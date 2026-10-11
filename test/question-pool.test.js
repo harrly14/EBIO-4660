@@ -57,3 +57,10 @@ test('answer checking handles accepted aliases, typed answers, and select-all', 
   assert.ok(isCorrect({ input: 'select-all', answer: ['x', 'y'] }, ['y', 'x']));
   assert.ok(!isCorrect({ input: 'select-all', answer: ['x', 'y'] }, ['x']));
 });
+
+test('multi-blank questions are correct only when every blank is exactly right', () => {
+  const question = { input: 'blanks', blanks: [{ label: 'Order', answers: ['Odonata'] }, { label: 'Suborder', answers: ['Anisoptera'] }] };
+  assert.ok(isCorrect(question, [' odonata ', 'ANISOPTERA']));
+  assert.ok(!isCorrect(question, ['Odonata', 'Zygoptera']));
+  assert.ok(!isCorrect(question, ['Odonata', 'Anisoptra']), 'a near match is not correct');
+});

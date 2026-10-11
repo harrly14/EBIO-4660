@@ -18,6 +18,16 @@
       <input data-role="fill" type="text" autocomplete="off" placeholder="{{placeholder}}" aria-label="Your answer">
       <button class="primary" type="button" data-action="submit-fill">Check answer</button>
     </div>
+  {{else if isBlanks}}
+    <div class="blanks-answer" role="group" aria-label="Your answers">
+      {{#each blanks}}
+      <div class="blank-field">
+        <label for="blank-{{index}}">{{label}}</label>
+        <input id="blank-{{index}}" data-role="blank" type="text" autocomplete="off" autocapitalize="none" spellcheck="false">
+      </div>
+      {{/each}}
+      <button class="primary" type="button" data-action="submit-blanks">Check answer</button>
+    </div>
   {{else if isSelectAll}}
     <div class="options">
       {{#each choices}}<label class="option"><input type="checkbox" data-role="select" value="{{value}}"><span class="num">{{number}}</span>{{value}}</label>{{/each}}

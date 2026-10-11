@@ -5,6 +5,10 @@ import { ancestorsOf } from './taxonomy.js';
 
 export { isFamilyRank };
 
+/* Fill-in-the-blank questions are tagged by topic (content/practical/fill-blanks.json and generated ones); each topic is its own pool. */
+export const FILL_TOPICS = ['families', 'orders', 'anatomy', 'vocab'];
+const FILL_TYPES = FILL_TOPICS.map(topic => `fill-${topic}`);
+
 const TOPIC_MODES = [
   { value: 'order-suborder', label: 'Order & suborder identification', types: ['order-id', 'suborder-id', 'order-image', 'suborder-image'] },
   { value: 'family', label: 'Family & superfamily identification', types: ['family-id', 'family-image', 'mystery-specimen'] },
@@ -13,7 +17,8 @@ const TOPIC_MODES = [
   { value: 'compare', label: 'Compare two groups', types: ['comparison'] },
   { value: 'select-all', label: 'Select all that apply', types: ['select-all'] },
   { value: 'yes-no', label: 'Yes / No feature', types: ['yes-no'] },
-  { value: 'ecology', label: 'Ecology & life history', types: ['ecology'] }
+  { value: 'ecology', label: 'Ecology & life history', types: ['ecology'] },
+  { value: 'fill-blank', label: 'Fill in the blank', types: FILL_TYPES }
 ];
 
 /* Mixed practice draws evenly from every topic, so the biggest pools cannot crowd out the rest. */
@@ -23,7 +28,7 @@ export const PRACTICE_MODES = [
   {
     value: 'simulation', label: 'Full practical simulation (20 stations)',
     strata: [
-      { types: ['order-id', 'suborder-id', 'order-image', 'suborder-image'], count: 5 },
+      { types: ['order-id', 'suborder-id', 'order-image', 'suborder-image'], count: 4 },
       { types: ['external-anatomy'], count: 3 },
       { types: ['morphology'], count: 2 },
       { types: ['internal-anatomy'], count: 3 },
@@ -31,7 +36,8 @@ export const PRACTICE_MODES = [
       { types: ['comparison'], count: 1 },
       { types: ['select-all'], count: 1 },
       { types: ['yes-no'], count: 1 },
-      { types: ['ecology'], count: 1 }
+      { types: ['ecology'], count: 1 },
+      { types: FILL_TYPES, count: 1 }
     ]
   }
 ];
@@ -51,10 +57,11 @@ const LABELS = {
   'external-anatomy': 'External anatomy', 'internal-anatomy': 'Internal anatomy', 'reverse-anatomy': 'Reverse anatomy',
   'order-id': 'Order ID', 'suborder-id': 'Suborder ID', 'order-image': 'Specimen photo ID', 'suborder-image': 'Specimen photo ID', 'family-id': 'Family ID', 'family-image': 'Specimen photo ID',
   'mystery-specimen': 'Mystery specimen', morphology: 'Functional morphology', ecology: 'Ecology & life history',
-  comparison: 'Comparison', 'select-all': 'Select all', 'yes-no': 'Yes / no feature'
+  comparison: 'Comparison', 'select-all': 'Select all', 'yes-no': 'Yes / no feature',
+  ...Object.fromEntries(FILL_TYPES.map(type => [type, 'Fill in the blank']))
 };
 
-export function buildPools({ taxa, anatomy, morphology, comparisons, questions, images }) {
+export function buildPools({ taxa, anatomy, morphology, comparisons, questions, images, fillBlanks }) {
   const pools = Object.fromEntries(Object.keys(LABELS).map(type => [type, []]));
   const add = (pool, id, build) => pools[pool].push({ id, build: () => ({ input: 'choice', label: LABELS[pool], ...build() }) });
 
@@ -174,6 +181,52 @@ export function buildPools({ taxa, anatomy, morphology, comparisons, questions, 
     prompt: escapeHtml(question.prompt),
     answer: question.answer,
     choices: question.type === 'yes-no-feature' ? question.choices : shuffle(question.choices),
+    explanation: question.explanation
+  })));
+
+  /* Fill in the blank: typed answers, one labeled input per blank. Every prompt names exactly what is asked for. */
+  const addFill = (topic, id, build) => add(`fill-${topic}`, id, () => {
+    const question = build();
+    return { type: 'fill-blank', input: 'blanks', topic, ...question, answer: question.blanks.map(blank => blank.answers[0]) };
+  });
+  const singular = category => category.toLowerCase().replace(/ types$/, ' type');
+  const sentenceCase = text => text.charAt(0).toUpperCase() + text.slice(1);
+
+  usable.filter(isFamilyRank).forEach(taxon => {
+    const [order, suborder] = String(taxon.parent).split('→').map(name => name.trim());
+    if (!suborder) return;
+    addFill('families', `fill-family-${taxon.name}`, () => ({
+      prompt: `Give the scientific names of the order and the suborder that contain the ${taxon.rank} ${strong(taxon.name)}.`,
+      blanks: [{ label: 'Order', answers: [order] }, { label: 'Suborder', answers: [suborder] }],
+      explanation: `${taxon.name} is in the order ${order}, suborder ${suborder}.`
+    }));
+  });
+  usable.filter(taxon => (taxon.rank === 'order' || taxon.rank === 'suborder') && taxon.commonName).forEach(taxon => {
+    addFill('orders', `fill-${taxon.rank}-common-${taxon.name}`, () => ({
+      prompt: `What is the scientific name of the ${taxon.rank} commonly called ${strong(taxon.commonName)}?`,
+      blanks: [{ label: `Scientific name of the ${taxon.rank}`, answers: [taxon.name] }],
+      explanation: `${sentenceCase(taxon.commonName)} are the ${taxon.rank} ${taxon.name}.`
+    }));
+  });
+  usable.filter(taxon => taxon.rank === 'suborder').forEach(taxon => {
+    addFill('orders', `fill-suborder-order-${taxon.name}`, () => ({
+      prompt: `What is the scientific name of the order that contains the suborder ${strong(taxon.name)}?`,
+      blanks: [{ label: 'Scientific name of the order', answers: [orderOf(taxon)] }],
+      explanation: `${taxon.name} is a suborder of ${orderOf(taxon)}.`
+    }));
+  });
+  /* A morphology term whose own name appears in its description would give the answer away. */
+  const leaksAnswer = (term, description) => term.toLowerCase().split('/').some(part => description.toLowerCase().includes(part.trim().split(' ')[0]));
+  morphology.forEach(group => group.types.filter(item => !leaksAnswer(item.term, item.description)).forEach(item => {
+    addFill('vocab', `fill-morphology-${group.category}-${item.term}`, () => ({
+      prompt: `What is the technical term for the ${escapeHtml(singular(group.category))} described as ${strong(item.description)}?`,
+      blanks: [{ label: sentenceCase(singular(group.category)), answers: [item.term, ...item.term.split('/').map(part => part.trim())] }],
+      explanation: `${item.term} is ${item.description}.`
+    }));
+  }));
+  fillBlanks.forEach(question => addFill(question.topic, question.id, () => ({
+    prompt: escapeHtml(question.prompt),
+    blanks: question.blanks,
     explanation: question.explanation
   })));
 

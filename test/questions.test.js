@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import * as orders from '../src/apps/orders/questions.js';
 import * as practical from '../src/apps/practical/questions.js';
+import { FILL_TOPICS } from '../src/apps/practical/questions.js';
 import { ancestorsOf } from '../src/apps/practical/taxonomy.js';
 import { content } from './helpers.js';
 
@@ -27,7 +28,7 @@ function expectedOrdersCounts({ orders, confusionGroups, challengeQuestions, pho
   };
 }
 
-function expectedPracticalCounts({ taxa, anatomy, morphology, comparisons, questions, images }) {
+function expectedPracticalCounts({ taxa, anatomy, morphology, comparisons, questions, images, fillBlanks }) {
   const usable = taxa.filter(taxon => !taxon.sourceLimitation);
   const families = taxa.filter(practical.isFamilyRank);
   const usableFamilies = usable.filter(practical.isFamilyRank);
@@ -38,7 +39,13 @@ function expectedPracticalCounts({ taxa, anatomy, morphology, comparisons, quest
     const taxon = taxa.find(item => item.name === image.taxon);
     return [taxon, ...ancestorsOf(taxon, taxa)].filter(node => node.rank === rank).length;
   });
+  const withSuborder = usableFamilies.filter(taxon => taxon.parent.includes('→')).length;
+  const namedGroups = usable.filter(taxon => (taxon.rank === 'order' || taxon.rank === 'suborder') && taxon.commonName).length;
+  const suborders = usable.filter(taxon => taxon.rank === 'suborder').length;
+  /* Morphology terms whose name appears in their description are left out (it would give the answer away). */
+  const unleaked = sum(morphology, group => group.types.filter(item => !item.term.toLowerCase().split('/').some(part => item.description.toLowerCase().includes(part.trim().split(' ')[0]))).length);
   return {
+    'fill-blank': withSuborder + namedGroups + suborders + unleaked + fillBlanks.length,
     'order-image-identification': imageQuestions('order'),
     'suborder-image-identification': imageQuestions('suborder'),
     'anatomy-name': anatomyTerms,
@@ -82,6 +89,12 @@ for (const [name, app] of Object.entries(APPS)) {
       const question = candidate.build();
       const where = `${candidate.id}`;
       assert.ok(question.prompt && question.explanation && question.label, `${where}: missing prompt/explanation/label`);
+      if (question.input === 'blanks') {
+        assert.ok(question.blanks.length >= 1 && question.answer.length === question.blanks.length, `${where}: answer must list one answer per blank`);
+        question.blanks.forEach(blank => assert.ok(blank.label && blank.answers.length, `${where}: every blank needs a label and an accepted answer`));
+        assert.ok(FILL_TOPICS.includes(question.topic), `${where}: unknown topic`);
+        return;
+      }
       if (question.input === 'fill') return;
       assert.equal(new Set(question.choices).size, question.choices.length, `${where}: duplicate choices`);
       [].concat(question.answer).forEach(answer => assert.ok(question.choices.includes(answer), `${where}: answer not among choices`));

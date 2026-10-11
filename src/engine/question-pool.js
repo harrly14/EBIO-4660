@@ -1,6 +1,7 @@
 // Seen-aware question drawing for the Practice tab in both apps.
 // A pool is { [type]: [{ id, build() }] }. Unseen candidates are served first; a type's
 // seen history is only cleared once every candidate in scope has been seen.
+import { blanksCorrect, gradeBlanks } from './grading.js';
 import { sample, shuffle, unique } from './util.js';
 
 export function poolSize(pools, types) {
@@ -61,6 +62,7 @@ export function drawStrata({ pools, strata, seen, random = Math.random }) {
 }
 
 export function isCorrect(question, response) {
+  if (question.input === 'blanks') return blanksCorrect(gradeBlanks(question, response));
   if (question.input === 'select-all') {
     const expected = [...question.answer].sort();
     const given = [...response].sort();

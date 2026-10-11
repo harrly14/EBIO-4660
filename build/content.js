@@ -2,7 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { PRACTICE_MODES as ORDERS_MODES } from '../src/apps/orders/questions.js';
-import { HAND_WRITTEN_TYPES as QUESTION_TYPES, PRACTICE_MODES as PRACTICAL_MODES } from '../src/apps/practical/questions.js';
+import { FILL_TOPICS, HAND_WRITTEN_TYPES as QUESTION_TYPES, PRACTICE_MODES as PRACTICAL_MODES } from '../src/apps/practical/questions.js';
 
 export const IMAGE_FILES = { orders: 'orders/photos.json', practical: 'practical/images.json' };
 
@@ -22,6 +22,7 @@ const APP_FILES = {
     comparisons: 'practical/comparisons.json',
     keys: 'practical/keys.json',
     questions: 'practical/questions.json',
+    fillBlanks: 'practical/fill-blanks.json',
     images: IMAGE_FILES.practical
   }
 };
@@ -167,6 +168,15 @@ export function validateContent({ site, apps }, publicDir) {
     questionIds.add(question.id);
     [].concat(question.answer).forEach(answer => check(question.choices?.includes(answer), `${where}: answer "${answer}" is not one of the choices`));
     if (question.taxon) check(taxonNames.has(question.taxon), `${where}: unknown taxon "${question.taxon}"`);
+  });
+  const fillIds = new Set();
+  p.fillBlanks.forEach((question, index) => {
+    const where = `practical/fill-blanks.json[${index}]`;
+    fields(question, ['id', 'topic', 'prompt', 'blanks', 'explanation'], where);
+    check(FILL_TOPICS.includes(question.topic), `${where}: topic must be one of ${FILL_TOPICS.join(', ')}`);
+    check(!fillIds.has(question.id), `${where}: duplicate id "${question.id}"`);
+    fillIds.add(question.id);
+    (question.blanks || []).forEach((blank, i) => fields(blank, ['label', 'answers'], `${where}.blanks[${i}]`));
   });
   validateImages(p.images, taxonNames, publicDir, 'practical/images.json', ctx, warnings);
 

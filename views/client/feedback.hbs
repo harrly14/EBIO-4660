@@ -1,4 +1,5 @@
 <strong class="{{#if ok}}feedback-correct{{else}}feedback-incorrect{{/if}}">{{message}}</strong> {{explanation}}
+{{#if blankResults}}<ul class="blank-results">{{#each blankResults}}<li class="blank-{{grade}}"><strong>{{label}}:</strong> {{#if given}}{{given}}{{else}}(blank){{/if}} <span class="blank-status">{{status}}</span>{{#if answer}} Correct answer: <strong>{{answer}}</strong>{{/if}}</li>{{/each}}</ul>{{/if}}
 {{#if path}}<div class="mini step-path">Path: {{path}}</div>{{/if}}
 {{#if correction}}<div class="fill-correction">Your answer: {{{correction}}}<br>Correct spelling: <strong>{{answer}}</strong></div>{{/if}}
 {{#if image}}{{> photo-credit image}}{{/if}}

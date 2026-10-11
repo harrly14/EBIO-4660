@@ -32,6 +32,7 @@ Everything a student sees lives in `content/` as JSON. The build validates it an
 | `content/practical/comparisons.json` | Paired comparisons; each feature's `holder` is `a`, `b`, `both`, or `neither` (with `owner`) |
 | `content/practical/keys.json` | The course family keys (couplets) |
 | `content/practical/questions.json` | Hand-written questions (select-all, yes/no, reverse anatomy, mystery specimen, …) |
+| `content/practical/fill-blanks.json` | Hand-written fill-in-the-blank questions: `id`, `topic` (`families`, `orders`, `anatomy`, `vocab`), `prompt`, `blanks` (`label` + accepted `answers`), `explanation` |
 | `content/practical/images.json` | Specimen photos per family, with credits |
 
 Most practice questions are generated from this content. Adding a trait to a taxon or a structure to `anatomy.json` adds questions automatically.
