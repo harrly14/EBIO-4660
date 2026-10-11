@@ -2,6 +2,7 @@
 import orders from './generated/orders-content.js';
 import practical from './generated/practical-content.js';
 import { isFamilyRank, narrowingSteps, taxonChoices } from './apps/practical/narrowing.js';
+import { installLightbox } from './engine/lightbox.js';
 import { createStorage } from './engine/storage.js';
 import { escapeHtml, makeChoices, shuffle } from './engine/util.js';
 
@@ -21,6 +22,13 @@ const photoCredit = item => (item.sourceUrl
   ? `<div class="photo-source">Photo: <a href="${escapeHtml(item.sourceUrl)}" target="_blank" rel="noopener">${escapeHtml(item.creator || 'source')}</a>${item.license ? ` · ${escapeHtml(item.license)}` : ''}</div>`
   : '');
 
+/* A freshly shuffled deck whose first card (popped from the end) is not the one just shown. */
+const refill = (source, current) => {
+  const deck = shuffle(source);
+  if (deck.length > 1 && deck.at(-1) === current) [deck[0], deck[deck.length - 1]] = [deck[deck.length - 1], deck[0]];
+  return deck;
+};
+
 /* ---------- mystery specimen ---------- */
 function mountMystery(box) {
   const photo = box.querySelector('[data-role="mystery-photo"]');
@@ -39,7 +47,7 @@ function mountMystery(box) {
   };
 
   function next() {
-    if (!deck.length) deck = shuffle(orders.photos);
+    if (!deck.length) deck = refill(orders.photos, current);
     current = deck.pop();
     photo.src = current.src;
     photo.parentElement.style.setProperty('--photo', `url("${current.src}")`);
@@ -115,7 +123,7 @@ function mountFamilyMystery(box, deckSource) {
     + `<div class="options">${level.choices.map((choice, number) => `<button class="option" type="button" data-value="${escapeHtml(choice)}"><span class="num">${number + 1}</span>${escapeHtml(choice)}</button>`).join('')}</div></div>`;
 
   function next() {
-    if (!deck.length) deck = shuffle(deckSource);
+    if (!deck.length) deck = refill(deckSource, current);
     current = deck.pop();
     const taxon = byName.get(current.taxon);
     levels = [...narrowingSteps(taxon, practical.taxa), { prompt: 'Which family or superfamily?', answer: taxon.name, choices: taxonChoices(practical.taxa, taxon) }];
@@ -182,7 +190,7 @@ function showProgress(card) {
   if (!seen) return;
   const percent = Math.round((seen / total) * 100);
   card.querySelector('.progress-bar span').style.width = `${percent}%`;
-  card.querySelector('[data-role="progress-text"]').textContent = `You've seen ${seen} of ${total} questions (${percent}%)`;
+  card.querySelector('[data-role="progress-text"]').textContent = `You've answered ${seen} of ${total} questions correctly (${percent}%)`;
   card.classList.remove('hidden');
 }
 
@@ -192,3 +200,4 @@ const familyMystery = document.querySelector('[data-role="family-mystery"]');
 const familyPhotos = practical.images.filter(image => image.quiz && isFamilyRank(practical.taxa.find(taxon => taxon.name === image.taxon) || {}));
 if (familyMystery && familyPhotos.length) mountFamilyMystery(familyMystery, familyPhotos);
 document.querySelectorAll('[data-progress]').forEach(showProgress);
+installLightbox();

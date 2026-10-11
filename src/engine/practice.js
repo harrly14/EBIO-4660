@@ -7,7 +7,7 @@
 import { delegate, digitIndex, isTyping, render, revealOptions, role, roles } from './dom.js';
 import { gradeBlanks } from './grading.js';
 import { allIds, answerText, drawBalanced, drawQuestions, drawStrata, isCorrect, poolSize } from './question-pool.js';
-import { escapeHtml, numbered } from './util.js';
+import { escapeHtml, numbered, shuffle } from './util.js';
 
 const MIN_COUNT = 5;
 const MAX_COUNT = 100;
@@ -23,6 +23,8 @@ function misspellingMarkup(given, correct) {
 export function createPracticeTab(pane, app) {
   const { pools, modes } = app.config.practice;
   const ids = allIds(pools);
+  const byId = new Map(Object.values(pools).flat().map(candidate => [candidate.id, candidate]));
+  app.seen.prune(ids);
   const modeFor = value => modes.find(mode => mode.value === value) || modes[0];
   const typesOf = mode => mode.types || mode.buckets?.flat() || Object.keys(pools);
   const sizeOf = mode => (mode.strata ? mode.strata.reduce((total, stratum) => total + stratum.count, 0) : Math.min(MAX_COUNT, poolSize(pools, typesOf(mode))));
@@ -56,7 +58,7 @@ export function createPracticeTab(pane, app) {
     const size = Math.min(count, sizeOf(mode));
     state.questions = mode.strata ? drawStrata({ pools, strata: mode.strata, seen })
       : mode.buckets ? drawBalanced({ pools, buckets: mode.buckets, count: size, seen })
-        : drawQuestions({ pools, types: typesOf(mode), count: size, seen });
+        : drawQuestions({ pools, types: typesOf(mode), count: size, seen, uniform: true });
     app.seen.save(seen);
     Object.assign(state, { view: 'quiz', index: 0, results: [] });
     showQuestion();
@@ -71,7 +73,6 @@ export function createPracticeTab(pane, app) {
     }
     state.answered = false;
     state.stepAnswers = [];
-    app.seen.mark(question.id);
     pane.innerHTML = render('question', {
       ...question,
       position: state.index + 1,
@@ -100,6 +101,8 @@ export function createPracticeTab(pane, app) {
     const steps = question.steps || [];
     const stepsOk = steps.every((step, index) => state.stepAnswers[index] === step.answer);
     const ok = !skipped && stepsOk && isCorrect(question, given);
+    /* Only a correct answer retires a question; misses and skips stay unseen so they come back. */
+    if (ok) app.seen.mark(question.id);
     const chosen = question.input === 'blanks' ? [] : [].concat(given ?? []);
     const blankResults = question.input === 'blanks' ? blankFeedback(question, given) : [];
     const correct = question.input === 'select-all' ? question.answer : (question.accepted || [question.answer]);
@@ -178,8 +181,17 @@ export function createPracticeTab(pane, app) {
       heading: answered === 0 ? 'Set ended' : accuracy >= 80 ? 'Set complete' : accuracy >= 50 ? 'Good effort' : 'Keep practicing',
       correct, answered, accuracy,
       skipped: state.questions.length - answered,
+      missedCount: state.results.filter(result => !result.ok).length,
       review: reviewItems(state.results)
     });
+  }
+
+  /* Re-drills the set's missed and skipped questions, rebuilt so their choices are reshuffled. */
+  function retryMissed() {
+    const missed = state.results.filter(result => !result.ok).map(result => result.question.id);
+    state.questions = shuffle(missed).map(id => ({ ...byId.get(id).build(), id }));
+    Object.assign(state, { view: 'quiz', index: 0, results: [] });
+    showQuestion();
   }
 
   delegate(pane, 'click', {
@@ -196,6 +208,7 @@ export function createPracticeTab(pane, app) {
     skip: () => reveal(null),
     finish: showEnd,
     next,
+    'retry-missed': retryMissed,
     continue: showSetup
   });
   delegate(pane, 'change', {

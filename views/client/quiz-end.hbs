@@ -8,5 +8,6 @@
     <div class="set-stat"><div class="big">{{skipped}}</div><div class="lbl">skipped</div></div>
   </div>
   <button class="primary" type="button" data-action="continue">Continue practicing</button>
+  {{#if missedCount}}<button class="secondary" type="button" data-action="retry-missed">Retry missed ({{missedCount}})</button>{{/if}}
   {{> review-list items=review emptyText="No questions were answered before the set ended."}}
 </div>

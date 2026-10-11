@@ -103,7 +103,7 @@ export function buildPools({ taxa, anatomy, morphology, comparisons, questions, 
   /* Taxon identification from each diagnostic trait. */
   const usable = taxa.filter(taxon => !taxon.sourceLimitation);
   usable.filter(taxon => taxon.rank === 'order' || taxon.rank === 'suborder').forEach(taxon => {
-    taxon.diagnosticTraits.forEach((clue, index) => add(`${taxon.rank}-id`, `id-${taxon.name}-${index}`, () => ({
+    taxon.diagnosticTraits.forEach(clue => add(`${taxon.rank}-id`, `id-${taxon.name}-${clue}`, () => ({
       type: `${taxon.rank}-identification`,
       prompt: `Which ${taxon.rank} matches this supported clue? ${strong(clue)}`,
       answer: taxon.name, choices: choicesForTaxon(taxon, clue),
@@ -113,7 +113,7 @@ export function buildPools({ taxa, anatomy, morphology, comparisons, questions, 
   const imagesByTaxon = groupBy(images.filter(image => image.quiz), image => image.taxon);
   usable.filter(isFamilyRank).forEach(taxon => {
     const keyOrder = orderOf(taxon);
-    taxon.diagnosticTraits.forEach((clue, index) => add('family-id', `family-id-${taxon.name}-${index}`, () => ({
+    taxon.diagnosticTraits.forEach(clue => add('family-id', `family-id-${taxon.name}-${clue}`, () => ({
       type: 'family-identification',
       prompt: `Which family or superfamily is supported by this specimen feature? ${strong(clue)}`,
       answer: taxon.name, accepted: accepted(taxon), choices: choicesForTaxon(taxon, clue),
@@ -147,8 +147,8 @@ export function buildPools({ taxa, anatomy, morphology, comparisons, questions, 
       answer: taxon.name, accepted: accepted(taxon), choices: choicesForTaxon(taxon, clue),
       explanation: `${taxon.name}: ${clue}.`
     });
-    taxon.ecology.forEach((clue, index) => add('ecology', `family-${taxon.name}-ecology-${index}`, ecologyQuestion(clue, 'ecology or life-history')));
-    taxon.lifeHistory.forEach((clue, index) => add('ecology', `family-${taxon.name}-life-${index}`, ecologyQuestion(clue, 'life-history')));
+    taxon.ecology.forEach(clue => add('ecology', `family-${taxon.name}-ecology-${clue}`, ecologyQuestion(clue, 'ecology or life-history')));
+    taxon.lifeHistory.forEach(clue => add('ecology', `family-${taxon.name}-life-${clue}`, ecologyQuestion(clue, 'life-history')));
   });
 
   /* Morphology type from its description. */
@@ -160,13 +160,13 @@ export function buildPools({ taxa, anatomy, morphology, comparisons, questions, 
   }))));
 
   /* Comparisons: which of the pair (or both/neither) has each feature. */
-  comparisons.forEach(({ a, b, summary, features }, pairIndex) => features.forEach(({ feature, holder, owner }, index) => {
+  comparisons.forEach(({ a, b, summary, features }) => features.forEach(({ feature, holder, owner }) => {
     const both = `Both ${a} and ${b}`;
     const answer = { a, b, both, neither: 'Neither' }[holder];
     const reason = holder === 'neither' ? `Neither: ${feature} belongs to ${owner}, not to ${a} or ${b}.`
       : holder === 'both' ? `Both ${a} and ${b} have ${feature}.`
         : `${answer}: ${feature}.`;
-    add('comparison', `cmp-${pairIndex}-${index}`, () => ({
+    add('comparison', `cmp-${a}|${b}-${feature}`, () => ({
       type: 'comparison',
       prompt: `${strong(`${a} vs ${b}`)}: which is characterized by ${strong(feature)}?`,
       answer, choices: [a, b, both, 'Neither'],

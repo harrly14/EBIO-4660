@@ -26,3 +26,10 @@ test('keeps working in memory when storage throws', () => {
   seen.reset();
   assert.equal(seen.load().size, 0);
 });
+
+test('pruning drops seen ids that no longer match a question', () => {
+  const seen = createSeenTracker(createStorage('practical', memoryBackend()));
+  ['q1', 'old-1', 'q2'].forEach(id => seen.mark(id));
+  seen.prune(new Set(['q1', 'q2', 'q3']));
+  assert.deepEqual([...seen.load()].sort(), ['q1', 'q2']);
+});

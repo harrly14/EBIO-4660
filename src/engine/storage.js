@@ -48,6 +48,12 @@ export function createSeenTracker(storage) {
       save(seen);
     },
     count(ids) { return [...load()].filter(id => ids.has(id)).length; },
+    /* Drops ids that no longer match a question (renamed or removed content). */
+    prune(ids) {
+      const seen = load();
+      const kept = [...seen].filter(id => ids.has(id));
+      if (kept.length !== seen.size) save(new Set(kept));
+    },
     reset() { storage.remove('seen'); }
   };
 }

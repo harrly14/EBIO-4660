@@ -1,5 +1,5 @@
 // Click a specimen photo to view it full size; click, Escape, or the backdrop closes it.
-const EXPANDABLE = '.practical-image-grid img, .visual-box img';
+const EXPANDABLE = '.practical-image-grid img, .visual-box img, .mystery-photo img';
 
 export function installLightbox() {
   let overlay = null;

@@ -43,11 +43,27 @@ test('balanced draws split evenly across buckets regardless of pool size', () =>
   assert.equal(counts('big'), 5);
 });
 
-test('balanced draws keep an all-seen bucket in the mix by starting its new round', () => {
+test('a scope without recycle keeps its seen history and returns what it has', () => {
+  const seen = new Set(['a0', 'a1', 'a2']);
+  const questions = drawQuestions({ pools, types: ['a'], count: 3, seen, recycle: false, random: seededRandom() });
+  assert.deepEqual(questions.map(q => q.id), ['a3']);
+  assert.ok(seen.has('a0') && seen.has('a1') && seen.has('a2'));
+});
+
+test('balanced draws sit out an all-seen bucket while others still have unseen questions', () => {
   const seen = new Set(['b0', 'b1', 'a0']);
-  const questions = drawBalanced({ pools, buckets: [['a'], ['b']], count: 4, seen, random: seededRandom() });
-  assert.equal(questions.filter(q => q.id.startsWith('b')).length, 2);
-  assert.ok(seen.has('a0'), 'buckets with unseen questions keep their history');
+  const questions = drawBalanced({ pools, buckets: [['a'], ['b']], count: 3, seen, random: seededRandom() });
+  assert.deepEqual(questions.map(q => q.id).sort(), ['a1', 'a2', 'a3']);
+  assert.ok(seen.has('b0') && seen.has('b1') && seen.has('a0'), 'no bucket starts a new round early');
+});
+
+test('balanced draws reset every bucket together once all are used up', () => {
+  const seen = new Set(['b0', 'b1', 'a0', 'a1', 'a2']);
+  const questions = drawBalanced({ pools, buckets: [['a'], ['b']], count: 5, seen, random: seededRandom() });
+  assert.equal(questions.length, 5);
+  assert.equal(new Set(questions.map(q => q.id)).size, 5, 'no repeats within a set');
+  assert.ok(questions.some(q => q.id === 'a3'), 'the unseen question still comes first');
+  assert.equal(seen.size, 0, 'every bucket started its new round');
 });
 
 test('answer checking handles accepted aliases, typed answers, and select-all', () => {
