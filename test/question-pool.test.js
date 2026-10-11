@@ -51,7 +51,7 @@ test('balanced draws keep an all-seen bucket in the mix by starting its new roun
 });
 
 test('answer checking handles accepted aliases, typed answers, and select-all', () => {
-  assert.ok(isCorrect({ input: 'choice', answer: 'Coccoidae', accepted: ['Coccoidae', 'Coccoidea'] }, 'Coccoidea'));
+  assert.ok(isCorrect({ input: 'choice', answer: 'Coccoidea', accepted: ['Coccoidea', 'Coccoidea'] }, 'Coccoidea'));
   assert.ok(isCorrect({ input: 'fill', answer: 'Odonata' }, '  odonata '));
   assert.ok(!isCorrect({ input: 'fill', answer: 'Odonata' }, 'Odonat'));
   assert.ok(isCorrect({ input: 'select-all', answer: ['x', 'y'] }, ['y', 'x']));

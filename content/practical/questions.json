@@ -156,7 +156,7 @@
     "answer": "Cimicidae",
     "choices": [
       "Cimicidae",
-      "Coccoidae",
+      "Coccoidea",
       "Belostomatidae",
       "Acrididae"
     ],
@@ -231,11 +231,11 @@
     "explanation": "Rhaphidophoridae (camel crickets or cave crickets) lack tympanal organs, which are specialized hearing structures that detect airborne sound. Unlike many other crickets and katydids, they do not have these eardrum-like structures."
   },
   {
-    "id": "yn-coccoidae-cornicles",
+    "id": "yn-Coccoidea-cornicles",
     "type": "yes-no-feature",
     "category": "Yes/no feature",
-    "taxon": "Coccoidae",
-    "prompt": "Do Coccoidae have cornicles near the posterior end of the abdomen?",
+    "taxon": "Coccoidea",
+    "prompt": "Do Coccoidea have cornicles near the posterior end of the abdomen?",
     "answer": "No",
     "choices": [
       "Yes",

@@ -229,8 +229,8 @@
   },
   {
     "a": "Aphididae",
-    "b": "Coccoidae",
-    "summary": "Aphididae have cornicles and always three pairs of legs; Coccoidae lack cornicles and females are often legless.",
+    "b": "Coccoidea",
+    "summary": "Aphididae have cornicles and always three pairs of legs; Coccoidea lack cornicles and females are often legless.",
     "features": [
       {
         "feature": "cornicles near the posterior abdomen",
