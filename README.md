@@ -36,25 +36,6 @@ Everything a student sees lives in `content/` as JSON. The build validates it an
 
 Most practice questions are generated from this content. Adding a trait to a taxon or a structure to `anatomy.json` adds questions automatically.
 
-## Photo credits
-
-Every photo should record `sourceUrl`, `title`, `creator`, and `license`. The answer feedback shows the credit, and the build writes `dist/images/ATTRIBUTION.md`. Photos without a credit trigger a build warning.
-
-To find credits, run:
-
-```sh
-npm run credits   # http://localhost:4174
-```
-
-The tool goes through every uncredited photo:
-
-- It checks Wikimedia Commons for a byte-identical file.
-- It suggests the original link where git history still has one.
-- It searches Commons for the taxon and ranks the results by visual similarity.
-- It links to Google Lens, TinEye, and Bing reverse search. These links use the deployed copy of the photo.
-
-Choose **This is it** on a match, check the fields, and **Save credit**. If nothing matches, search other terms, paste a link you found elsewhere, or load more results. **Move on (remove photo)** deletes the photo and its entry. Commit the changes when you're done; git can bring back anything removed by mistake.
-
 ## Code layout
 
 ```
@@ -75,7 +56,3 @@ test/             node:test suites
 ```
 
 An app is mostly configuration. `src/apps/*/main.js` passes `createStudyApp` its lessons, question pools and practice modes, flashcard deck, and reference sections. Behavior shared by both apps belongs in `src/engine/`; markup belongs in `views/client/`.
-
-## Deployment
-
-`.github/workflows/pages.yml` runs the tests, builds, and publishes `dist/` to GitHub Pages on every push to `main`. In the repository settings, **Pages → Build and deployment → Source** must be set to **GitHub Actions**. `dist/` is not committed.
